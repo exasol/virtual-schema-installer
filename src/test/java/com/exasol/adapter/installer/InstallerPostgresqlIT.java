@@ -56,8 +56,8 @@ class InstallerPostgresqlIT {
     }
 
     @Test
-    void testInstallVirtualSchema() throws SQLException, BucketAccessException, InterruptedException, TimeoutException,
-            ParseException, IOException {
+    void testInstallVirtualSchema()
+            throws SQLException, BucketAccessException, TimeoutException, ParseException, IOException {
         final String virtualSchemaName = "POSTGRES_VIRTUAL_SCHEMA_1";
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_NAME_KEY, "postgresql.jar", //
@@ -81,8 +81,8 @@ class InstallerPostgresqlIT {
     }
 
     @Test
-    void testInstallVirtualSchemaWithDefaultValues() throws SQLException, BucketAccessException, InterruptedException,
-            TimeoutException, ParseException, IOException {
+    void testInstallVirtualSchemaWithDefaultValues()
+            throws SQLException, BucketAccessException, TimeoutException, ParseException, IOException {
         final String virtualSchemaName = "POSTGRES_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/postgresql-driver", //
@@ -98,8 +98,7 @@ class InstallerPostgresqlIT {
     }
 
     private void assertVirtualSchemaWasCreated(final String virtualSchemaName, final String[] args)
-            throws ParseException, SQLException, BucketAccessException, InterruptedException, TimeoutException,
-            IOException {
+            throws ParseException, SQLException, BucketAccessException, TimeoutException, IOException {
         final String credentials = EXASOL_USERNAME_KEY + "=" + EXASOL.getUsername() + "\n" //
                 + EXASOL_PASSWORD_KEY + "=" + EXASOL.getPassword() + "\n" //
                 + EXASOL_BUCKET_WRITE_PASSWORD_KEY + "=" + EXASOL.getDefaultBucket().getWritePassword() + "\n" //
