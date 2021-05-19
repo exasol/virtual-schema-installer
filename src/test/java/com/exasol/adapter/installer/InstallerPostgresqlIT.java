@@ -112,7 +112,7 @@ class InstallerPostgresqlIT {
         newArgs[newArgs.length - 3] = Dialect.POSTGRESQL.toString().toLowerCase();
         newArgs[newArgs.length - 2] = "--" + CREDENTIALS_FILE_KEY;
         newArgs[newArgs.length - 1] = tempFile.toString();
-        Installer.main(newArgs);
+        new Runner().run(newArgs);
         final ResultSet actualResultSet = EXASOL.createConnection().createStatement()
                 .executeQuery("SELECT * FROM " + virtualSchemaName + "." + SIMPLE_POSTGRES_TABLE);
         assertThat(actualResultSet, table().row(1).matches(TypeMatchMode.NO_JAVA_TYPE_CHECK));
