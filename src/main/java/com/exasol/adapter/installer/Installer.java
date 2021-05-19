@@ -1,8 +1,9 @@
 package com.exasol.adapter.installer;
 
-import static com.exasol.adapter.installer.PostgresqlVirtualSchemaInstallerConstants.*;
+import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
 import static java.lang.Integer.parseInt;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -69,7 +70,7 @@ public class Installer {
     /**
      * Install Postgres Virtual Schema to the Exasol database.
      */
-    public void install() throws SQLException, BucketAccessException, InterruptedException, TimeoutException {
+    public void install() throws SQLException, BucketAccessException, TimeoutException, FileNotFoundException {
         uploadFilesToBucket();
         try (final Connection connection = DriverManager.getConnection("jdbc:exa:" + this.exaIp + ":" + this.exaPort,
                 this.exaUsername, this.exaPassword); final Statement statement = connection.createStatement()) {
@@ -77,7 +78,7 @@ public class Installer {
         }
     }
 
-    private void uploadFilesToBucket() throws BucketAccessException, InterruptedException, TimeoutException {
+    private void uploadFilesToBucket() throws BucketAccessException, TimeoutException, FileNotFoundException {
         final WriteEnabledBucket bucket = getBucket();
         uploadVsJarToBucket(bucket);
         uploadDriverToBucket(bucket);
@@ -149,22 +150,18 @@ public class Installer {
     }
 
     private void uploadVsJarToBucket(final WriteEnabledBucket bucket)
-            throws BucketAccessException, InterruptedException, TimeoutException {
+            throws BucketAccessException, TimeoutException, FileNotFoundException {
         bucket.uploadFileNonBlocking(getVirtualSchemaPath(), this.virtualSchemaJarName);
     }
 
     private void uploadDriverToBucket(final WriteEnabledBucket bucket)
-            throws BucketAccessException, InterruptedException, TimeoutException {
+            throws BucketAccessException, TimeoutException, FileNotFoundException {
         bucket.uploadFileNonBlocking(getJdbcDriverPath(), this.jdbcDriverName);
     }
 
     public static void main(final String[] args)
-            throws ParseException, SQLException, BucketAccessException, InterruptedException, TimeoutException {
+            throws ParseException, SQLException, BucketAccessException, TimeoutException, FileNotFoundException {
         final Map<String, String> options = new HashMap<>();
-        options.put(VIRTUAL_SCHEMA_JAR_NAME_KEY,
-                getDescription(VIRTUAL_SCHEMA_JAR_NAME_DESCRIPTION, VIRTUAL_SCHEMA_JAR_NAME_DEFAULT));
-        options.put(VIRTUAL_SCHEMA_JAR_PATH_KEY,
-                getDescription(VIRTUAL_SCHEMA_JAR_PATH_DESCRIPTION, "current directory"));
         options.put(JDBC_DRIVER_NAME_KEY, getDescription(JDBC_DRIVER_NAME_DESCRIPTION, JDBC_DRIVER_NAME_DEFAULT));
         options.put(JDBC_DRIVER_PATH_KEY, getDescription(JDBC_DRIVER_PATH_DESCRIPTION, "current directory"));
         options.put(EXA_IP_KEY, getDescription(EXA_IP_DESCRIPTION, EXA_IP_DEFAULT));
@@ -185,6 +182,7 @@ public class Installer {
         options.put(CREDENTIALS_FILE_KEY, getDescription(CREDENTIALS_FILE_DESCRIPTION, CREDENTIALS_FILE_DEFAULT));
 
         final UserInput userInput = new UserInputParser().parseUserInput(args, options);
+        final VirtualSchemaJarInfo jarInfo = new VirtualSchemaJarManager().downloadJar(userInput.getDialect());
         final Map<String, String> parameters = userInput.getParameters();
         final PropertyReader propertyReader = new PropertyReader(
                 getOrDefault(parameters, CREDENTIALS_FILE_KEY, CREDENTIALS_FILE_DEFAULT));
@@ -194,10 +192,8 @@ public class Installer {
                 .exaBucketWritePassword(propertyReader.readProperty(EXASOL_BUCKET_WRITE_PASSWORD_KEY))
                 .postgresUsername(propertyReader.readProperty(POSTGRES_USERNAME_KEY))
                 .postgresPassword(propertyReader.readProperty(POSTGRES_PASSWORD_KEY)) //
-                .virtualSchemaJarName(
-                        getOrDefault(parameters, VIRTUAL_SCHEMA_JAR_NAME_KEY, VIRTUAL_SCHEMA_JAR_NAME_DEFAULT)) //
-                .virtualSchemaJarPath(
-                        getOrDefault(parameters, VIRTUAL_SCHEMA_JAR_PATH_KEY, VIRTUAL_SCHEMA_JAR_PATH_DEFAULT)) //
+                .virtualSchemaJarName(jarInfo.getJarName()) //
+                .virtualSchemaJarPath(jarInfo.getJarPath()) //
                 .jdbcDriverName(getOrDefault(parameters, JDBC_DRIVER_NAME_KEY, JDBC_DRIVER_NAME_DEFAULT)) //
                 .jdbcDriverPath(getOrDefault(parameters, JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DEFAULT)) //
                 .exaIp(getOrDefault(parameters, EXA_IP_KEY, EXA_IP_DEFAULT)) //

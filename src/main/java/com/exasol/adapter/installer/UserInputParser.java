@@ -1,7 +1,6 @@
 package com.exasol.adapter.installer;
 
-import static com.exasol.adapter.installer.PostgresqlVirtualSchemaInstallerConstants.ADDITIONAL_PROPERTY_KEY;
-import static com.exasol.adapter.installer.PostgresqlVirtualSchemaInstallerConstants.HELP_KEY;
+import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +20,8 @@ public class UserInputParser {
             userInput.put(option, cmd.getOptionValue(option));
         }
         final String[] additionalProperties = cmd.getOptionValues(ADDITIONAL_PROPERTY_KEY);
-        return new UserInput(userInput, additionalProperties);
+        final String dialectName = cmd.getOptionValue(DIALECT_KEY);
+        return new UserInput(dialectName, userInput, additionalProperties);
     }
 
     private void printHelpIfNeeded(final Options options, final CommandLine cmd) {
@@ -34,13 +34,16 @@ public class UserInputParser {
     private Options createOptions(final Map<String, String> optionsMap) {
         final Options options = new Options();
         options.addOption(new Option(HELP_KEY, HELP_KEY, false, "Help command"));
-        for (final Map.Entry<String, String> entry : optionsMap.entrySet()) {
-            options.addOption(new Option(null, entry.getKey(), true, entry.getValue()));
-        }
+        final Option dialect = new Option(DIALECT_KEY, DIALECT_KEY, true, DIALECT_DESCRIPTION);
+        dialect.setRequired(true);
+        options.addOption(dialect);
         final Option property = new Option(ADDITIONAL_PROPERTY_KEY, ADDITIONAL_PROPERTY_KEY, true,
                 "Additional virtual schema property.");
         property.setArgs(Option.UNLIMITED_VALUES);
         options.addOption(property);
+        for (final Map.Entry<String, String> entry : optionsMap.entrySet()) {
+            options.addOption(new Option(null, entry.getKey(), true, entry.getValue()));
+        }
         return options;
     }
 
@@ -56,6 +59,6 @@ public class UserInputParser {
 
     private void printHelp(final Options options) {
         final HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("Postgres Virtual Schema Installer", options);
+        formatter.printHelp("Virtual Schema Installer", options);
     }
 }

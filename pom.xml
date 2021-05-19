@@ -11,7 +11,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
         <surefire.and.failsafe.plugin.version>3.0.0-M5</surefire.and.failsafe.plugin.version>
-        <org.testcontainers.version>1.15.1</org.testcontainers.version>
+        <org.testcontainers.version>1.15.3</org.testcontainers.version>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
@@ -45,12 +45,12 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>error-reporting-java</artifactId>
-            <version>0.2.2</version>
+            <version>0.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>bucketfs-java</artifactId>
-            <version>1.0.0</version>
+            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
@@ -62,11 +62,16 @@
             <artifactId>lombok</artifactId>
             <version>1.18.20</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.exasol</groupId>-->
-        <!--            <artifactId>exasol-jdbc</artifactId>-->
-        <!--            <version>7.0.7</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.kohsuke</groupId>
+            <artifactId>github-api</artifactId>
+            <version>1.128</version>
+        </dependency>
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>exasol-jdbc</artifactId>
+            <version>7.0.7</version>
+        </dependency>
         <!--Unit test dependencies -->
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -77,14 +82,14 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.7.1</version>
+            <version>5.7.2</version>
             <scope>test</scope>
         </dependency>
         <!--Integration test dependencies -->
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>3.5.2</version>
+            <version>3.5.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -102,7 +107,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.18</version>
+            <version>42.2.20.jre7</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -121,7 +126,7 @@
         <dependency>
             <artifactId>org.jacoco.agent</artifactId>
             <groupId>org.jacoco</groupId>
-            <version>0.8.5</version>
+            <version>0.8.7</version>
             <classifier>runtime</classifier>
             <scope>runtime</scope>
         </dependency>
@@ -141,7 +146,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
+                <version>0.8.7</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -268,7 +273,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.7</version>
+                <version>2.8.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -319,25 +324,25 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.exasol</groupId>
-                <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>0.7.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <modules>
-                        <module>jar_artifact</module>
-                        <module>integration_tests</module>
-                        <module>udf_coverage</module>
-                    </modules>
-                </configuration>
-            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>com.exasol</groupId>-->
+            <!--                <artifactId>project-keeper-maven-plugin</artifactId>-->
+            <!--                <version>0.7.0</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <goals>-->
+            <!--                            <goal>verify</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--                <configuration>-->
+            <!--                    <modules>-->
+            <!--                        <module>jar_artifact</module>-->
+            <!--                        <module>integration_tests</module>-->
+            <!--                        <module>udf_coverage</module>-->
+            <!--                    </modules>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -371,35 +376,9 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>validate-capabilities-report</id>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <configuration>
-                            <mainClass>
-                                com.exasol.adapter.dialects.postgresql.docgeneration.PostgresAutogeneratedResourceVerifier
-                            </mainClass> <!-- Add your class here -->
-                            <classpathScope>test</classpathScope>
-                            <systemProperties>
-                                <systemProperty>
-                                    <key>projectDir</key>
-                                    <value>${project.basedir}</value>
-                                </systemProperty>
-                            </systemProperties>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>0.1.1</version>
+                <version>0.4.0</version>
                 <executions>
                     <execution>
                         <goals>

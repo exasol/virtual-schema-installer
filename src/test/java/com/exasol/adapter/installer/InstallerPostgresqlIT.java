@@ -1,6 +1,6 @@
 package com.exasol.adapter.installer;
 
-import static com.exasol.adapter.installer.PostgresqlVirtualSchemaInstallerConstants.*;
+import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
 import static com.exasol.matcher.ResultSetStructureMatcher.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -60,8 +60,6 @@ class InstallerPostgresqlIT {
             ParseException, IOException {
         final String virtualSchemaName = "POSTGRES_VIRTUAL_SCHEMA_1";
         final String[] args = new String[] { //
-                "--" + VIRTUAL_SCHEMA_JAR_NAME_KEY, "virtual-schema-dist-9.0.1-postgresql-2.0.0.jar", //
-                "--" + VIRTUAL_SCHEMA_JAR_PATH_KEY, "target", //
                 "--" + JDBC_DRIVER_NAME_KEY, "postgresql.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/postgresql-driver", //
                 "--" + EXA_IP_KEY, "localhost", //
@@ -87,7 +85,6 @@ class InstallerPostgresqlIT {
             TimeoutException, ParseException, IOException {
         final String virtualSchemaName = "POSTGRES_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
-                "--" + VIRTUAL_SCHEMA_JAR_PATH_KEY, "target", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/postgresql-driver", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
@@ -110,8 +107,10 @@ class InstallerPostgresqlIT {
                 + POSTGRES_PASSWORD_KEY + "=" + POSTGRES.getPassword() + "\n";
         final Path tempFile = Files.createTempFile("installer_credentials", "temp");
         Files.write(tempFile, credentials.getBytes());
-        final String[] newArgs = new String[args.length + 2];
+        final String[] newArgs = new String[args.length + 4];
         System.arraycopy(args, 0, newArgs, 0, args.length);
+        newArgs[newArgs.length - 4] = "--" + DIALECT_KEY;
+        newArgs[newArgs.length - 3] = Dialect.POSTGRESQL.toString().toLowerCase();
         newArgs[newArgs.length - 2] = "--" + CREDENTIALS_FILE_KEY;
         newArgs[newArgs.length - 1] = tempFile.toString();
         Installer.main(newArgs);

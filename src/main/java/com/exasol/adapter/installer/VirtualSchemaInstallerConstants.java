@@ -1,7 +1,10 @@
 package com.exasol.adapter.installer;
 
-public class PostgresqlVirtualSchemaInstallerConstants {
-    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+public class VirtualSchemaInstallerConstants {
+    public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     public static final String CREDENTIALS_FILE_KEY = "credentials_file";
     public static final String CREDENTIALS_FILE_DESCRIPTION = "Path to the file where credentials are stored";
@@ -16,13 +19,9 @@ public class PostgresqlVirtualSchemaInstallerConstants {
     public static final String POSTGRES_PASSWORD_KEY = "postgres_password";
 
     // User input
-    public static final String VIRTUAL_SCHEMA_JAR_NAME_KEY = "virtual-schema-jar-name";
-    public static final String VIRTUAL_SCHEMA_JAR_NAME_DEFAULT = "virtual-schema-dist-9.0.1-postgresql-2.0.0.jar";
-    public static final String VIRTUAL_SCHEMA_JAR_NAME_DESCRIPTION = "Name of the Virtual Schema JAR file";
-
-    public static final String VIRTUAL_SCHEMA_JAR_PATH_KEY = "virtual-schema-jar-path";
-    public static final String VIRTUAL_SCHEMA_JAR_PATH_DEFAULT = "";
-    public static final String VIRTUAL_SCHEMA_JAR_PATH_DESCRIPTION = "Path to the Virtual Schema JAR file";
+    public static final String DIALECT_KEY = "dialect";
+    public static final String DIALECT_DESCRIPTION = "Select one of the supported dialects: " + Arrays
+            .stream(Dialect.values()).map(dialect -> dialect.toString().toLowerCase()).collect(Collectors.joining(","));
 
     public static final String JDBC_DRIVER_NAME_KEY = "jdbc-driver-name";
     public static final String JDBC_DRIVER_NAME_DEFAULT = "postgresql.jar";
