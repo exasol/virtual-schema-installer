@@ -32,14 +32,15 @@ public class VirtualSchemaJarManager {
         final List<GHAsset> assets = getGHAssets(dialect);
         final GHAsset ghAsset = getGHAsset(assets);
         final String tempDirectory = System.getProperty("java.io.tmpdir");
-        final String filePath = tempDirectory + FILE_SEPARATOR + ghAsset.getName();
+        final String assetName = ghAsset.getName();
+        final String filePath = tempDirectory + FILE_SEPARATOR + assetName;
         try (final InputStream in = new URL(ghAsset.getBrowserDownloadUrl()).openStream()) {
             Files.copy(in, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
         } catch (final IOException exception) {
             throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-5")
-                    .message("Cannot download the file {{file}}.", ghAsset.getName()).toString());
+                    .message("Cannot download and save the file {{file}}.", assetName).toString(), exception);
         }
-        return new VirtualSchemaJarInfo(tempDirectory, ghAsset.getName());
+        return new VirtualSchemaJarInfo(tempDirectory, assetName);
     }
 
     private List<GHAsset> getGHAssets(final Dialect dialect) {
