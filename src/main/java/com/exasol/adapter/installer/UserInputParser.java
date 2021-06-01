@@ -11,6 +11,14 @@ import org.apache.commons.cli.*;
  * Parses user input for the {@link Installer} class.
  */
 public class UserInputParser {
+    /**
+     * Parse user input.
+     *
+     * @param args       the args
+     * @param optionsMap the options map
+     * @return the user input
+     * @throws ParseException when parsing has some problems
+     */
     public UserInput parseUserInput(final String[] args, final Map<String, String> optionsMap) throws ParseException {
         final Options options = createOptions(optionsMap);
         final CommandLine cmd = getCommandLine(args, options);
@@ -22,13 +30,6 @@ public class UserInputParser {
         final String[] additionalProperties = cmd.getOptionValues(ADDITIONAL_PROPERTY_KEY);
         final String dialectName = cmd.getOptionValue(DIALECT_KEY);
         return new UserInput(dialectName, userInput, additionalProperties);
-    }
-
-    private void printHelpIfNeeded(final Options options, final CommandLine cmd) {
-        if (cmd.hasOption(HELP_KEY)) {
-            printHelp(options);
-            System.exit(0);
-        }
     }
 
     private Options createOptions(final Map<String, String> optionsMap) {
@@ -54,6 +55,13 @@ public class UserInputParser {
         } catch (final ParseException exception) {
             printHelp(options);
             throw exception;
+        }
+    }
+
+    private void printHelpIfNeeded(final Options options, final CommandLine cmd) {
+        if (cmd.hasOption(HELP_KEY)) {
+            printHelp(options);
+            System.exit(0);
         }
     }
 

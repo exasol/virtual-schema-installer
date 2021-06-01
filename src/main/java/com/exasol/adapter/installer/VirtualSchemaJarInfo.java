@@ -11,7 +11,7 @@ public class VirtualSchemaJarInfo {
     private final String jarName;
 
     /**
-     * Instantiates a new {@link VirtualSchemaJarInfo}.
+     * Instantiate a new {@link VirtualSchemaJarInfo}.
      *
      * @param jarPath the jar path
      * @param jarName the jar name

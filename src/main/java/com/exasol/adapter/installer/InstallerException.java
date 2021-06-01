@@ -7,7 +7,7 @@ public class InstallerException extends RuntimeException {
     private static final long serialVersionUID = 2135321592579639349L;
 
     /**
-     * Instantiates a new {@link InstallerException}.
+     * Instantiate a new {@link InstallerException}.
      *
      * @param message the message
      * @param cause   the cause
@@ -17,7 +17,7 @@ public class InstallerException extends RuntimeException {
     }
 
     /**
-     * Instantiates a new {@link InstallerException}.
+     * Instantiate a new {@link InstallerException}.
      *
      * @param message the message
      */

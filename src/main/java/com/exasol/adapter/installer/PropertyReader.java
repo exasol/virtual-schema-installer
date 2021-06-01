@@ -8,7 +8,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
- * This class retrieves a user property.
+ * This class reads configurable properties.
  */
 public final class PropertyReader {
     private static final Logger LOGGER = Logger.getLogger(PropertyReader.class.getName());
@@ -24,27 +24,28 @@ public final class PropertyReader {
     }
 
     /**
-     * Reads property by key.
+     * Read property by property name.
      *
-     * @param key key
+     * @param propertyName propertyName
      * @return value
      */
-    public String readProperty(final String key) {
-        final Optional<String> property = readFromFile(key);
+    public String readProperty(final String propertyName) {
+        final Optional<String> property = readFromFile(propertyName);
         if (property.isPresent()) {
-            LOGGER.fine(() -> "Using property '" + key + "' from the file '" + this.pathToPropertyFile + "'.");
+            LOGGER.fine(() -> "Using property '" + propertyName + "' from the '" + this.pathToPropertyFile + "' file.");
             return property.get();
         } else {
-            LOGGER.fine(() -> "Property '" + key + "' is not found in the file '" + this.pathToPropertyFile + "'.");
-            return getCredentialsFromConsole(key);
+            LOGGER.fine(() -> "Property '" + propertyName + "' is not found in the '" + this.pathToPropertyFile
+                    + "' file.");
+            return readPropertyFromConsole(propertyName);
         }
     }
 
-    private Optional<String> readFromFile(final String key) {
+    private Optional<String> readFromFile(final String propertyName) {
         try (final InputStream stream = new FileInputStream(this.pathToPropertyFile)) {
             final var properties = new Properties();
             properties.load(stream);
-            final String value = properties.getProperty(key);
+            final String value = properties.getProperty(propertyName);
             if (value == null) {
                 return Optional.empty();
             } else {
@@ -55,7 +56,7 @@ public final class PropertyReader {
         }
     }
 
-    private String getCredentialsFromConsole(final String key) {
-        return System.console().readLine("Enter " + key.replace("_", " ") + ": ");
+    private String readPropertyFromConsole(final String propertyName) {
+        return System.console().readLine("Enter " + propertyName.replace("_", " ") + ": ");
     }
 }

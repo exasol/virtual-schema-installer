@@ -4,6 +4,7 @@ import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
 import static com.exasol.matcher.ResultSetStructureMatcher.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,7 +27,7 @@ import com.exasol.matcher.TypeMatchMode;
 
 @Tag("integration")
 @Testcontainers
-class InstallerPostgresqlIT {
+class PostgreSQLInstallerIT {
     private static final String EXASOL_SCHEMA_NAME = "ADAPTER";
     private static final String EXASOL_ADAPTER_NAME = "POSTGRES_ADAPTER_SCRIPT";
     private static final String POSTGRES_JDBC_CONNECTION = "POSTGRES_JDBC_CONNECTION";
@@ -44,15 +45,23 @@ class InstallerPostgresqlIT {
 
     @BeforeAll
     static void beforeAll() throws SQLException {
-        final Statement statementPostgres = POSTGRES.createConnection("").createStatement();
-        statementPostgres.execute("CREATE SCHEMA " + POSTGRES_SCHEMA);
-        createPostgresTestTableSimple(statementPostgres);
+        final Statement statementPostgres = createConnection();
+        createSchema(statementPostgres, POSTGRES_SCHEMA);
+        createPostgresSimpleTestTable(statementPostgres);
     }
 
-    private static void createPostgresTestTableSimple(final Statement statementPostgres) throws SQLException {
+    private static Statement createConnection() throws SQLException {
+        return POSTGRES.createConnection("").createStatement();
+    }
+
+    private static void createSchema(final Statement statementPostgres, final String schemaName) throws SQLException {
+        statementPostgres.execute("CREATE SCHEMA " + schemaName);
+    }
+
+    private static void createPostgresSimpleTestTable(final Statement statement) throws SQLException {
         final String qualifiedTableName = POSTGRES_SCHEMA + "." + SIMPLE_POSTGRES_TABLE;
-        statementPostgres.execute("CREATE TABLE " + qualifiedTableName + " (x INT)");
-        statementPostgres.execute("INSERT INTO " + qualifiedTableName + " VALUES (1)");
+        statement.execute("CREATE TABLE " + qualifiedTableName + " (x INT)");
+        statement.execute("INSERT INTO " + qualifiedTableName + " VALUES (1)");
     }
 
     @Test
@@ -99,6 +108,14 @@ class InstallerPostgresqlIT {
 
     private void assertVirtualSchemaWasCreated(final String virtualSchemaName, final String[] args)
             throws ParseException, SQLException, BucketAccessException, TimeoutException, IOException {
+        final Path tempFile = createCredentialsFile();
+        installVirtualSchema(args, tempFile);
+        final ResultSet actualResultSet = EXASOL.createConnection().createStatement()
+                .executeQuery("SELECT * FROM " + virtualSchemaName + "." + SIMPLE_POSTGRES_TABLE);
+        assertThat(actualResultSet, table().row(1).matches(TypeMatchMode.NO_JAVA_TYPE_CHECK));
+    }
+
+    private Path createCredentialsFile() throws IOException {
         final String credentials = EXASOL_USERNAME_KEY + "=" + EXASOL.getUsername() + "\n" //
                 + EXASOL_PASSWORD_KEY + "=" + EXASOL.getPassword() + "\n" //
                 + EXASOL_BUCKET_WRITE_PASSWORD_KEY + "=" + EXASOL.getDefaultBucket().getWritePassword() + "\n" //
@@ -106,15 +123,21 @@ class InstallerPostgresqlIT {
                 + POSTGRES_PASSWORD_KEY + "=" + POSTGRES.getPassword() + "\n";
         final Path tempFile = Files.createTempFile("installer_credentials", "temp");
         Files.write(tempFile, credentials.getBytes());
+        return tempFile;
+    }
+
+    private String[] resolveArguments(final String[] args, final Path tempFile) {
         final String[] newArgs = new String[args.length + 4];
         System.arraycopy(args, 0, newArgs, 0, args.length);
         newArgs[newArgs.length - 4] = "--" + DIALECT_KEY;
         newArgs[newArgs.length - 3] = Dialect.POSTGRESQL.toString().toLowerCase();
         newArgs[newArgs.length - 2] = "--" + CREDENTIALS_FILE_KEY;
         newArgs[newArgs.length - 1] = tempFile.toString();
-        new Runner().run(newArgs);
-        final ResultSet actualResultSet = EXASOL.createConnection().createStatement()
-                .executeQuery("SELECT * FROM " + virtualSchemaName + "." + SIMPLE_POSTGRES_TABLE);
-        assertThat(actualResultSet, table().row(1).matches(TypeMatchMode.NO_JAVA_TYPE_CHECK));
+        return newArgs;
+    }
+
+    private void installVirtualSchema(final String[] args, final Path tempFile)
+            throws SQLException, BucketAccessException, FileNotFoundException, ParseException, TimeoutException {
+        Runner.main(resolveArguments(args, tempFile));
     }
 }

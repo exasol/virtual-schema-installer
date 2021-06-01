@@ -54,23 +54,19 @@ public class Installer {
 
     private final String[] additionalProperties;
 
-    private Path getVirtualSchemaPath() {
-        return Path.of(this.virtualSchemaJarPath, this.virtualSchemaJarName);
-    }
-
-    private Path getJdbcDriverPath() {
-        return Path.of(this.jdbcDriverPath, this.jdbcDriverName);
-    }
-
     /**
      * Install Postgres Virtual Schema to the Exasol database.
      */
     public void install() throws SQLException, BucketAccessException, TimeoutException, FileNotFoundException {
         uploadFilesToBucket();
-        try (final Connection connection = DriverManager.getConnection("jdbc:exa:" + this.exaIp + ":" + this.exaPort,
-                this.exaUsername, this.exaPassword); final Statement statement = connection.createStatement()) {
+        try (final Connection connection = getConnection(); final Statement statement = connection.createStatement()) {
             installVirtualSchema(statement);
         }
+    }
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:exa:" + this.exaIp + ":" + this.exaPort, this.exaUsername,
+                this.exaPassword);
     }
 
     private void uploadFilesToBucket() throws BucketAccessException, TimeoutException, FileNotFoundException {
@@ -149,8 +145,16 @@ public class Installer {
         bucket.uploadFileNonBlocking(getVirtualSchemaPath(), this.virtualSchemaJarName);
     }
 
+    private Path getVirtualSchemaPath() {
+        return Path.of(this.virtualSchemaJarPath, this.virtualSchemaJarName);
+    }
+
     private void uploadDriverToBucket(final WriteEnabledBucket bucket)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
         bucket.uploadFileNonBlocking(getJdbcDriverPath(), this.jdbcDriverName);
+    }
+
+    private Path getJdbcDriverPath() {
+        return Path.of(this.jdbcDriverPath, this.jdbcDriverName);
     }
 }

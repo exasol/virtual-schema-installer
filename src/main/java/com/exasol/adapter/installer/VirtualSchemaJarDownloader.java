@@ -19,9 +19,9 @@ import org.kohsuke.github.GitHub;
 import com.exasol.errorreporting.ExaError;
 
 /**
- * Retrieves a Virtual Schema JAR file.
+ * Downloads a Virtual Schema JAR file.
  */
-public class VirtualSchemaJarManager {
+public class VirtualSchemaJarDownloader {
     /**
      * Get a Virtual Schema JAR file.
      * 
@@ -35,7 +35,7 @@ public class VirtualSchemaJarManager {
         final String assetName = ghAsset.getName();
         final String filePath = tempDirectory + FILE_SEPARATOR + assetName;
         try (final InputStream in = new URL(ghAsset.getBrowserDownloadUrl()).openStream()) {
-            Files.copy(in, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+            writeToDisk(filePath, in);
         } catch (final IOException exception) {
             throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-5")
                     .message("Cannot download and save the file {{file}}.", assetName).toString(), exception);
@@ -86,5 +86,9 @@ public class VirtualSchemaJarManager {
                     .message("GitHub connection problem happened during retrieving the latest release.").toString(),
                     exception);
         }
+    }
+
+    private void writeToDisk(final String filePath, final InputStream in) throws IOException {
+        Files.copy(in, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
     }
 }
