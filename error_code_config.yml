@@ -1,0 +1,5 @@
+error-tags:
+  E-VS-INSTL:
+    packages:
+      - com.exasol.adapter.installer
+    highest-index: 5
