@@ -22,10 +22,9 @@ import lombok.Builder;
 @Builder
 public class Installer {
     private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
+    private final VirtualSchemaJarProvider jarProvider;
 
     // Files related fields
-    private final String virtualSchemaJarName;
-    private final String virtualSchemaJarPath;
     private final String jdbcDriverName;
     private final String jdbcDriverPath;
 
@@ -58,9 +57,10 @@ public class Installer {
      * Install Postgres Virtual Schema to the Exasol database.
      */
     public void install() throws SQLException, BucketAccessException, TimeoutException, FileNotFoundException {
-        uploadFilesToBucket();
+        final VirtualSchemaJar virtualSchemaJar = this.jarProvider.provideJar();
+        uploadFilesToBucket(virtualSchemaJar);
         try (final Connection connection = getConnection(); final Statement statement = connection.createStatement()) {
-            installVirtualSchema(statement);
+            installVirtualSchema(statement, virtualSchemaJar.getJarName());
         }
     }
 
@@ -69,9 +69,10 @@ public class Installer {
                 this.exaPassword);
     }
 
-    private void uploadFilesToBucket() throws BucketAccessException, TimeoutException, FileNotFoundException {
+    private void uploadFilesToBucket(final VirtualSchemaJar virtualSchemaJar)
+            throws BucketAccessException, TimeoutException, FileNotFoundException {
         final WriteEnabledBucket bucket = getBucket();
-        uploadVsJarToBucket(bucket);
+        uploadVsJarToBucket(bucket, virtualSchemaJar);
         uploadDriverToBucket(bucket);
     }
 
@@ -84,9 +85,9 @@ public class Installer {
                 .build();
     }
 
-    private void installVirtualSchema(final Statement statement) throws SQLException {
+    private void installVirtualSchema(final Statement statement, final String jarName) throws SQLException {
         createSchema(statement);
-        createAdapterScript(statement);
+        createAdapterScript(statement, jarName);
         createConnection(statement);
         createVirtualSchema(statement);
     }
@@ -95,9 +96,8 @@ public class Installer {
         statement.execute("CREATE SCHEMA IF NOT EXISTS " + this.exaSchemaName);
     }
 
-    private void createAdapterScript(final Statement statement) throws SQLException {
-        final String createAdapterScriptStatement = prepareAdapterScriptStatement(this.exaSchemaName,
-                this.exaAdapterName);
+    private void createAdapterScript(final Statement statement, final String jarName) throws SQLException {
+        final String createAdapterScriptStatement = prepareAdapterScriptStatement(jarName);
         LOGGER.info(() -> "Installing adapter script with the following command: " + LINE_SEPARATOR
                 + createAdapterScriptStatement);
         statement.execute(createAdapterScriptStatement);
@@ -132,21 +132,17 @@ public class Installer {
         return createVirtualSchemaStatement.toString();
     }
 
-    private String prepareAdapterScriptStatement(final String schemaName, final String adapterName) {
-        return "CREATE OR REPLACE JAVA ADAPTER SCRIPT " + schemaName + "." + adapterName + " AS" + LINE_SEPARATOR //
-                + "  %scriptclass com.exasol.adapter.RequestDispatcher;" + LINE_SEPARATOR //
-                + "%jar /buckets/bfsdefault/" + this.exaBucketName + "/" + this.virtualSchemaJarName + ";"
+    private String prepareAdapterScriptStatement(final String jarName) {
+        return "CREATE OR REPLACE JAVA ADAPTER SCRIPT " + this.exaSchemaName + "." + this.exaAdapterName + " AS"
                 + LINE_SEPARATOR //
+                + "  %scriptclass com.exasol.adapter.RequestDispatcher;" + LINE_SEPARATOR //
+                + "%jar /buckets/bfsdefault/" + this.exaBucketName + "/" + jarName + ";" + LINE_SEPARATOR //
                 + "%jar /buckets/bfsdefault/" + this.exaBucketName + "/" + this.jdbcDriverName + ";";
     }
 
-    private void uploadVsJarToBucket(final WriteEnabledBucket bucket)
+    private void uploadVsJarToBucket(final WriteEnabledBucket bucket, final VirtualSchemaJar virtualSchemaJar)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
-        bucket.uploadFileNonBlocking(getVirtualSchemaPath(), this.virtualSchemaJarName);
-    }
-
-    private Path getVirtualSchemaPath() {
-        return Path.of(this.virtualSchemaJarPath, this.virtualSchemaJarName);
+        bucket.uploadFileNonBlocking(virtualSchemaJar.getVirtualSchemaPath(), virtualSchemaJar.getJarName());
     }
 
     private void uploadDriverToBucket(final WriteEnabledBucket bucket)

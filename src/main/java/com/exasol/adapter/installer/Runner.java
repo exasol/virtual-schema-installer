@@ -18,24 +18,24 @@ public class Runner {
             throws SQLException, BucketAccessException, FileNotFoundException, ParseException, TimeoutException {
         final Map<String, String> options = getUserInputOptions();
         final UserInput userInput = new UserInputParser().parseUserInput(args, options);
-        final VirtualSchemaJarInfo jarInfo = new VirtualSchemaJarDownloader().downloadJar(userInput.getDialect());
+        final VirtualSchemaGitHubJarDownloader jarProvider = new VirtualSchemaGitHubJarDownloader(
+                userInput.getDialect());
         final Map<String, String> parameters = userInput.getParameters();
         final PropertyReader propertyReader = new PropertyReader(
                 getOrDefault(parameters, CREDENTIALS_FILE_KEY, CREDENTIALS_FILE_DEFAULT));
-        final Installer installer = createInstaller(userInput, jarInfo, parameters, propertyReader);
+        final Installer installer = createInstaller(userInput, jarProvider, parameters, propertyReader);
         installer.install();
     }
 
-    private static Installer createInstaller(final UserInput userInput, final VirtualSchemaJarInfo jarInfo,
+    private static Installer createInstaller(final UserInput userInput, final VirtualSchemaJarProvider jarProvider,
             final Map<String, String> parameters, final PropertyReader propertyReader) {
         return Installer.builder() //
+                .jarProvider(jarProvider) //
                 .exaUsername(propertyReader.readProperty(EXASOL_USERNAME_KEY))
                 .exaPassword(propertyReader.readProperty(EXASOL_PASSWORD_KEY))
                 .exaBucketWritePassword(propertyReader.readProperty(EXASOL_BUCKET_WRITE_PASSWORD_KEY))
                 .postgresUsername(propertyReader.readProperty(POSTGRES_USERNAME_KEY))
                 .postgresPassword(propertyReader.readProperty(POSTGRES_PASSWORD_KEY)) //
-                .virtualSchemaJarName(jarInfo.getJarName()) //
-                .virtualSchemaJarPath(jarInfo.getJarPath()) //
                 .jdbcDriverName(getOrDefault(parameters, JDBC_DRIVER_NAME_KEY, JDBC_DRIVER_NAME_DEFAULT)) //
                 .jdbcDriverPath(getOrDefault(parameters, JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DEFAULT)) //
                 .exaIp(getOrDefault(parameters, EXA_IP_KEY, EXA_IP_DEFAULT)) //
