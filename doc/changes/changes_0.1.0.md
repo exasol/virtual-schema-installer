@@ -2,9 +2,13 @@
 
 Code name: 
 
-## Features / Enhancements
+## Features
 
 * #1: Create initial implementation for Postgres VS dialect.
+
+## Refactoring
+
+* #3: Created an interface for obtaining JAR files.
 
 ## Dependency Updates
 

@@ -1,13 +1,7 @@
 package com.exasol.adapter.installer;
 
 /**
- * This interface provide a Virtual Schema JAR.
+ * Interface-marker for providing Virtual Schema JAR.
  */
-public interface VirtualSchemaJarProvider {
-    /**
-     * Provide a Virtual Schema JAR file.
-     *
-     * @return new instance of {@link VirtualSchemaJar}
-     */
-    VirtualSchemaJar provideJar();
+public interface VirtualSchemaJarProvider extends JarProvider {
 }

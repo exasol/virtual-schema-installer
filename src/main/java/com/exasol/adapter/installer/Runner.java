@@ -18,26 +18,31 @@ public class Runner {
             throws SQLException, BucketAccessException, FileNotFoundException, ParseException, TimeoutException {
         final Map<String, String> options = getUserInputOptions();
         final UserInput userInput = new UserInputParser().parseUserInput(args, options);
-        final VirtualSchemaGitHubJarDownloader jarProvider = new VirtualSchemaGitHubJarDownloader(
+        final VirtualSchemaJarProvider virtualSchemaJarProvider = new VirtualSchemaGitHubJarDownloader(
                 userInput.getDialect());
         final Map<String, String> parameters = userInput.getParameters();
+        final String jdbcDriverPath = getOrDefault(parameters, JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DEFAULT);
+        final String jdbcDriverName = getOrDefault(parameters, JDBC_DRIVER_NAME_KEY, JDBC_DRIVER_NAME_DEFAULT);
+        final JdbcDriverJarProvider jdbcDriverJarProvider = new JdbcDriverLocalFileProvider(jdbcDriverPath,
+                jdbcDriverName);
         final PropertyReader propertyReader = new PropertyReader(
                 getOrDefault(parameters, CREDENTIALS_FILE_KEY, CREDENTIALS_FILE_DEFAULT));
-        final Installer installer = createInstaller(userInput, jarProvider, parameters, propertyReader);
+        final Installer installer = createInstaller(userInput, virtualSchemaJarProvider, jdbcDriverJarProvider,
+                parameters, propertyReader);
         installer.install();
     }
 
-    private static Installer createInstaller(final UserInput userInput, final VirtualSchemaJarProvider jarProvider,
+    private static Installer createInstaller(final UserInput userInput,
+            final VirtualSchemaJarProvider virtualSchemaJarProvider, final JdbcDriverJarProvider jdbcDriverJarProvider,
             final Map<String, String> parameters, final PropertyReader propertyReader) {
         return Installer.builder() //
-                .jarProvider(jarProvider) //
+                .virtualSchemaJarProvider(virtualSchemaJarProvider) //
+                .jdbcDriverJarProvider(jdbcDriverJarProvider) //
                 .exaUsername(propertyReader.readProperty(EXASOL_USERNAME_KEY))
                 .exaPassword(propertyReader.readProperty(EXASOL_PASSWORD_KEY))
                 .exaBucketWritePassword(propertyReader.readProperty(EXASOL_BUCKET_WRITE_PASSWORD_KEY))
                 .postgresUsername(propertyReader.readProperty(POSTGRES_USERNAME_KEY))
                 .postgresPassword(propertyReader.readProperty(POSTGRES_PASSWORD_KEY)) //
-                .jdbcDriverName(getOrDefault(parameters, JDBC_DRIVER_NAME_KEY, JDBC_DRIVER_NAME_DEFAULT)) //
-                .jdbcDriverPath(getOrDefault(parameters, JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DEFAULT)) //
                 .exaIp(getOrDefault(parameters, EXA_IP_KEY, EXA_IP_DEFAULT)) //
                 .exaPort(parseInt(getOrDefault(parameters, EXA_PORT_KEY, EXA_PORT_DEFAULT))) //
                 .exaBucketFsPort(parseInt(getOrDefault(parameters, EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DEFAULT))) //
