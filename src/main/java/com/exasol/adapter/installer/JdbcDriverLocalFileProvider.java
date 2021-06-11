@@ -4,20 +4,20 @@ package com.exasol.adapter.installer;
  * This class provide a locally stored JDBC driver JAR.
  */
 public class JdbcDriverLocalFileProvider implements JdbcDriverJarProvider {
-    private final Jar jar;
+    private final JarFile jarFile;
 
     /**
-     * Instantiates a new {@link JdbcDriverLocalFileProvider}
+     * Instantiate a new {@link JdbcDriverLocalFileProvider}
      *
      * @param jdbcDriverPath JDBC driver path
      * @param jdbcDriverName JDBC driver name
      */
     public JdbcDriverLocalFileProvider(final String jdbcDriverPath, final String jdbcDriverName) {
-        this.jar = new Jar(jdbcDriverPath, jdbcDriverName);
+        this.jarFile = new JarFile(jdbcDriverPath, jdbcDriverName);
     }
 
     @Override
-    public Jar provideJar() {
-        return this.jar;
+    public JarFile getJar() {
+        return this.jarFile;
     }
 }

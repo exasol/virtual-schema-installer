@@ -34,7 +34,7 @@ public class VirtualSchemaGitHubJarDownloader implements VirtualSchemaJarProvide
     }
 
     @Override
-    public Jar provideJar() {
+    public JarFile getJar() {
         final List<GHAsset> assets = getGHAssets(this.dialect);
         final GHAsset ghAsset = getGHAsset(assets);
         final String tempDirectory = System.getProperty("java.io.tmpdir");
@@ -46,7 +46,7 @@ public class VirtualSchemaGitHubJarDownloader implements VirtualSchemaJarProvide
             throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-5")
                     .message("Cannot download and save the file {{file}}.", assetName).toString(), exception);
         }
-        return new Jar(tempDirectory, assetName);
+        return new JarFile(tempDirectory, assetName);
     }
 
     private List<GHAsset> getGHAssets(final Dialect dialect) {

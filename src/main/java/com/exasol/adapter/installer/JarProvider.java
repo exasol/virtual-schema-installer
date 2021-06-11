@@ -1,13 +1,13 @@
 package com.exasol.adapter.installer;
 
 /**
- * This interface provides a {@link Jar}.
+ * This interface provides a {@link JarFile}.
  */
 public interface JarProvider {
     /**
-     * Provide a {@link Jar}.
+     * Get a {@link JarFile}.
      *
-     * @return new instance of {@link Jar}
+     * @return new instance of {@link JarFile}
      */
-    Jar provideJar();
+    JarFile getJar();
 }
