@@ -9,6 +9,7 @@ Code name:
 ## Refactoring
 
 * #3: Created an interface for obtaining JAR files.
+* #4: Validated user input.
 
 ## Dependency Updates
 

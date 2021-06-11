@@ -26,29 +26,29 @@ public class Installer {
     private final JarFile jdbcDriverJarFile;
 
     // Credentials
-    private final String exaUsername;
-    private final String exaPassword;
-    private final String exaBucketWritePassword;
-    private final String postgresUsername;
-    private final String postgresPassword;
+    private final InputString exaUsername;
+    private final InputString exaPassword;
+    private final InputString exaBucketWritePassword;
+    private final InputString postgresUsername;
+    private final InputString postgresPassword;
 
     // Exasol related fields
-    private final String exaIp;
+    private final InputString exaIp;
     private final int exaPort;
     private final int exaBucketFsPort;
-    private final String exaBucketName;
-    private final String exaSchemaName;
-    private final String exaAdapterName;
-    private final String exaConnectionName;
-    private final String exaVirtualSchemaName;
+    private final InputString exaBucketName;
+    private final InputString exaSchemaName;
+    private final InputString exaAdapterName;
+    private final InputString exaConnectionName;
+    private final InputString exaVirtualSchemaName;
 
     // Postgres related fields
-    private final String postgresIp;
+    private final InputString postgresIp;
     private final int postgresPort;
-    private final String postgresDatabaseName;
-    private final String postgresMappedSchema;
+    private final InputString postgresDatabaseName;
+    private final InputString postgresMappedSchema;
 
-    private final String[] additionalProperties;
+    private final InputString[] additionalProperties;
 
     private Installer(final InstallerBuilder builder) {
         this.virtualSchemaJarFile = builder.virtualSchemaJarFile;
@@ -85,8 +85,8 @@ public class Installer {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:exa:" + this.exaIp + ":" + this.exaPort, this.exaUsername,
-                this.exaPassword);
+        return DriverManager.getConnection("jdbc:exa:" + this.exaIp + ":" + this.exaPort, this.exaUsername.toString(),
+                this.exaPassword.toString());
     }
 
     private void uploadFilesToBucket(final JarFile virtualSchemaJarFile, final JarFile jdbcDriverJarFile)
@@ -98,10 +98,10 @@ public class Installer {
 
     private WriteEnabledBucket getBucket() {
         return WriteEnabledBucket.builder()//
-                .ipAddress(this.exaIp) //
+                .ipAddress(this.exaIp.toString()) //
                 .httpPort(this.exaBucketFsPort) //
-                .name(this.exaBucketName) //
-                .writePassword(this.exaBucketWritePassword) //
+                .name(this.exaBucketName.toString()) //
+                .writePassword(this.exaBucketWritePassword.toString()) //
                 .build();
     }
 
@@ -148,7 +148,7 @@ public class Installer {
                         + "WITH" + LINE_SEPARATOR //
                         + "SCHEMA_NAME = '" + this.postgresMappedSchema + "'" + LINE_SEPARATOR //
                         + "CONNECTION_NAME = '" + this.exaConnectionName + "'" + LINE_SEPARATOR);
-        for (final String additionalProperty : this.additionalProperties) {
+        for (final InputString additionalProperty : this.additionalProperties) {
             createVirtualSchemaStatement.append(additionalProperty).append(LINE_SEPARATOR);
         }
         return createVirtualSchemaStatement.toString();
@@ -180,35 +180,43 @@ public class Installer {
         bucket.uploadFileNonBlocking(jdbcDriverJarFile.getPath(), jdbcDriverJarFile.getName());
     }
 
+    /**
+     * Create a new builder for {@link Installer}.
+     * 
+     * @return new builder
+     */
     public static InstallerBuilder builder() {
         return new InstallerBuilder();
     }
 
+    /**
+     * A builder for installer.
+     */
     public static final class InstallerBuilder {
         // Files related fields
         private JarFile virtualSchemaJarFile;
         private JarFile jdbcDriverJarFile;
         // Credentials
-        private String exaUsername;
-        private String exaPassword;
-        private String exaBucketWritePassword;
-        private String postgresUsername;
-        private String postgresPassword;
+        private InputString exaUsername;
+        private InputString exaPassword;
+        private InputString exaBucketWritePassword;
+        private InputString postgresUsername;
+        private InputString postgresPassword;
         // Exasol related fields
-        private String exaIp;
+        private InputString exaIp;
         private int exaPort;
         private int exaBucketFsPort;
-        private String exaBucketName;
-        private String exaSchemaName;
-        private String exaAdapterName;
-        private String exaConnectionName;
-        private String exaVirtualSchemaName;
+        private InputString exaBucketName;
+        private InputString exaSchemaName;
+        private InputString exaAdapterName;
+        private InputString exaConnectionName;
+        private InputString exaVirtualSchemaName;
         // Postgres related fields
-        private String postgresIp;
+        private InputString postgresIp;
         private int postgresPort;
-        private String postgresDatabaseName;
-        private String postgresMappedSchema;
-        private String[] additionalProperties;
+        private InputString postgresDatabaseName;
+        private InputString postgresMappedSchema;
+        private InputString[] additionalProperties;
 
         private InstallerBuilder() {
         }
@@ -224,32 +232,32 @@ public class Installer {
         }
 
         public InstallerBuilder exaUsername(final String exaUsername) {
-            this.exaUsername = exaUsername;
+            this.exaUsername = InputString.of(exaUsername);
             return this;
         }
 
         public InstallerBuilder exaPassword(final String exaPassword) {
-            this.exaPassword = exaPassword;
+            this.exaPassword = InputString.of(exaPassword);
             return this;
         }
 
         public InstallerBuilder exaBucketWritePassword(final String exaBucketWritePassword) {
-            this.exaBucketWritePassword = exaBucketWritePassword;
+            this.exaBucketWritePassword = InputString.of(exaBucketWritePassword);
             return this;
         }
 
         public InstallerBuilder postgresUsername(final String postgresUsername) {
-            this.postgresUsername = postgresUsername;
+            this.postgresUsername = InputString.of(postgresUsername);
             return this;
         }
 
         public InstallerBuilder postgresPassword(final String postgresPassword) {
-            this.postgresPassword = postgresPassword;
+            this.postgresPassword = InputString.of(postgresPassword);
             return this;
         }
 
         public InstallerBuilder exaIp(final String exaIp) {
-            this.exaIp = exaIp;
+            this.exaIp = InputString.of(exaIp);
             return this;
         }
 
@@ -263,7 +271,9 @@ public class Installer {
                 return Integer.parseInt(value);
             } catch (final NumberFormatException exception) {
                 throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-6")
-                        .message("Invalid value for parameter {{parameter}}. The value should only contain digits.", parameterName).toString(), exception);
+                        .message("Invalid value for parameter {{parameter}}. The value should only contain digits.",
+                                parameterName)
+                        .toString(), exception);
             }
         }
 
@@ -273,145 +283,67 @@ public class Installer {
         }
 
         public InstallerBuilder exaBucketName(final String exaBucketName) {
-            this.exaBucketName = exaBucketName;
+            this.exaBucketName = InputString.of(exaBucketName);
             return this;
         }
 
         public InstallerBuilder exaSchemaName(final String exaSchemaName) {
-            this.exaSchemaName = exaSchemaName;
+            this.exaSchemaName = InputString.of(exaSchemaName);
             return this;
         }
 
         public InstallerBuilder exaAdapterName(final String exaAdapterName) {
-            this.exaAdapterName = exaAdapterName;
+            this.exaAdapterName = InputString.of(exaAdapterName);
             return this;
         }
 
         public InstallerBuilder exaConnectionName(final String exaConnectionName) {
-            this.exaConnectionName = exaConnectionName;
+            this.exaConnectionName = InputString.of(exaConnectionName);
             return this;
         }
 
         public InstallerBuilder exaVirtualSchemaName(final String exaVirtualSchemaName) {
-            this.exaVirtualSchemaName = exaVirtualSchemaName;
+            this.exaVirtualSchemaName = InputString.of(exaVirtualSchemaName);
             return this;
         }
 
         public InstallerBuilder postgresIp(final String postgresIp) {
-            this.postgresIp = postgresIp;
+            this.postgresIp = InputString.of(postgresIp);
             return this;
         }
 
         public InstallerBuilder postgresPort(final String postgresPort) {
-            this.postgresPort = convertToInteger(postgresPort,"postgresPort");
+            this.postgresPort = convertToInteger(postgresPort, "postgresPort");
             return this;
         }
 
         public InstallerBuilder postgresDatabaseName(final String postgresDatabaseName) {
-            this.postgresDatabaseName = postgresDatabaseName;
+            this.postgresDatabaseName = InputString.of(postgresDatabaseName);
             return this;
         }
 
         public InstallerBuilder postgresMappedSchema(final String postgresMappedSchema) {
-            this.postgresMappedSchema = postgresMappedSchema;
+            this.postgresMappedSchema = InputString.of(postgresMappedSchema);
             return this;
         }
 
         public InstallerBuilder additionalProperties(final String[] additionalProperties) {
-            this.additionalProperties = additionalProperties;
+            final InputString[] properties = new InputString[additionalProperties.length];
+            for (int i = 0; i < additionalProperties.length; i++) {
+                final String additionalProperty = additionalProperties[i];
+                properties[i] = InputString.of(additionalProperty);
+            }
+            this.additionalProperties = properties;
             return this;
         }
 
+        /**
+         * Create a new {@link Installer}.
+         * 
+         * @return new installer
+         */
         public Installer build() {
-            validateInput();
             return new Installer(this);
-        }
-
-        private void validateInput() {
-            validateVirtualSchemaJarFile();
-            validateJdbcDriverJarFile();
-            validateExaUsername();
-            validateExaPassword();
-            validateExaBucketWritePassword();
-            validatePostgresUsername();
-            validatePostgresPassword();
-            validateExaIp();
-            validateExaBucketName();
-            validateExaSchemaName();
-            validateExaAdapterName();
-            validateExaConnectionName();
-            validateExaVirtualSchemaName();
-            validatePostgresIp();
-            validatePostgresDatabaseName();
-            validatePostgresMappedSchema();
-            validateAdditionalProperties();
-        }
-
-        private void validateVirtualSchemaJarFile() {
-
-        }
-
-        private void validateJdbcDriverJarFile() {
-
-        }
-
-        private void validateExaUsername() {
-        }
-
-        private void validateExaPassword() {
-
-        }
-
-        private void validateExaBucketWritePassword() {
-
-        }
-
-        private void validatePostgresUsername() {
-
-        }
-
-        private void validatePostgresPassword() {
-
-        }
-
-        private void validateExaIp() {
-
-        }
-
-        private void validateExaBucketName() {
-
-        }
-
-        private void validateExaSchemaName() {
-
-        }
-
-        private void validateExaAdapterName() {
-
-        }
-
-        private void validateExaConnectionName() {
-
-        }
-
-        private void validateExaVirtualSchemaName() {
-
-        }
-
-        private void validatePostgresIp() {
-
-        }
-
-        private void validatePostgresDatabaseName() {
-
-        }
-
-        private void validatePostgresMappedSchema() {
-
-        }
-
-        private void validateAdditionalProperties() {
-
         }
     }
 }
