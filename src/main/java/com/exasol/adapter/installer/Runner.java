@@ -1,7 +1,6 @@
 package com.exasol.adapter.installer;
 
 import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
-import static java.lang.Integer.parseInt;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
@@ -36,16 +35,16 @@ public class Runner {
             final VirtualSchemaJarProvider virtualSchemaJarProvider, final JdbcDriverJarProvider jdbcDriverJarProvider,
             final Map<String, String> parameters, final PropertyReader propertyReader) {
         return Installer.builder() //
-                .virtualSchemaJarProvider(virtualSchemaJarProvider) //
-                .jdbcDriverJarProvider(jdbcDriverJarProvider) //
+                .virtualSchemaJarFile(virtualSchemaJarProvider.getJar()) //
+                .jdbcDriverJarFile(jdbcDriverJarProvider.getJar()) //
                 .exaUsername(propertyReader.readProperty(EXASOL_USERNAME_KEY))
                 .exaPassword(propertyReader.readProperty(EXASOL_PASSWORD_KEY))
                 .exaBucketWritePassword(propertyReader.readProperty(EXASOL_BUCKET_WRITE_PASSWORD_KEY))
                 .postgresUsername(propertyReader.readProperty(POSTGRES_USERNAME_KEY))
                 .postgresPassword(propertyReader.readProperty(POSTGRES_PASSWORD_KEY)) //
                 .exaIp(getOrDefault(parameters, EXA_IP_KEY, EXA_IP_DEFAULT)) //
-                .exaPort(parseInt(getOrDefault(parameters, EXA_PORT_KEY, EXA_PORT_DEFAULT))) //
-                .exaBucketFsPort(parseInt(getOrDefault(parameters, EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DEFAULT))) //
+                .exaPort(getOrDefault(parameters, EXA_PORT_KEY, EXA_PORT_DEFAULT)) //
+                .exaBucketFsPort(getOrDefault(parameters, EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DEFAULT)) //
                 .exaBucketName(getOrDefault(parameters, EXA_BUCKET_NAME_KEY, EXA_BUCKET_NAME_DEFAULT)) //
                 .exaSchemaName(getOrDefault(parameters, EXA_SCHEMA_NAME_KEY, EXA_SCHEMA_NAME_DEFAULT)) //
                 .exaAdapterName(getOrDefault(parameters, EXA_ADAPTER_NAME_KEY, EXA_ADAPTER_NAME_DEFAULT)) //

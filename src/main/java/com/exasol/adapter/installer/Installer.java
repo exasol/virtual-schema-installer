@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import com.exasol.bucketfs.BucketAccessException;
 import com.exasol.bucketfs.WriteEnabledBucket;
+import com.exasol.errorreporting.ExaError;
 
 /**
  * This class contains Postgres Virtual Schema installation logic.
@@ -21,8 +22,8 @@ public class Installer {
     private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
 
     // Files related fields
-    private final VirtualSchemaJarProvider virtualSchemaJarProvider;
-    private final JdbcDriverJarProvider jdbcDriverJarProvider;
+    private final JarFile virtualSchemaJarFile;
+    private final JarFile jdbcDriverJarFile;
 
     // Credentials
     private final String exaUsername;
@@ -43,22 +44,22 @@ public class Installer {
 
     // Postgres related fields
     private final String postgresIp;
-    private final String postgresPort;
+    private final int postgresPort;
     private final String postgresDatabaseName;
     private final String postgresMappedSchema;
 
     private final String[] additionalProperties;
 
     private Installer(final InstallerBuilder builder) {
+        this.virtualSchemaJarFile = builder.virtualSchemaJarFile;
+        this.jdbcDriverJarFile = builder.jdbcDriverJarFile;
         this.exaAdapterName = builder.exaAdapterName;
         this.postgresDatabaseName = builder.postgresDatabaseName;
         this.exaPassword = builder.exaPassword;
         this.exaBucketWritePassword = builder.exaBucketWritePassword;
         this.postgresPort = builder.postgresPort;
         this.postgresUsername = builder.postgresUsername;
-        this.virtualSchemaJarProvider = builder.virtualSchemaJarProvider;
         this.exaSchemaName = builder.exaSchemaName;
-        this.jdbcDriverJarProvider = builder.jdbcDriverJarProvider;
         this.exaConnectionName = builder.exaConnectionName;
         this.exaBucketFsPort = builder.exaBucketFsPort;
         this.postgresPassword = builder.postgresPassword;
@@ -76,11 +77,10 @@ public class Installer {
      * Install Postgres Virtual Schema to the Exasol database.
      */
     public void install() throws SQLException, BucketAccessException, TimeoutException, FileNotFoundException {
-        final JarFile virtualSchemaJarFile = this.virtualSchemaJarProvider.getJar();
-        final JarFile jdbcDriverJarFile = this.jdbcDriverJarProvider.getJar();
-        uploadFilesToBucket(virtualSchemaJarFile, jdbcDriverJarFile);
+        uploadFilesToBucket(this.virtualSchemaJarFile, this.jdbcDriverJarFile);
         try (final Connection connection = getConnection()) {
-            installVirtualSchema(connection, List.of(virtualSchemaJarFile.getName(), jdbcDriverJarFile.getName()));
+            installVirtualSchema(connection,
+                    List.of(this.virtualSchemaJarFile.getName(), this.jdbcDriverJarFile.getName()));
         }
     }
 
@@ -186,8 +186,8 @@ public class Installer {
 
     public static final class InstallerBuilder {
         // Files related fields
-        private VirtualSchemaJarProvider virtualSchemaJarProvider;
-        private JdbcDriverJarProvider jdbcDriverJarProvider;
+        private JarFile virtualSchemaJarFile;
+        private JarFile jdbcDriverJarFile;
         // Credentials
         private String exaUsername;
         private String exaPassword;
@@ -205,7 +205,7 @@ public class Installer {
         private String exaVirtualSchemaName;
         // Postgres related fields
         private String postgresIp;
-        private String postgresPort;
+        private int postgresPort;
         private String postgresDatabaseName;
         private String postgresMappedSchema;
         private String[] additionalProperties;
@@ -213,13 +213,13 @@ public class Installer {
         private InstallerBuilder() {
         }
 
-        public InstallerBuilder virtualSchemaJarProvider(final VirtualSchemaJarProvider virtualSchemaJarProvider) {
-            this.virtualSchemaJarProvider = virtualSchemaJarProvider;
+        public InstallerBuilder virtualSchemaJarFile(final JarFile virtualSchemaJarFile) {
+            this.virtualSchemaJarFile = virtualSchemaJarFile;
             return this;
         }
 
-        public InstallerBuilder jdbcDriverJarProvider(final JdbcDriverJarProvider jdbcDriverJarProvider) {
-            this.jdbcDriverJarProvider = jdbcDriverJarProvider;
+        public InstallerBuilder jdbcDriverJarFile(final JarFile jdbcDriverJarFile) {
+            this.jdbcDriverJarFile = jdbcDriverJarFile;
             return this;
         }
 
@@ -253,13 +253,22 @@ public class Installer {
             return this;
         }
 
-        public InstallerBuilder exaPort(final int exaPort) {
-            this.exaPort = exaPort;
+        public InstallerBuilder exaPort(final String exaPort) {
+            this.exaPort = convertToInteger(exaPort, "exaPort");
             return this;
         }
 
-        public InstallerBuilder exaBucketFsPort(final int exaBucketFsPort) {
-            this.exaBucketFsPort = exaBucketFsPort;
+        private int convertToInteger(final String value, final String parameterName) {
+            try {
+                return Integer.parseInt(value);
+            } catch (final NumberFormatException exception) {
+                throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-6")
+                        .message("Invalid value for parameter {{parameter}}. The value should only contain digits.", parameterName).toString(), exception);
+            }
+        }
+
+        public InstallerBuilder exaBucketFsPort(final String exaBucketFsPort) {
+            this.exaBucketFsPort = convertToInteger(exaBucketFsPort, "exaBucketFsPort");
             return this;
         }
 
@@ -294,7 +303,7 @@ public class Installer {
         }
 
         public InstallerBuilder postgresPort(final String postgresPort) {
-            this.postgresPort = postgresPort;
+            this.postgresPort = convertToInteger(postgresPort,"postgresPort");
             return this;
         }
 
@@ -314,7 +323,95 @@ public class Installer {
         }
 
         public Installer build() {
+            validateInput();
             return new Installer(this);
+        }
+
+        private void validateInput() {
+            validateVirtualSchemaJarFile();
+            validateJdbcDriverJarFile();
+            validateExaUsername();
+            validateExaPassword();
+            validateExaBucketWritePassword();
+            validatePostgresUsername();
+            validatePostgresPassword();
+            validateExaIp();
+            validateExaBucketName();
+            validateExaSchemaName();
+            validateExaAdapterName();
+            validateExaConnectionName();
+            validateExaVirtualSchemaName();
+            validatePostgresIp();
+            validatePostgresDatabaseName();
+            validatePostgresMappedSchema();
+            validateAdditionalProperties();
+        }
+
+        private void validateVirtualSchemaJarFile() {
+
+        }
+
+        private void validateJdbcDriverJarFile() {
+
+        }
+
+        private void validateExaUsername() {
+        }
+
+        private void validateExaPassword() {
+
+        }
+
+        private void validateExaBucketWritePassword() {
+
+        }
+
+        private void validatePostgresUsername() {
+
+        }
+
+        private void validatePostgresPassword() {
+
+        }
+
+        private void validateExaIp() {
+
+        }
+
+        private void validateExaBucketName() {
+
+        }
+
+        private void validateExaSchemaName() {
+
+        }
+
+        private void validateExaAdapterName() {
+
+        }
+
+        private void validateExaConnectionName() {
+
+        }
+
+        private void validateExaVirtualSchemaName() {
+
+        }
+
+        private void validatePostgresIp() {
+
+        }
+
+        private void validatePostgresDatabaseName() {
+
+        }
+
+        private void validatePostgresMappedSchema() {
+
+        }
+
+        private void validateAdditionalProperties() {
+
         }
     }
 }
