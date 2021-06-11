@@ -16,10 +16,10 @@ Code name:
 
 * Added `com.exasol:bucketfs-java:2.0.1`
 * Added `com.exasol:error-reporting-java:0.4.0`
+* Added `com.exasol:exasol-jdbc:7.0.7`
 * Added `commons-cli:commons-cli:1.4`
 * Added `org.kohsuke:github-api:1.128`
 * Added `org.postgresql:postgresql:42.2.20.jre7`
-* Added `org.projectlombok:lombok:1.18.20`
 
 ### Runtime Dependency Updates
 
@@ -39,7 +39,7 @@ Code name:
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.3.1`
 * Added `com.exasol:error-code-crawler-maven-plugin:0.1.1`
-* Added `com.exasol:project-keeper-maven-plugin:0.7.0`
+* Added `com.exasol:project-keeper-maven-plugin:0.7.2`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.13`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`

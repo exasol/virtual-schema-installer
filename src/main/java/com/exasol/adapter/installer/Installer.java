@@ -14,12 +14,9 @@ import java.util.logging.Logger;
 import com.exasol.bucketfs.BucketAccessException;
 import com.exasol.bucketfs.WriteEnabledBucket;
 
-import lombok.Builder;
-
 /**
  * This class contains Postgres Virtual Schema installation logic.
  */
-@Builder
 public class Installer {
     private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
 
@@ -51,6 +48,29 @@ public class Installer {
     private final String postgresMappedSchema;
 
     private final String[] additionalProperties;
+
+    private Installer(final InstallerBuilder builder) {
+        this.exaAdapterName = builder.exaAdapterName;
+        this.postgresDatabaseName = builder.postgresDatabaseName;
+        this.exaPassword = builder.exaPassword;
+        this.exaBucketWritePassword = builder.exaBucketWritePassword;
+        this.postgresPort = builder.postgresPort;
+        this.postgresUsername = builder.postgresUsername;
+        this.virtualSchemaJarProvider = builder.virtualSchemaJarProvider;
+        this.exaSchemaName = builder.exaSchemaName;
+        this.jdbcDriverJarProvider = builder.jdbcDriverJarProvider;
+        this.exaConnectionName = builder.exaConnectionName;
+        this.exaBucketFsPort = builder.exaBucketFsPort;
+        this.postgresPassword = builder.postgresPassword;
+        this.postgresMappedSchema = builder.postgresMappedSchema;
+        this.exaIp = builder.exaIp;
+        this.postgresIp = builder.postgresIp;
+        this.exaUsername = builder.exaUsername;
+        this.exaPort = builder.exaPort;
+        this.exaBucketName = builder.exaBucketName;
+        this.additionalProperties = builder.additionalProperties;
+        this.exaVirtualSchemaName = builder.exaVirtualSchemaName;
+    }
 
     /**
      * Install Postgres Virtual Schema to the Exasol database.
@@ -158,5 +178,143 @@ public class Installer {
     private void uploadDriverToBucket(final WriteEnabledBucket bucket, final JarFile jdbcDriverJarFile)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
         bucket.uploadFileNonBlocking(jdbcDriverJarFile.getPath(), jdbcDriverJarFile.getName());
+    }
+
+    public static InstallerBuilder builder() {
+        return new InstallerBuilder();
+    }
+
+    public static final class InstallerBuilder {
+        // Files related fields
+        private VirtualSchemaJarProvider virtualSchemaJarProvider;
+        private JdbcDriverJarProvider jdbcDriverJarProvider;
+        // Credentials
+        private String exaUsername;
+        private String exaPassword;
+        private String exaBucketWritePassword;
+        private String postgresUsername;
+        private String postgresPassword;
+        // Exasol related fields
+        private String exaIp;
+        private int exaPort;
+        private int exaBucketFsPort;
+        private String exaBucketName;
+        private String exaSchemaName;
+        private String exaAdapterName;
+        private String exaConnectionName;
+        private String exaVirtualSchemaName;
+        // Postgres related fields
+        private String postgresIp;
+        private String postgresPort;
+        private String postgresDatabaseName;
+        private String postgresMappedSchema;
+        private String[] additionalProperties;
+
+        private InstallerBuilder() {
+        }
+
+        public InstallerBuilder virtualSchemaJarProvider(final VirtualSchemaJarProvider virtualSchemaJarProvider) {
+            this.virtualSchemaJarProvider = virtualSchemaJarProvider;
+            return this;
+        }
+
+        public InstallerBuilder jdbcDriverJarProvider(final JdbcDriverJarProvider jdbcDriverJarProvider) {
+            this.jdbcDriverJarProvider = jdbcDriverJarProvider;
+            return this;
+        }
+
+        public InstallerBuilder exaUsername(final String exaUsername) {
+            this.exaUsername = exaUsername;
+            return this;
+        }
+
+        public InstallerBuilder exaPassword(final String exaPassword) {
+            this.exaPassword = exaPassword;
+            return this;
+        }
+
+        public InstallerBuilder exaBucketWritePassword(final String exaBucketWritePassword) {
+            this.exaBucketWritePassword = exaBucketWritePassword;
+            return this;
+        }
+
+        public InstallerBuilder postgresUsername(final String postgresUsername) {
+            this.postgresUsername = postgresUsername;
+            return this;
+        }
+
+        public InstallerBuilder postgresPassword(final String postgresPassword) {
+            this.postgresPassword = postgresPassword;
+            return this;
+        }
+
+        public InstallerBuilder exaIp(final String exaIp) {
+            this.exaIp = exaIp;
+            return this;
+        }
+
+        public InstallerBuilder exaPort(final int exaPort) {
+            this.exaPort = exaPort;
+            return this;
+        }
+
+        public InstallerBuilder exaBucketFsPort(final int exaBucketFsPort) {
+            this.exaBucketFsPort = exaBucketFsPort;
+            return this;
+        }
+
+        public InstallerBuilder exaBucketName(final String exaBucketName) {
+            this.exaBucketName = exaBucketName;
+            return this;
+        }
+
+        public InstallerBuilder exaSchemaName(final String exaSchemaName) {
+            this.exaSchemaName = exaSchemaName;
+            return this;
+        }
+
+        public InstallerBuilder exaAdapterName(final String exaAdapterName) {
+            this.exaAdapterName = exaAdapterName;
+            return this;
+        }
+
+        public InstallerBuilder exaConnectionName(final String exaConnectionName) {
+            this.exaConnectionName = exaConnectionName;
+            return this;
+        }
+
+        public InstallerBuilder exaVirtualSchemaName(final String exaVirtualSchemaName) {
+            this.exaVirtualSchemaName = exaVirtualSchemaName;
+            return this;
+        }
+
+        public InstallerBuilder postgresIp(final String postgresIp) {
+            this.postgresIp = postgresIp;
+            return this;
+        }
+
+        public InstallerBuilder postgresPort(final String postgresPort) {
+            this.postgresPort = postgresPort;
+            return this;
+        }
+
+        public InstallerBuilder postgresDatabaseName(final String postgresDatabaseName) {
+            this.postgresDatabaseName = postgresDatabaseName;
+            return this;
+        }
+
+        public InstallerBuilder postgresMappedSchema(final String postgresMappedSchema) {
+            this.postgresMappedSchema = postgresMappedSchema;
+            return this;
+        }
+
+        public InstallerBuilder additionalProperties(final String[] additionalProperties) {
+            this.additionalProperties = additionalProperties;
+            return this;
+        }
+
+        public Installer build() {
+            return new Installer(this);
+        }
     }
 }

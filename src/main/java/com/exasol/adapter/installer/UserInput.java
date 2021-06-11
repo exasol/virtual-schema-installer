@@ -2,12 +2,9 @@ package com.exasol.adapter.installer;
 
 import java.util.Map;
 
-import lombok.Getter;
-
 /**
  * The type User input.
  */
-@Getter
 public class UserInput {
     private final Dialect dialect;
     private final String[] additionalProperties;
@@ -25,5 +22,17 @@ public class UserInput {
         this.dialect = Dialect.valueOf(dialectName.toUpperCase());
         this.parameters = parameters;
         this.additionalProperties = additionalProperties;
+    }
+
+    public Dialect getDialect() {
+        return this.dialect;
+    }
+
+    public String[] getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    public Map<String, String> getParameters() {
+        return this.parameters;
     }
 }
