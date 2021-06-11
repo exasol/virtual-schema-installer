@@ -21,15 +21,21 @@ import com.exasol.errorreporting.ExaError;
 /**
  * Downloads a Virtual Schema JAR file.
  */
-public class VirtualSchemaJarDownloader {
+public class VirtualSchemaGitHubJarDownloader implements VirtualSchemaJarProvider {
+    private final Dialect dialect;
+
     /**
-     * Get a Virtual Schema JAR file.
-     * 
-     * @param dialect dialect
-     * @return instance of {@link VirtualSchemaJarInfo}
+     * Instantiates a new {@link VirtualSchemaGitHubJarDownloader}.
+     *
+     * @param dialect the dialect
      */
-    public VirtualSchemaJarInfo downloadJar(final Dialect dialect) {
-        final List<GHAsset> assets = getGHAssets(dialect);
+    public VirtualSchemaGitHubJarDownloader(final Dialect dialect) {
+        this.dialect = dialect;
+    }
+
+    @Override
+    public JarFile getJar() {
+        final List<GHAsset> assets = getGHAssets(this.dialect);
         final GHAsset ghAsset = getGHAsset(assets);
         final String tempDirectory = System.getProperty("java.io.tmpdir");
         final String assetName = ghAsset.getName();
@@ -40,7 +46,7 @@ public class VirtualSchemaJarDownloader {
             throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-5")
                     .message("Cannot download and save the file {{file}}.", assetName).toString(), exception);
         }
-        return new VirtualSchemaJarInfo(tempDirectory, assetName);
+        return new JarFile(tempDirectory, assetName);
     }
 
     private List<GHAsset> getGHAssets(final Dialect dialect) {
