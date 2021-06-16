@@ -15,8 +15,8 @@ public class VirtualSchemaInstallerConstants {
     public static final String EXASOL_USERNAME_KEY = "exasol_username";
     public static final String EXASOL_PASSWORD_KEY = "exasol_password";
     public static final String EXASOL_BUCKET_WRITE_PASSWORD_KEY = "exasol_bucket_write_password";
-    public static final String POSTGRES_USERNAME_KEY = "postgres_username";
-    public static final String POSTGRES_PASSWORD_KEY = "postgres_password";
+    public static final String SOURCE_USERNAME_KEY = "source_username";
+    public static final String SOURCE_PASSWORD_KEY = "source_password";
 
     // User input
     public static final String DIALECT_KEY = "dialect";
@@ -57,27 +57,27 @@ public class VirtualSchemaInstallerConstants {
 
     public static final String EXA_CONNECTION_NAME_KEY = "exa-connection-name";
     public static final String EXA_CONNECTION_NAME_DEFAULT = "POSTGRES_JDBC_CONNECTION";
-    public static final String EXA_CONNECTION_NAME_DESCRIPTION = "A name for an Exasol connection to the Postgres database";
+    public static final String EXA_CONNECTION_NAME_DESCRIPTION = "A name for an Exasol connection to the source database";
 
     public static final String EXA_VIRTUAL_SCHEMA_NAME_KEY = "exa-virtual-schema-name";
     public static final String EXA_VIRTUAL_SCHEMA_NAME_DEFAULT = "POSTGRES_VIRTUAL_SCHEMA";
     public static final String EXA_VIRTUAL_SCHEMA_NAME_DESCRIPTION = "A name for a virtual schema";
 
-    public static final String POSTGRES_IP_KEY = "postgres-ip";
-    public static final String POSTGRES_IP_DEFAULT = "localhost";
-    public static final String POSTGRES_IP_DESCRIPTION = "An IP address to connect to the PostgreSQL database";
+    public static final String SOURCE_IP_KEY = "source-ip";
+    public static final String SOURCE_IP_DEFAULT = "localhost";
+    public static final String SOURCE_IP_DESCRIPTION = "An IP address to connect to the source database";
 
-    public static final String POSTGRES_PORT_KEY = "postgres-port";
-    public static final String POSTGRES_PORT_DEFAULT = "5432";
-    public static final String POSTGRES_PORT_DESCRIPTION = "A port on which the PostgreSQL database is listening";
+    public static final String SOURCE_PORT_KEY = "source-port";
+    public static final String SOURCE_PORT_DEFAULT = "5432";
+    public static final String SOURCE_PORT_DESCRIPTION = "A port on which the source database is listening";
 
-    public static final String POSTGRES_DATABASE_NAME_KEY = "postgres-database-name";
-    public static final String POSTGRES_DATABASE_NAME_DEFAULT = "postgres";
-    public static final String POSTGRES_DATABASE_NAME_DESCRIPTION = "A PostgreSQL database name to connect to";
+    public static final String SOURCE_DATABASE_NAME_KEY = "source-database-name";
+    public static final String SOURCE_DATABASE_NAME_DEFAULT = "postgres";
+    public static final String SOURCE_DATABASE_NAME_DESCRIPTION = "A source database name to connect to";
 
-    public static final String POSTGRES_MAPPED_SCHEMA_KEY = "postgres-mapped-schema";
-    public static final String POSTGRES_MAPPED_SCHEMA_DEFAULT = "";
-    public static final String POSTGRES_MAPPED_SCHEMA_DESCRIPTION = "A PostgreSQL schema to map in Virtual Schema";
+    public static final String SOURCE_MAPPED_SCHEMA_KEY = "source-mapped-schema";
+    public static final String SOURCE_MAPPED_SCHEMA_DEFAULT = "";
+    public static final String SOURCE_MAPPED_SCHEMA_DESCRIPTION = "A source schema to map in Virtual Schema";
 
     public static final String ADDITIONAL_PROPERTY_KEY = "property";
     public static final String[] ADDITIONAL_PROPERTIES_DEFAULT = new String[0];

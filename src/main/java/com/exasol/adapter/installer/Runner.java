@@ -40,8 +40,8 @@ public class Runner {
                 .exaUsername(propertyReader.readProperty(EXASOL_USERNAME_KEY))
                 .exaPassword(propertyReader.readProperty(EXASOL_PASSWORD_KEY))
                 .exaBucketWritePassword(propertyReader.readProperty(EXASOL_BUCKET_WRITE_PASSWORD_KEY))
-                .postgresUsername(propertyReader.readProperty(POSTGRES_USERNAME_KEY))
-                .postgresPassword(propertyReader.readProperty(POSTGRES_PASSWORD_KEY)) //
+                .sourceUsername(propertyReader.readProperty(SOURCE_USERNAME_KEY))
+                .sourcePassword(propertyReader.readProperty(SOURCE_PASSWORD_KEY)) //
                 .exaIp(getOrDefault(parameters, EXA_IP_KEY, EXA_IP_DEFAULT)) //
                 .exaPort(getOrDefault(parameters, EXA_PORT_KEY, EXA_PORT_DEFAULT)) //
                 .exaBucketFsPort(getOrDefault(parameters, EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DEFAULT)) //
@@ -51,12 +51,12 @@ public class Runner {
                 .exaConnectionName(getOrDefault(parameters, EXA_CONNECTION_NAME_KEY, EXA_CONNECTION_NAME_DEFAULT)) //
                 .exaVirtualSchemaName(
                         getOrDefault(parameters, EXA_VIRTUAL_SCHEMA_NAME_KEY, EXA_VIRTUAL_SCHEMA_NAME_DEFAULT)) //
-                .postgresIp(getOrDefault(parameters, POSTGRES_IP_KEY, POSTGRES_IP_DEFAULT)) //
-                .postgresPort(getOrDefault(parameters, POSTGRES_PORT_KEY, POSTGRES_PORT_DEFAULT)) //
-                .postgresDatabaseName(
-                        getOrDefault(parameters, POSTGRES_DATABASE_NAME_KEY, POSTGRES_DATABASE_NAME_DEFAULT)) //
-                .postgresMappedSchema(
-                        getOrDefault(parameters, POSTGRES_MAPPED_SCHEMA_KEY, POSTGRES_MAPPED_SCHEMA_DEFAULT)) //
+                .sourceIp(getOrDefault(parameters, SOURCE_IP_KEY, SOURCE_IP_DEFAULT)) //
+                .sourcePort(getOrDefault(parameters, SOURCE_PORT_KEY, SOURCE_PORT_DEFAULT)) //
+                .sourceDatabaseName(
+                        getOrDefault(parameters, SOURCE_DATABASE_NAME_KEY, SOURCE_DATABASE_NAME_DEFAULT)) //
+                .sourceMappedSchema(
+                        getOrDefault(parameters, SOURCE_MAPPED_SCHEMA_KEY, SOURCE_MAPPED_SCHEMA_DEFAULT)) //
                 .additionalProperties(getOrDefault(userInput.getAdditionalProperties(), ADDITIONAL_PROPERTIES_DEFAULT)) //
                 .build();
     }
@@ -75,11 +75,11 @@ public class Runner {
                 getDescription(EXA_CONNECTION_NAME_DESCRIPTION, EXA_CONNECTION_NAME_DEFAULT));
         options.put(EXA_VIRTUAL_SCHEMA_NAME_KEY,
                 getDescription(EXA_VIRTUAL_SCHEMA_NAME_DESCRIPTION, EXA_VIRTUAL_SCHEMA_NAME_DEFAULT));
-        options.put(POSTGRES_IP_KEY, getDescription(POSTGRES_IP_DESCRIPTION, POSTGRES_IP_DEFAULT));
-        options.put(POSTGRES_PORT_KEY, getDescription(POSTGRES_PORT_DESCRIPTION, POSTGRES_PORT_DEFAULT));
-        options.put(POSTGRES_DATABASE_NAME_KEY,
-                getDescription(POSTGRES_DATABASE_NAME_DESCRIPTION, POSTGRES_DATABASE_NAME_DEFAULT));
-        options.put(POSTGRES_MAPPED_SCHEMA_KEY, getDescription(POSTGRES_MAPPED_SCHEMA_DESCRIPTION, "no default value"));
+        options.put(SOURCE_IP_KEY, getDescription(SOURCE_IP_DESCRIPTION, SOURCE_IP_DEFAULT));
+        options.put(SOURCE_PORT_KEY, getDescription(SOURCE_PORT_DESCRIPTION, SOURCE_PORT_DEFAULT));
+        options.put(SOURCE_DATABASE_NAME_KEY,
+                getDescription(SOURCE_DATABASE_NAME_DESCRIPTION, SOURCE_DATABASE_NAME_DEFAULT));
+        options.put(SOURCE_MAPPED_SCHEMA_KEY, getDescription(SOURCE_MAPPED_SCHEMA_DESCRIPTION, "no default value"));
         options.put(CREDENTIALS_FILE_KEY, getDescription(CREDENTIALS_FILE_DESCRIPTION, CREDENTIALS_FILE_DEFAULT));
         return options;
     }

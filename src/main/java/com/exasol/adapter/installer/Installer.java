@@ -16,7 +16,7 @@ import com.exasol.bucketfs.WriteEnabledBucket;
 import com.exasol.errorreporting.ExaError;
 
 /**
- * This class contains Postgres Virtual Schema installation logic.
+ * This class contains a Virtual Schema installation logic.
  */
 public class Installer {
     private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
@@ -29,8 +29,8 @@ public class Installer {
     private final String exaUsername;
     private final String exaPassword;
     private final String exaBucketWritePassword;
-    private final String postgresUsername;
-    private final String postgresPassword;
+    private final String sourceUsername;
+    private final String sourcePassword;
 
     // Exasol related fields
     private final String exaIp;
@@ -42,11 +42,11 @@ public class Installer {
     private final String exaConnectionName;
     private final String exaVirtualSchemaName;
 
-    // Postgres related fields
-    private final String postgresIp;
-    private final int postgresPort;
-    private final String postgresDatabaseName;
-    private final String postgresMappedSchema;
+    // Source related fields
+    private final String sourceIp;
+    private final int sourcePort;
+    private final String sourceDatabaseName;
+    private final String sourceMappedSchema;
 
     private final String[] additionalProperties;
 
@@ -54,18 +54,18 @@ public class Installer {
         this.virtualSchemaJarFile = builder.virtualSchemaJarFile;
         this.jdbcDriverJarFile = builder.jdbcDriverJarFile;
         this.exaAdapterName = builder.exaAdapterName;
-        this.postgresDatabaseName = builder.postgresDatabaseName;
+        this.sourceDatabaseName = builder.sourceDatabaseName;
         this.exaPassword = builder.exaPassword;
         this.exaBucketWritePassword = builder.exaBucketWritePassword;
-        this.postgresPort = builder.postgresPort;
-        this.postgresUsername = builder.postgresUsername;
+        this.sourcePort = builder.sourcePort;
+        this.sourceUsername = builder.sourceUsername;
         this.exaSchemaName = builder.exaSchemaName;
         this.exaConnectionName = builder.exaConnectionName;
         this.exaBucketFsPort = builder.exaBucketFsPort;
-        this.postgresPassword = builder.postgresPassword;
-        this.postgresMappedSchema = builder.postgresMappedSchema;
+        this.sourcePassword = builder.sourcePassword;
+        this.sourceMappedSchema = builder.sourceMappedSchema;
         this.exaIp = builder.exaIp;
-        this.postgresIp = builder.postgresIp;
+        this.sourceIp = builder.sourceIp;
         this.exaUsername = builder.exaUsername;
         this.exaPort = builder.exaPort;
         this.exaBucketName = builder.exaBucketName;
@@ -74,7 +74,7 @@ public class Installer {
     }
 
     /**
-     * Install Postgres Virtual Schema to the Exasol database.
+     * Install a Virtual Schema to the Exasol database.
      */
     public void install() throws SQLException, BucketAccessException, TimeoutException, FileNotFoundException {
         uploadFilesToBucket(this.virtualSchemaJarFile, this.jdbcDriverJarFile);
@@ -85,8 +85,8 @@ public class Installer {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:exa:" + this.exaIp + ":" + this.exaPort, this.exaUsername.toString(),
-                this.exaPassword.toString());
+        return DriverManager.getConnection("jdbc:exa:" + this.exaIp + ":" + this.exaPort, this.exaUsername,
+                this.exaPassword);
     }
 
     private void uploadFilesToBucket(final JarFile virtualSchemaJarFile, final JarFile jdbcDriverJarFile)
@@ -98,10 +98,10 @@ public class Installer {
 
     private WriteEnabledBucket getBucket() {
         return WriteEnabledBucket.builder()//
-                .ipAddress(this.exaIp.toString()) //
+                .ipAddress(this.exaIp) //
                 .httpPort(this.exaBucketFsPort) //
-                .name(this.exaBucketName.toString()) //
-                .writePassword(this.exaBucketWritePassword.toString()) //
+                .name(this.exaBucketName) //
+                .writePassword(this.exaBucketWritePassword) //
                 .build();
     }
 
@@ -126,12 +126,12 @@ public class Installer {
     }
 
     private void createConnection(final Statement statement) throws SQLException {
-        final String connectionString = "jdbc:postgresql://" + this.postgresIp + ":" + this.postgresPort + "/"
-                + this.postgresDatabaseName;
+        final String connectionString = "jdbc:postgresql://" + this.sourceIp + ":" + this.sourcePort + "/"
+                + this.sourceDatabaseName;
         LOGGER.info(() -> "Creating connection object with the following connection string: " + LINE_SEPARATOR
                 + connectionString);
         statement.execute("CREATE OR REPLACE CONNECTION " + this.exaConnectionName + " TO '" + connectionString
-                + "' USER '" + this.postgresUsername + "' IDENTIFIED BY '" + this.postgresPassword + "'");
+                + "' USER '" + this.sourceUsername + "' IDENTIFIED BY '" + this.sourcePassword + "'");
     }
 
     private void createVirtualSchema(final Statement statement) throws SQLException {
@@ -146,7 +146,7 @@ public class Installer {
                 "CREATE VIRTUAL SCHEMA " + this.exaVirtualSchemaName + LINE_SEPARATOR //
                         + "USING " + this.exaSchemaName + "." + this.exaAdapterName + LINE_SEPARATOR //
                         + "WITH" + LINE_SEPARATOR //
-                        + "SCHEMA_NAME = '" + this.postgresMappedSchema + "'" + LINE_SEPARATOR //
+                        + "SCHEMA_NAME = '" + this.sourceMappedSchema + "'" + LINE_SEPARATOR //
                         + "CONNECTION_NAME = '" + this.exaConnectionName + "'" + LINE_SEPARATOR);
         for (final String additionalProperty : this.additionalProperties) {
             createVirtualSchemaStatement.append(additionalProperty).append(LINE_SEPARATOR);
@@ -200,8 +200,8 @@ public class Installer {
         private String exaUsername;
         private String exaPassword;
         private String exaBucketWritePassword;
-        private String postgresUsername;
-        private String postgresPassword;
+        private String sourceUsername;
+        private String sourcePassword;
         // Exasol related fields
         private String exaIp;
         private int exaPort;
@@ -211,11 +211,11 @@ public class Installer {
         private String exaAdapterName;
         private String exaConnectionName;
         private String exaVirtualSchemaName;
-        // Postgres related fields
-        private String postgresIp;
-        private int postgresPort;
-        private String postgresDatabaseName;
-        private String postgresMappedSchema;
+        // Source related fields
+        private String sourceIp;
+        private int sourcePort;
+        private String sourceDatabaseName;
+        private String sourceMappedSchema;
         private String[] additionalProperties;
 
         private InstallerBuilder() {
@@ -246,13 +246,13 @@ public class Installer {
             return this;
         }
 
-        public InstallerBuilder postgresUsername(final String postgresUsername) {
-            this.postgresUsername = InputString.validate(postgresUsername);
+        public InstallerBuilder sourceUsername(final String sourceUsername) {
+            this.sourceUsername = InputString.validate(sourceUsername);
             return this;
         }
 
-        public InstallerBuilder postgresPassword(final String postgresPassword) {
-            this.postgresPassword = InputString.validate(postgresPassword);
+        public InstallerBuilder sourcePassword(final String sourcePassword) {
+            this.sourcePassword = InputString.validate(sourcePassword);
             return this;
         }
 
@@ -307,23 +307,23 @@ public class Installer {
             return this;
         }
 
-        public InstallerBuilder postgresIp(final String postgresIp) {
-            this.postgresIp = InputString.validate(postgresIp);
+        public InstallerBuilder sourceIp(final String sourceIp) {
+            this.sourceIp = InputString.validate(sourceIp);
             return this;
         }
 
-        public InstallerBuilder postgresPort(final String postgresPort) {
-            this.postgresPort = convertToInteger(postgresPort, "postgresPort");
+        public InstallerBuilder sourcePort(final String sourcePort) {
+            this.sourcePort = convertToInteger(sourcePort, "sourcePort");
             return this;
         }
 
-        public InstallerBuilder postgresDatabaseName(final String postgresDatabaseName) {
-            this.postgresDatabaseName = InputString.validate(postgresDatabaseName);
+        public InstallerBuilder sourceDatabaseName(final String sourceDatabaseName) {
+            this.sourceDatabaseName = InputString.validate(sourceDatabaseName);
             return this;
         }
 
-        public InstallerBuilder postgresMappedSchema(final String postgresMappedSchema) {
-            this.postgresMappedSchema = InputString.validate(postgresMappedSchema);
+        public InstallerBuilder sourceMappedSchema(final String sourceMappedSchema) {
+            this.sourceMappedSchema = InputString.validate(sourceMappedSchema);
             return this;
         }
 
