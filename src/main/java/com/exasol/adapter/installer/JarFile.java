@@ -16,8 +16,8 @@ public class JarFile {
      * @param name JAR name
      */
     public JarFile(final String path, final String name) {
-        this.path = path;
-        this.name = name;
+        this.path = InputString.validate(path);
+        this.name = InputString.validate(name);
     }
 
     /**
@@ -35,6 +35,6 @@ public class JarFile {
      * @return JAR path
      */
     public Path getPath() {
-        return Path.of(this.path, this.name);
+        return Path.of(this.path.toString(), this.name);
     }
 }

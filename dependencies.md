@@ -8,8 +8,8 @@
 | [error-reporting-java][0]    | [MIT][1]                         |
 | [BucketFS Java][2]           | [MIT][1]                         |
 | [Apache Commons CLI][4]      | [Apache License, Version 2.0][5] |
-| [Project Lombok][6]          | [The MIT License][7]             |
-| [GitHub API for Java][8]     | [The MIT license][9]             |
+| [GitHub API for Java][6]     | [The MIT license][7]             |
+| [EXASolution JDBC Driver][8] | [EXAClient License][9]           |
 | [pgdjbc Postgresql-jre7][10] | [BSD-2-Clause][11]               |
 
 ## Test Dependencies
@@ -57,11 +57,11 @@
 [26]: https://www.eclemma.org/jacoco/index.html
 [44]: https://github.com/exasol/project-keeper-maven-plugin
 [2]: https://github.com/exasol/bucketfs-java
+[9]: LICENSE-exasol-jdbc.txt
 [0]: https://github.com/exasol/error-reporting-java
-[9]: https://www.opensource.org/licenses/mit-license.php
+[7]: https://www.opensource.org/licenses/mit-license.php
 [10]: https://jdbc.postgresql.org
 [37]: http://www.apache.org/licenses/LICENSE-2.0.txt
-[6]: https://projectlombok.org
 [50]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [11]: https://jdbc.postgresql.org/about/license.html
 [54]: http://maven.apache.org/plugins/maven-clean-plugin/
@@ -77,12 +77,12 @@
 [25]: http://www.eclipse.org/legal/epl-v10.html
 [16]: https://github.com/exasol/exasol-testcontainers
 [28]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
-[7]: https://projectlombok.org/LICENSE
 [22]: https://github.com/exasol/hamcrest-resultset-matcher
 [48]: http://zlika.github.io/reproducible-build-maven-plugin
 [58]: http://maven.apache.org/plugins/maven-jar-plugin/
 [5]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [40]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
+[8]: http://www.exasol.com
 [15]: https://www.eclipse.org/legal/epl-v20.html
 [60]: http://maven.apache.org/plugins/maven-install-plugin/
 [4]: http://commons.apache.org/proper/commons-cli/
@@ -92,7 +92,7 @@
 [12]: http://hamcrest.org/JavaHamcrest/
 [62]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [64]: http://maven.apache.org/plugins/maven-site-plugin/
-[8]: https://github-api.kohsuke.org/
+[6]: https://github-api.kohsuke.org/
 [56]: http://maven.apache.org/plugins/maven-resources-plugin/
 [42]: https://github.com/exasol/artifact-reference-checker-maven-plugin
 [52]: https://github.com/exasol/error-code-crawler-maven-plugin
