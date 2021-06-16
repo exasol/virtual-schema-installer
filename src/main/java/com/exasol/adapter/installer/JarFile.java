@@ -6,8 +6,8 @@ import java.nio.file.Path;
  * Represents a JAR file.
  */
 public class JarFile {
-    private final InputString path;
-    private final InputString name;
+    private final String path;
+    private final String name;
 
     /**
      * Instantiate a new {@link JarFile}.
@@ -16,8 +16,8 @@ public class JarFile {
      * @param name JAR name
      */
     public JarFile(final String path, final String name) {
-        this.path = InputString.of(path);
-        this.name = InputString.of(name);
+        this.path = InputString.validate(path);
+        this.name = InputString.validate(name);
     }
 
     /**
@@ -26,7 +26,7 @@ public class JarFile {
      * @return JAR name
      */
     public String getName() {
-        return this.name.toString();
+        return this.name;
     }
 
     /**
@@ -35,6 +35,6 @@ public class JarFile {
      * @return JAR path
      */
     public Path getPath() {
-        return Path.of(this.path.toString(), this.name.toString());
+        return Path.of(this.path.toString(), this.name);
     }
 }

@@ -7,31 +7,24 @@ import java.util.Set;
 import com.exasol.errorreporting.ExaError;
 
 /**
- * Contains validated user input.
+ * Validates user input.
  */
 public class InputString {
-    private static final Set<Character> ALLOWED_CHARS = Set.of('_', '-', '.', '/', '=', '\'');
-    private final String value;
+    private static final Set<Character> ALLOWED_SPECIAL_CHARS = Set.of('_', '-', '.', '/', '=', '\'');
 
-    private InputString(final String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return this.value;
+    private InputString() {
     }
 
     /**
-     * Create an input string.
+     * Validate an input string.
      *
      * @param value the value
-     * @return the input string
+     * @return validated string
      */
-    public static InputString of(final String value) {
+    public static String validate(final String value) {
         final List<Character> illegalCharacters = getIllegalCharacters(value);
         if (illegalCharacters.isEmpty()) {
-            return new InputString(value);
+            return value;
         } else {
             throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-7")
                     .message("Value {{value}} has illegal characters: {{illegalChars|uq}}", value,
@@ -43,7 +36,7 @@ public class InputString {
     private static List<Character> getIllegalCharacters(final String value) {
         final List<Character> illegalCharacters = new ArrayList<>();
         for (final char ch : value.toCharArray()) {
-            if (!Character.isAlphabetic(ch) && !Character.isDigit(ch) && !ALLOWED_CHARS.contains(ch)) {
+            if (!Character.isAlphabetic(ch) && !Character.isDigit(ch) && !ALLOWED_SPECIAL_CHARS.contains(ch)) {
                 illegalCharacters.add(ch);
             }
         }

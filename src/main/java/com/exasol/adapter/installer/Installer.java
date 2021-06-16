@@ -26,29 +26,29 @@ public class Installer {
     private final JarFile jdbcDriverJarFile;
 
     // Credentials
-    private final InputString exaUsername;
-    private final InputString exaPassword;
-    private final InputString exaBucketWritePassword;
-    private final InputString postgresUsername;
-    private final InputString postgresPassword;
+    private final String exaUsername;
+    private final String exaPassword;
+    private final String exaBucketWritePassword;
+    private final String postgresUsername;
+    private final String postgresPassword;
 
     // Exasol related fields
-    private final InputString exaIp;
+    private final String exaIp;
     private final int exaPort;
     private final int exaBucketFsPort;
-    private final InputString exaBucketName;
-    private final InputString exaSchemaName;
-    private final InputString exaAdapterName;
-    private final InputString exaConnectionName;
-    private final InputString exaVirtualSchemaName;
+    private final String exaBucketName;
+    private final String exaSchemaName;
+    private final String exaAdapterName;
+    private final String exaConnectionName;
+    private final String exaVirtualSchemaName;
 
     // Postgres related fields
-    private final InputString postgresIp;
+    private final String postgresIp;
     private final int postgresPort;
-    private final InputString postgresDatabaseName;
-    private final InputString postgresMappedSchema;
+    private final String postgresDatabaseName;
+    private final String postgresMappedSchema;
 
-    private final InputString[] additionalProperties;
+    private final String[] additionalProperties;
 
     private Installer(final InstallerBuilder builder) {
         this.virtualSchemaJarFile = builder.virtualSchemaJarFile;
@@ -148,7 +148,7 @@ public class Installer {
                         + "WITH" + LINE_SEPARATOR //
                         + "SCHEMA_NAME = '" + this.postgresMappedSchema + "'" + LINE_SEPARATOR //
                         + "CONNECTION_NAME = '" + this.exaConnectionName + "'" + LINE_SEPARATOR);
-        for (final InputString additionalProperty : this.additionalProperties) {
+        for (final String additionalProperty : this.additionalProperties) {
             createVirtualSchemaStatement.append(additionalProperty).append(LINE_SEPARATOR);
         }
         return createVirtualSchemaStatement.toString();
@@ -197,26 +197,26 @@ public class Installer {
         private JarFile virtualSchemaJarFile;
         private JarFile jdbcDriverJarFile;
         // Credentials
-        private InputString exaUsername;
-        private InputString exaPassword;
-        private InputString exaBucketWritePassword;
-        private InputString postgresUsername;
-        private InputString postgresPassword;
+        private String exaUsername;
+        private String exaPassword;
+        private String exaBucketWritePassword;
+        private String postgresUsername;
+        private String postgresPassword;
         // Exasol related fields
-        private InputString exaIp;
+        private String exaIp;
         private int exaPort;
         private int exaBucketFsPort;
-        private InputString exaBucketName;
-        private InputString exaSchemaName;
-        private InputString exaAdapterName;
-        private InputString exaConnectionName;
-        private InputString exaVirtualSchemaName;
+        private String exaBucketName;
+        private String exaSchemaName;
+        private String exaAdapterName;
+        private String exaConnectionName;
+        private String exaVirtualSchemaName;
         // Postgres related fields
-        private InputString postgresIp;
+        private String postgresIp;
         private int postgresPort;
-        private InputString postgresDatabaseName;
-        private InputString postgresMappedSchema;
-        private InputString[] additionalProperties;
+        private String postgresDatabaseName;
+        private String postgresMappedSchema;
+        private String[] additionalProperties;
 
         private InstallerBuilder() {
         }
@@ -232,32 +232,32 @@ public class Installer {
         }
 
         public InstallerBuilder exaUsername(final String exaUsername) {
-            this.exaUsername = InputString.of(exaUsername);
+            this.exaUsername = InputString.validate(exaUsername);
             return this;
         }
 
         public InstallerBuilder exaPassword(final String exaPassword) {
-            this.exaPassword = InputString.of(exaPassword);
+            this.exaPassword = InputString.validate(exaPassword);
             return this;
         }
 
         public InstallerBuilder exaBucketWritePassword(final String exaBucketWritePassword) {
-            this.exaBucketWritePassword = InputString.of(exaBucketWritePassword);
+            this.exaBucketWritePassword = InputString.validate(exaBucketWritePassword);
             return this;
         }
 
         public InstallerBuilder postgresUsername(final String postgresUsername) {
-            this.postgresUsername = InputString.of(postgresUsername);
+            this.postgresUsername = InputString.validate(postgresUsername);
             return this;
         }
 
         public InstallerBuilder postgresPassword(final String postgresPassword) {
-            this.postgresPassword = InputString.of(postgresPassword);
+            this.postgresPassword = InputString.validate(postgresPassword);
             return this;
         }
 
         public InstallerBuilder exaIp(final String exaIp) {
-            this.exaIp = InputString.of(exaIp);
+            this.exaIp = InputString.validate(exaIp);
             return this;
         }
 
@@ -283,32 +283,32 @@ public class Installer {
         }
 
         public InstallerBuilder exaBucketName(final String exaBucketName) {
-            this.exaBucketName = InputString.of(exaBucketName);
+            this.exaBucketName = InputString.validate(exaBucketName);
             return this;
         }
 
         public InstallerBuilder exaSchemaName(final String exaSchemaName) {
-            this.exaSchemaName = InputString.of(exaSchemaName);
+            this.exaSchemaName = InputString.validate(exaSchemaName);
             return this;
         }
 
         public InstallerBuilder exaAdapterName(final String exaAdapterName) {
-            this.exaAdapterName = InputString.of(exaAdapterName);
+            this.exaAdapterName = InputString.validate(exaAdapterName);
             return this;
         }
 
         public InstallerBuilder exaConnectionName(final String exaConnectionName) {
-            this.exaConnectionName = InputString.of(exaConnectionName);
+            this.exaConnectionName = InputString.validate(exaConnectionName);
             return this;
         }
 
         public InstallerBuilder exaVirtualSchemaName(final String exaVirtualSchemaName) {
-            this.exaVirtualSchemaName = InputString.of(exaVirtualSchemaName);
+            this.exaVirtualSchemaName = InputString.validate(exaVirtualSchemaName);
             return this;
         }
 
         public InstallerBuilder postgresIp(final String postgresIp) {
-            this.postgresIp = InputString.of(postgresIp);
+            this.postgresIp = InputString.validate(postgresIp);
             return this;
         }
 
@@ -318,20 +318,20 @@ public class Installer {
         }
 
         public InstallerBuilder postgresDatabaseName(final String postgresDatabaseName) {
-            this.postgresDatabaseName = InputString.of(postgresDatabaseName);
+            this.postgresDatabaseName = InputString.validate(postgresDatabaseName);
             return this;
         }
 
         public InstallerBuilder postgresMappedSchema(final String postgresMappedSchema) {
-            this.postgresMappedSchema = InputString.of(postgresMappedSchema);
+            this.postgresMappedSchema = InputString.validate(postgresMappedSchema);
             return this;
         }
 
         public InstallerBuilder additionalProperties(final String[] additionalProperties) {
-            final InputString[] properties = new InputString[additionalProperties.length];
+            final String[] properties = new String[additionalProperties.length];
             for (int i = 0; i < additionalProperties.length; i++) {
                 final String additionalProperty = additionalProperties[i];
-                properties[i] = InputString.of(additionalProperty);
+                properties[i] = InputString.validate(additionalProperty);
             }
             this.additionalProperties = properties;
             return this;
