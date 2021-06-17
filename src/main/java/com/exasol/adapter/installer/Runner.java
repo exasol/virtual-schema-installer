@@ -10,6 +10,8 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.cli.ParseException;
 
+import com.exasol.adapter.installer.dialect.DialectProfile;
+import com.exasol.adapter.installer.dialect.DialectProfileProvider;
 import com.exasol.bucketfs.BucketAccessException;
 
 public class Runner {
@@ -26,14 +28,16 @@ public class Runner {
                 jdbcDriverName);
         final PropertyReader propertyReader = new PropertyReader(
                 getOrDefault(parameters, CREDENTIALS_FILE_KEY, CREDENTIALS_FILE_DEFAULT));
-        final Installer installer = createInstaller(userInput, virtualSchemaJarProvider, jdbcDriverJarProvider,
-                parameters, propertyReader);
+        final DialectProfile dialectProfile = DialectProfileProvider.provideProfile(userInput.getDialect());
+        final Installer installer = createInstaller(dialectProfile, virtualSchemaJarProvider, jdbcDriverJarProvider,
+                parameters, propertyReader, userInput.getAdditionalProperties());
         installer.install();
     }
 
-    private static Installer createInstaller(final UserInput userInput,
+    private static Installer createInstaller(final DialectProfile dialectProfile,
             final VirtualSchemaJarProvider virtualSchemaJarProvider, final JdbcDriverJarProvider jdbcDriverJarProvider,
-            final Map<String, String> parameters, final PropertyReader propertyReader) {
+            final Map<String, String> parameters, final PropertyReader propertyReader,
+            final String[] additionalProperties) {
         return Installer.builder() //
                 .virtualSchemaJarFile(virtualSchemaJarProvider.getJar()) //
                 .jdbcDriverJarFile(jdbcDriverJarProvider.getJar()) //
@@ -47,18 +51,30 @@ public class Runner {
                 .exaBucketFsPort(getOrDefault(parameters, EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DEFAULT)) //
                 .exaBucketName(getOrDefault(parameters, EXA_BUCKET_NAME_KEY, EXA_BUCKET_NAME_DEFAULT)) //
                 .exaSchemaName(getOrDefault(parameters, EXA_SCHEMA_NAME_KEY, EXA_SCHEMA_NAME_DEFAULT)) //
-                .exaAdapterName(getOrDefault(parameters, EXA_ADAPTER_NAME_KEY, EXA_ADAPTER_NAME_DEFAULT)) //
-                .exaConnectionName(getOrDefault(parameters, EXA_CONNECTION_NAME_KEY, EXA_CONNECTION_NAME_DEFAULT)) //
-                .exaVirtualSchemaName(
-                        getOrDefault(parameters, EXA_VIRTUAL_SCHEMA_NAME_KEY, EXA_VIRTUAL_SCHEMA_NAME_DEFAULT)) //
+                .exaAdapterName(getOrDefault(parameters, EXA_ADAPTER_NAME_KEY, getDefaultAdapterName(dialectProfile))) //
+                .exaConnectionName(
+                        getOrDefault(parameters, EXA_CONNECTION_NAME_KEY, getDefaultConnectionName(dialectProfile))) //
+                .exaVirtualSchemaName(getOrDefault(parameters, EXA_VIRTUAL_SCHEMA_NAME_KEY,
+                        getDefaultVirtualSchemaName(dialectProfile))) //
                 .sourceIp(getOrDefault(parameters, SOURCE_IP_KEY, SOURCE_IP_DEFAULT)) //
-                .sourcePort(getOrDefault(parameters, SOURCE_PORT_KEY, SOURCE_PORT_DEFAULT)) //
+                .sourcePort(getOrDefault(parameters, SOURCE_PORT_KEY, dialectProfile.getDefaultPort())) //
                 .sourceDatabaseName(
-                        getOrDefault(parameters, SOURCE_DATABASE_NAME_KEY, SOURCE_DATABASE_NAME_DEFAULT)) //
-                .sourceMappedSchema(
-                        getOrDefault(parameters, SOURCE_MAPPED_SCHEMA_KEY, SOURCE_MAPPED_SCHEMA_DEFAULT)) //
-                .additionalProperties(getOrDefault(userInput.getAdditionalProperties(), ADDITIONAL_PROPERTIES_DEFAULT)) //
+                        getOrDefault(parameters, SOURCE_DATABASE_NAME_KEY, dialectProfile.getDefaultDatabaseName())) //
+                .sourceMappedSchema(getOrDefault(parameters, SOURCE_MAPPED_SCHEMA_KEY, SOURCE_MAPPED_SCHEMA_DEFAULT)) //
+                .additionalProperties(getOrDefault(additionalProperties, ADDITIONAL_PROPERTIES_DEFAULT)) //
                 .build();
+    }
+
+    private static String getDefaultAdapterName(final DialectProfile dialectProfile) {
+        return dialectProfile.getDialectName() + "_ADAPTER_SCRIPT";
+    }
+
+    private static String getDefaultConnectionName(final DialectProfile dialectProfile) {
+        return dialectProfile.getDialectName() + "_JDBC_CONNECTION";
+    }
+
+    private static String getDefaultVirtualSchemaName(final DialectProfile dialectProfile) {
+        return dialectProfile.getDialectName() + "_VIRTUAL_SCHEMA";
     }
 
     private static Map<String, String> getUserInputOptions() {
@@ -76,9 +92,9 @@ public class Runner {
         options.put(EXA_VIRTUAL_SCHEMA_NAME_KEY,
                 getDescription(EXA_VIRTUAL_SCHEMA_NAME_DESCRIPTION, EXA_VIRTUAL_SCHEMA_NAME_DEFAULT));
         options.put(SOURCE_IP_KEY, getDescription(SOURCE_IP_DESCRIPTION, SOURCE_IP_DEFAULT));
-        options.put(SOURCE_PORT_KEY, getDescription(SOURCE_PORT_DESCRIPTION, SOURCE_PORT_DEFAULT));
+        options.put(SOURCE_PORT_KEY, getDescription(SOURCE_PORT_DESCRIPTION, DIALECT_SPECIFIC_DEFAULT));
         options.put(SOURCE_DATABASE_NAME_KEY,
-                getDescription(SOURCE_DATABASE_NAME_DESCRIPTION, SOURCE_DATABASE_NAME_DEFAULT));
+                getDescription(SOURCE_DATABASE_NAME_DESCRIPTION, DIALECT_SPECIFIC_DEFAULT));
         options.put(SOURCE_MAPPED_SCHEMA_KEY, getDescription(SOURCE_MAPPED_SCHEMA_DESCRIPTION, "no default value"));
         options.put(CREDENTIALS_FILE_KEY, getDescription(CREDENTIALS_FILE_DESCRIPTION, CREDENTIALS_FILE_DEFAULT));
         return options;

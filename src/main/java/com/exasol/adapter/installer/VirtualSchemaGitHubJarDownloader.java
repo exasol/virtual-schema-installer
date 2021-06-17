@@ -16,6 +16,7 @@ import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
+import com.exasol.adapter.installer.dialect.Dialect;
 import com.exasol.errorreporting.ExaError;
 
 /**

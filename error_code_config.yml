@@ -2,4 +2,4 @@ error-tags:
   VS-INSTL:
     packages:
       - com.exasol.adapter.installer
-    highest-index: 5
+    highest-index: 8

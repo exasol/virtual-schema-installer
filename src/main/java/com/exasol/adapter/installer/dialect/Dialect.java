@@ -1,4 +1,4 @@
-package com.exasol.adapter.installer;
+package com.exasol.adapter.installer.dialect;
 
 /**
  * List of supported dialects to install.
