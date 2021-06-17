@@ -1,19 +1,39 @@
 package com.exasol.adapter.installer.dialect;
 
-import java.util.Map;
+import com.exasol.adapter.installer.UserInput;
 
-public class MysqlDialectProfile extends AbstractDialectProfile {
-    private final Map<String, String> dialectParameters = Map.of( //
-            DEFAULT_PORT_KEY, "3306", //
-            DEFAULT_DATABASE_KEY, "" //
-    );
-
-    public MysqlDialectProfile(final Dialect dialect) {
-        super(dialect.name());
+public class MysqlDialectProfile extends AbstractVirtualSchemaProfile {
+    public MysqlDialectProfile(final UserInput userInput) {
+        super(userInput);
     }
 
     @Override
-    protected Map<String, String> getDialectParameters() {
-        return this.dialectParameters;
+    protected String getDriverMain() {
+        return "com.mysql.jdbc.Driver";
+    }
+
+    @Override
+    protected String getDriverPrefix() {
+        return "jdbc:mysql:";
+    }
+
+    @Override
+    protected String getNoSecurity() {
+        return "YES";
+    }
+
+    @Override
+    protected String getDefaultPort() {
+        return "3306";
+    }
+
+    @Override
+    protected String getDefaultDriverName() {
+        return "mysql-connector-java.jar";
+    }
+
+    @Override
+    protected boolean isConfigRequired() {
+        return true;
     }
 }

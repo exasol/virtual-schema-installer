@@ -75,15 +75,14 @@ class PostgreSQLInstallerIT {
                 "--" + EXA_IP_KEY, "localhost", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
-                "--" + EXA_BUCKET_NAME_KEY, EXASOL.getDefaultBucket().getBucketName(), //
                 "--" + EXA_SCHEMA_NAME_KEY, EXASOL_SCHEMA_NAME, //
                 "--" + EXA_ADAPTER_NAME_KEY, EXASOL_ADAPTER_NAME, //
                 "--" + EXA_CONNECTION_NAME_KEY, POSTGRES_JDBC_CONNECTION, //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_IP_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, POSTGRES.getMappedPort(5432).toString(), //
-                "--" + SOURCE_DATABASE_NAME_KEY, POSTGRES.getDatabaseName(), //
-                "--" + SOURCE_MAPPED_SCHEMA_KEY, POSTGRES_SCHEMA, //
+                "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + POSTGRES.getDatabaseName() + "'", //
+                "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + POSTGRES_SCHEMA + "'", //
                 "--" + ADDITIONAL_PROPERTY_KEY, "TABLE_FILTER='" + SIMPLE_POSTGRES_TABLE + "'", //
                 "--" + ADDITIONAL_PROPERTY_KEY, "EXCLUDED_CAPABILITIES='LIMIT'" //
         };
@@ -95,14 +94,15 @@ class PostgreSQLInstallerIT {
             throws SQLException, BucketAccessException, TimeoutException, ParseException, IOException {
         final String virtualSchemaName = "POSTGRES_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
+                "--" + JDBC_DRIVER_NAME_KEY, "postgresql.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/postgresql-driver", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_IP_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, POSTGRES.getMappedPort(5432).toString(), //
-                "--" + SOURCE_DATABASE_NAME_KEY, POSTGRES.getDatabaseName(), //
-                "--" + SOURCE_MAPPED_SCHEMA_KEY, POSTGRES_SCHEMA //
+                "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + POSTGRES.getDatabaseName() + "'", //
+                "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + POSTGRES_SCHEMA + "'" //
         };
         assertVirtualSchemaWasCreated(virtualSchemaName, args);
     }

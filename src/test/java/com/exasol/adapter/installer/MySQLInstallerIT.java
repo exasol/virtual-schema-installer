@@ -71,14 +71,14 @@ class MySQLInstallerIT {
             throws SQLException, BucketAccessException, TimeoutException, ParseException, IOException {
         final String virtualSchemaName = "MYSQL_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
-                "--" + JDBC_DRIVER_PATH_KEY, "target/nysql-driver", //
+                "--" + JDBC_DRIVER_NAME_KEY, "mysql-connector-java.jar", //
+                "--" + JDBC_DRIVER_PATH_KEY, "target/mysql-driver", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_IP_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, MYSQL.getMappedPort(MYSQL_PORT).toString(), //
-                "--" + SOURCE_DATABASE_NAME_KEY, MYSQL.getDatabaseName(), //
-                "--" + SOURCE_MAPPED_SCHEMA_KEY, MYSQL_SCHEMA //
+                "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + MYSQL_SCHEMA + "'" //
         };
         assertVirtualSchemaWasCreated(virtualSchemaName, args);
     }

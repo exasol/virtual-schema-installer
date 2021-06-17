@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
@@ -20,19 +21,16 @@ import com.exasol.errorreporting.ExaError;
  */
 public class Installer {
     private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
-
     // Files related fields
-    private final JarFile virtualSchemaJarFile;
-    private final JarFile jdbcDriverJarFile;
-
+    private final File virtualSchemaJarFile;
+    private final JdbcDriver jdbcDriver;
     // Credentials
     private final String exaUsername;
     private final String exaPassword;
     private final String exaBucketWritePassword;
     private final String sourceUsername;
     private final String sourcePassword;
-
-    // Exasol related fields
+    // Virtual Schema related fields
     private final String exaIp;
     private final int exaPort;
     private final int exaBucketFsPort;
@@ -41,35 +39,26 @@ public class Installer {
     private final String exaAdapterName;
     private final String exaConnectionName;
     private final String exaVirtualSchemaName;
-
-    // Source related fields
-    private final String sourceIp;
-    private final int sourcePort;
-    private final String sourceDatabaseName;
-    private final String sourceMappedSchema;
-
-    private final String[] additionalProperties;
+    private final String connectionString;
+    private final List<String> dialectSpecificProperties;
 
     private Installer(final InstallerBuilder builder) {
         this.virtualSchemaJarFile = builder.virtualSchemaJarFile;
-        this.jdbcDriverJarFile = builder.jdbcDriverJarFile;
+        this.jdbcDriver = builder.jdbcDriver;
         this.exaAdapterName = builder.exaAdapterName;
-        this.sourceDatabaseName = builder.sourceDatabaseName;
         this.exaPassword = builder.exaPassword;
         this.exaBucketWritePassword = builder.exaBucketWritePassword;
-        this.sourcePort = builder.sourcePort;
         this.sourceUsername = builder.sourceUsername;
         this.exaSchemaName = builder.exaSchemaName;
         this.exaConnectionName = builder.exaConnectionName;
         this.exaBucketFsPort = builder.exaBucketFsPort;
         this.sourcePassword = builder.sourcePassword;
-        this.sourceMappedSchema = builder.sourceMappedSchema;
         this.exaIp = builder.exaIp;
-        this.sourceIp = builder.sourceIp;
+        this.connectionString = builder.connectionString;
         this.exaUsername = builder.exaUsername;
         this.exaPort = builder.exaPort;
         this.exaBucketName = builder.exaBucketName;
-        this.additionalProperties = builder.additionalProperties;
+        this.dialectSpecificProperties = builder.dialectSpecificProperties;
         this.exaVirtualSchemaName = builder.exaVirtualSchemaName;
     }
 
@@ -77,10 +66,10 @@ public class Installer {
      * Install a Virtual Schema to the Exasol database.
      */
     public void install() throws SQLException, BucketAccessException, TimeoutException, FileNotFoundException {
-        uploadFilesToBucket(this.virtualSchemaJarFile, this.jdbcDriverJarFile);
+        uploadFilesToBucket(this.virtualSchemaJarFile, this.jdbcDriver);
         try (final Connection connection = getConnection()) {
             installVirtualSchema(connection,
-                    List.of(this.virtualSchemaJarFile.getName(), this.jdbcDriverJarFile.getName()));
+                    List.of(this.virtualSchemaJarFile.getName(), this.jdbcDriver.getJarFile().getName()));
         }
     }
 
@@ -89,11 +78,11 @@ public class Installer {
                 this.exaPassword);
     }
 
-    private void uploadFilesToBucket(final JarFile virtualSchemaJarFile, final JarFile jdbcDriverJarFile)
+    private void uploadFilesToBucket(final File virtualSchemaJarFile, final JdbcDriver jdbcDriver)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
         final WriteEnabledBucket bucket = getBucket();
         uploadVsJarToBucket(bucket, virtualSchemaJarFile);
-        uploadDriverToBucket(bucket, jdbcDriverJarFile);
+        uploadDriverToBucket(bucket, jdbcDriver);
     }
 
     private WriteEnabledBucket getBucket() {
@@ -126,11 +115,9 @@ public class Installer {
     }
 
     private void createConnection(final Statement statement) throws SQLException {
-        final String connectionString = "jdbc:postgresql://" + this.sourceIp + ":" + this.sourcePort + "/"
-                + this.sourceDatabaseName;
         LOGGER.info(() -> "Creating connection object with the following connection string: " + LINE_SEPARATOR
-                + connectionString);
-        statement.execute("CREATE OR REPLACE CONNECTION " + this.exaConnectionName + " TO '" + connectionString
+                + this.connectionString);
+        statement.execute("CREATE OR REPLACE CONNECTION " + this.exaConnectionName + " TO '" + this.connectionString
                 + "' USER '" + this.sourceUsername + "' IDENTIFIED BY '" + this.sourcePassword + "'");
     }
 
@@ -146,10 +133,9 @@ public class Installer {
                 "CREATE VIRTUAL SCHEMA " + this.exaVirtualSchemaName + LINE_SEPARATOR //
                         + "USING " + this.exaSchemaName + "." + this.exaAdapterName + LINE_SEPARATOR //
                         + "WITH" + LINE_SEPARATOR //
-                        + "SCHEMA_NAME = '" + this.sourceMappedSchema + "'" + LINE_SEPARATOR //
                         + "CONNECTION_NAME = '" + this.exaConnectionName + "'" + LINE_SEPARATOR);
-        for (final String additionalProperty : this.additionalProperties) {
-            createVirtualSchemaStatement.append(additionalProperty).append(LINE_SEPARATOR);
+        for (final String property : this.dialectSpecificProperties) {
+            createVirtualSchemaStatement.append(property).append(LINE_SEPARATOR);
         }
         return createVirtualSchemaStatement.toString();
     }
@@ -167,17 +153,22 @@ public class Installer {
     }
 
     private String getPathInBucketFor(final String jarName) {
-        return "%jar /buckets/bfsdefault/" + this.exaBucketName + "/" + jarName + ";" + LINE_SEPARATOR;
+        return "%jar /buckets/bfsdefault/default/drivers/jdbc/" + jarName + ";" + LINE_SEPARATOR;
     }
 
-    private void uploadVsJarToBucket(final WriteEnabledBucket bucket, final JarFile virtualSchemaJarFile)
+    private void uploadVsJarToBucket(final WriteEnabledBucket bucket, final File virtualSchemaJarFile)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
-        bucket.uploadFileNonBlocking(virtualSchemaJarFile.getPath(), virtualSchemaJarFile.getName());
+        bucket.uploadFileNonBlocking(virtualSchemaJarFile.getPath(), "drivers/jdbc/" + virtualSchemaJarFile.getName());
     }
 
-    private void uploadDriverToBucket(final WriteEnabledBucket bucket, final JarFile jdbcDriverJarFile)
+    private void uploadDriverToBucket(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
-        bucket.uploadFileNonBlocking(jdbcDriverJarFile.getPath(), jdbcDriverJarFile.getName());
+        final File jdbcDriverJarFile = jdbcDriver.getJarFile();
+        bucket.uploadFileNonBlocking(jdbcDriverJarFile.getPath(), "drivers/jdbc/" + jdbcDriverJarFile.getName());
+        if (jdbcDriver.hasConfig()) {
+            final File config = jdbcDriver.getConfig();
+            bucket.uploadFileNonBlocking(config.getPath(), "drivers/jdbc/" + config.getName());
+        }
     }
 
     /**
@@ -194,15 +185,15 @@ public class Installer {
      */
     public static final class InstallerBuilder {
         // Files related fields
-        private JarFile virtualSchemaJarFile;
-        private JarFile jdbcDriverJarFile;
+        private File virtualSchemaJarFile;
+        private JdbcDriver jdbcDriver;
         // Credentials
         private String exaUsername;
         private String exaPassword;
         private String exaBucketWritePassword;
         private String sourceUsername;
         private String sourcePassword;
-        // Exasol related fields
+        // Virtual Schema related fields
         private String exaIp;
         private int exaPort;
         private int exaBucketFsPort;
@@ -211,23 +202,19 @@ public class Installer {
         private String exaAdapterName;
         private String exaConnectionName;
         private String exaVirtualSchemaName;
-        // Source related fields
-        private String sourceIp;
-        private int sourcePort;
-        private String sourceDatabaseName;
-        private String sourceMappedSchema;
-        private String[] additionalProperties;
+        private String connectionString;
+        private List<String> dialectSpecificProperties;
 
         private InstallerBuilder() {
         }
 
-        public InstallerBuilder virtualSchemaJarFile(final JarFile virtualSchemaJarFile) {
+        public InstallerBuilder virtualSchemaJarFile(final File virtualSchemaJarFile) {
             this.virtualSchemaJarFile = virtualSchemaJarFile;
             return this;
         }
 
-        public InstallerBuilder jdbcDriverJarFile(final JarFile jdbcDriverJarFile) {
-            this.jdbcDriverJarFile = jdbcDriverJarFile;
+        public InstallerBuilder jdbcDriver(final JdbcDriver jdbcDriver) {
+            this.jdbcDriver = jdbcDriver;
             return this;
         }
 
@@ -307,33 +294,17 @@ public class Installer {
             return this;
         }
 
-        public InstallerBuilder sourceIp(final String sourceIp) {
-            this.sourceIp = InputString.validate(sourceIp);
+        public InstallerBuilder connectionString(final String connectionString) {
+            this.connectionString = InputString.validate(connectionString);
             return this;
         }
 
-        public InstallerBuilder sourcePort(final String sourcePort) {
-            this.sourcePort = convertToInteger(sourcePort, "sourcePort");
-            return this;
-        }
-
-        public InstallerBuilder sourceDatabaseName(final String sourceDatabaseName) {
-            this.sourceDatabaseName = InputString.validate(sourceDatabaseName);
-            return this;
-        }
-
-        public InstallerBuilder sourceMappedSchema(final String sourceMappedSchema) {
-            this.sourceMappedSchema = InputString.validate(sourceMappedSchema);
-            return this;
-        }
-
-        public InstallerBuilder additionalProperties(final String[] additionalProperties) {
-            final String[] properties = new String[additionalProperties.length];
-            for (int i = 0; i < additionalProperties.length; i++) {
-                final String additionalProperty = additionalProperties[i];
-                properties[i] = InputString.validate(additionalProperty);
+        public InstallerBuilder dialectSpecificProperties(final List<String> dialectSpecificProperties) {
+            final List<String> properties = new ArrayList<>(dialectSpecificProperties.size());
+            for (final String additionalProperty : dialectSpecificProperties) {
+                properties.add(InputString.validate(additionalProperty));
             }
-            this.additionalProperties = properties;
+            this.dialectSpecificProperties = properties;
             return this;
         }
 

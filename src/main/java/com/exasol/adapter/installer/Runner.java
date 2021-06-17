@@ -10,99 +10,80 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.cli.ParseException;
 
-import com.exasol.adapter.installer.dialect.DialectProfile;
-import com.exasol.adapter.installer.dialect.DialectProfileProvider;
+import com.exasol.adapter.installer.dialect.Dialect;
+import com.exasol.adapter.installer.dialect.VirtualSchemaProfileProvider;
 import com.exasol.bucketfs.BucketAccessException;
 
 public class Runner {
+    private static final String CREDENTIALS_FILE_DEFAULT = FILE_SEPARATOR + ".virtual-schema-installer" + FILE_SEPARATOR
+            + "credentials";
+    private static final String JDBC_DRIVER_PATH_DEFAULT = "";
+
     public static void main(final String[] args)
             throws SQLException, BucketAccessException, FileNotFoundException, ParseException, TimeoutException {
         final Map<String, String> options = getUserInputOptions();
         final UserInput userInput = new UserInputParser().parseUserInput(args, options);
-        final VirtualSchemaJarProvider virtualSchemaJarProvider = new VirtualSchemaGitHubJarDownloader(
-                userInput.getDialect());
         final Map<String, String> parameters = userInput.getParameters();
-        final String jdbcDriverPath = getOrDefault(parameters, JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DEFAULT);
-        final String jdbcDriverName = getOrDefault(parameters, JDBC_DRIVER_NAME_KEY, JDBC_DRIVER_NAME_DEFAULT);
-        final JdbcDriverJarProvider jdbcDriverJarProvider = new JdbcDriverLocalFileProvider(jdbcDriverPath,
-                jdbcDriverName);
         final PropertyReader propertyReader = new PropertyReader(
                 getOrDefault(parameters, CREDENTIALS_FILE_KEY, CREDENTIALS_FILE_DEFAULT));
-        final DialectProfile dialectProfile = DialectProfileProvider.provideProfile(userInput.getDialect());
-        final Installer installer = createInstaller(dialectProfile, virtualSchemaJarProvider, jdbcDriverJarProvider,
-                parameters, propertyReader, userInput.getAdditionalProperties());
+        final File virtualSchemaJar = getVirtualSchemaJarFile(userInput.getDialect());
+        final VirtualSchemaProfile virtualSchemaProfile = VirtualSchemaProfileProvider.provideProfile(userInput);
+        final String jdbcDriverName = virtualSchemaProfile.getJdbcDriverName();
+        final JdbcDriver jdbcDriver = getJdbcDriver(parameters, virtualSchemaProfile, jdbcDriverName);
+        final Installer installer = createInstaller(virtualSchemaProfile, virtualSchemaJar, jdbcDriver, propertyReader);
         installer.install();
     }
 
-    private static Installer createInstaller(final DialectProfile dialectProfile,
-            final VirtualSchemaJarProvider virtualSchemaJarProvider, final JdbcDriverJarProvider jdbcDriverJarProvider,
-            final Map<String, String> parameters, final PropertyReader propertyReader,
-            final String[] additionalProperties) {
+    private static File getVirtualSchemaJarFile(final Dialect dialect) {
+        final FileProvider virtualSchemaJarProvider = new VirtualSchemaGitHubJarDownloader(dialect);
+        return virtualSchemaJarProvider.getFile();
+    }
+
+    private static JdbcDriver getJdbcDriver(final Map<String, String> parameters,
+            final VirtualSchemaProfile dialectProfile, final String jdbcDriverName) {
+        final String jdbcDriverPath = getOrDefault(parameters, JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DEFAULT);
+        final FileProvider jdbcDriverJarProvider = new LocalFileProvider(jdbcDriverPath, jdbcDriverName);
+        return new JdbcDriver(jdbcDriverJarProvider.getFile(), dialectProfile.getJdbcConfig());
+    }
+
+    private static Installer createInstaller(final VirtualSchemaProfile virtualSchemaProfile,
+            final File virtualSchemaJar, final JdbcDriver jdbcDriver, final PropertyReader propertyReader) {
         return Installer.builder() //
-                .virtualSchemaJarFile(virtualSchemaJarProvider.getJar()) //
-                .jdbcDriverJarFile(jdbcDriverJarProvider.getJar()) //
+                .virtualSchemaJarFile(virtualSchemaJar) //
+                .jdbcDriver(jdbcDriver) //
                 .exaUsername(propertyReader.readProperty(EXASOL_USERNAME_KEY))
                 .exaPassword(propertyReader.readProperty(EXASOL_PASSWORD_KEY))
                 .exaBucketWritePassword(propertyReader.readProperty(EXASOL_BUCKET_WRITE_PASSWORD_KEY))
                 .sourceUsername(propertyReader.readProperty(SOURCE_USERNAME_KEY))
                 .sourcePassword(propertyReader.readProperty(SOURCE_PASSWORD_KEY)) //
-                .exaIp(getOrDefault(parameters, EXA_IP_KEY, EXA_IP_DEFAULT)) //
-                .exaPort(getOrDefault(parameters, EXA_PORT_KEY, EXA_PORT_DEFAULT)) //
-                .exaBucketFsPort(getOrDefault(parameters, EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DEFAULT)) //
-                .exaBucketName(getOrDefault(parameters, EXA_BUCKET_NAME_KEY, EXA_BUCKET_NAME_DEFAULT)) //
-                .exaSchemaName(getOrDefault(parameters, EXA_SCHEMA_NAME_KEY, EXA_SCHEMA_NAME_DEFAULT)) //
-                .exaAdapterName(getOrDefault(parameters, EXA_ADAPTER_NAME_KEY, getDefaultAdapterName(dialectProfile))) //
-                .exaConnectionName(
-                        getOrDefault(parameters, EXA_CONNECTION_NAME_KEY, getDefaultConnectionName(dialectProfile))) //
-                .exaVirtualSchemaName(getOrDefault(parameters, EXA_VIRTUAL_SCHEMA_NAME_KEY,
-                        getDefaultVirtualSchemaName(dialectProfile))) //
-                .sourceIp(getOrDefault(parameters, SOURCE_IP_KEY, SOURCE_IP_DEFAULT)) //
-                .sourcePort(getOrDefault(parameters, SOURCE_PORT_KEY, dialectProfile.getDefaultPort())) //
-                .sourceDatabaseName(
-                        getOrDefault(parameters, SOURCE_DATABASE_NAME_KEY, dialectProfile.getDefaultDatabaseName())) //
-                .sourceMappedSchema(getOrDefault(parameters, SOURCE_MAPPED_SCHEMA_KEY, SOURCE_MAPPED_SCHEMA_DEFAULT)) //
-                .additionalProperties(getOrDefault(additionalProperties, ADDITIONAL_PROPERTIES_DEFAULT)) //
+                .exaIp(virtualSchemaProfile.getExaIp()) //
+                .exaPort(virtualSchemaProfile.getExaPort()) //
+                .exaBucketFsPort(virtualSchemaProfile.getBucketFsPort()) //
+                .exaBucketName(virtualSchemaProfile.getBucketName()) //
+                .exaSchemaName(virtualSchemaProfile.getAdapterSchemaName()) //
+                .exaAdapterName(virtualSchemaProfile.getAdapterName()) //
+                .exaConnectionName(virtualSchemaProfile.getConnectionName()) //
+                .exaVirtualSchemaName(virtualSchemaProfile.getVirtualSchemaName()) //
+                .connectionString(virtualSchemaProfile.getConnectionString()) //
+                .dialectSpecificProperties(virtualSchemaProfile.getDialectSpecificProperties()) //
                 .build();
-    }
-
-    private static String getDefaultAdapterName(final DialectProfile dialectProfile) {
-        return dialectProfile.getDialectName() + "_ADAPTER_SCRIPT";
-    }
-
-    private static String getDefaultConnectionName(final DialectProfile dialectProfile) {
-        return dialectProfile.getDialectName() + "_JDBC_CONNECTION";
-    }
-
-    private static String getDefaultVirtualSchemaName(final DialectProfile dialectProfile) {
-        return dialectProfile.getDialectName() + "_VIRTUAL_SCHEMA";
     }
 
     private static Map<String, String> getUserInputOptions() {
         final Map<String, String> options = new HashMap<>();
-        options.put(JDBC_DRIVER_NAME_KEY, getDescription(JDBC_DRIVER_NAME_DESCRIPTION, JDBC_DRIVER_NAME_DEFAULT));
-        options.put(JDBC_DRIVER_PATH_KEY, getDescription(JDBC_DRIVER_PATH_DESCRIPTION, "current directory"));
-        options.put(EXA_IP_KEY, getDescription(EXA_IP_DESCRIPTION, EXA_IP_DEFAULT));
-        options.put(EXA_PORT_KEY, getDescription(EXA_PORT_DESCRIPTION, EXA_PORT_DEFAULT));
-        options.put(EXA_BUCKET_FS_PORT_KEY, getDescription(EXA_BUCKET_FS_PORT_DESCRIPTION, EXA_BUCKET_FS_PORT_DEFAULT));
-        options.put(EXA_BUCKET_NAME_KEY, getDescription(EXA_BUCKET_NAME_DESCRIPTION, EXA_BUCKET_NAME_DEFAULT));
-        options.put(EXA_SCHEMA_NAME_KEY, getDescription(EXA_SCHEMA_NAME_DESCRIPTION, EXA_SCHEMA_NAME_DEFAULT));
-        options.put(EXA_ADAPTER_NAME_KEY, getDescription(EXA_ADAPTER_NAME_DESCRIPTION, EXA_ADAPTER_NAME_DEFAULT));
-        options.put(EXA_CONNECTION_NAME_KEY,
-                getDescription(EXA_CONNECTION_NAME_DESCRIPTION, EXA_CONNECTION_NAME_DEFAULT));
-        options.put(EXA_VIRTUAL_SCHEMA_NAME_KEY,
-                getDescription(EXA_VIRTUAL_SCHEMA_NAME_DESCRIPTION, EXA_VIRTUAL_SCHEMA_NAME_DEFAULT));
-        options.put(SOURCE_IP_KEY, getDescription(SOURCE_IP_DESCRIPTION, SOURCE_IP_DEFAULT));
-        options.put(SOURCE_PORT_KEY, getDescription(SOURCE_PORT_DESCRIPTION, DIALECT_SPECIFIC_DEFAULT));
-        options.put(SOURCE_DATABASE_NAME_KEY,
-                getDescription(SOURCE_DATABASE_NAME_DESCRIPTION, DIALECT_SPECIFIC_DEFAULT));
-        options.put(SOURCE_MAPPED_SCHEMA_KEY, getDescription(SOURCE_MAPPED_SCHEMA_DESCRIPTION, "no default value"));
-        options.put(CREDENTIALS_FILE_KEY, getDescription(CREDENTIALS_FILE_DESCRIPTION, CREDENTIALS_FILE_DEFAULT));
+        options.put(JDBC_DRIVER_NAME_KEY, JDBC_DRIVER_NAME_DESCRIPTION);
+        options.put(JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DESCRIPTION);
+        options.put(EXA_IP_KEY, EXA_IP_DESCRIPTION);
+        options.put(EXA_PORT_KEY, EXA_PORT_DESCRIPTION);
+        options.put(EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DESCRIPTION);
+        options.put(EXA_SCHEMA_NAME_KEY, EXA_SCHEMA_NAME_DESCRIPTION);
+        options.put(EXA_ADAPTER_NAME_KEY, EXA_ADAPTER_NAME_DESCRIPTION);
+        options.put(EXA_CONNECTION_NAME_KEY, EXA_CONNECTION_NAME_DESCRIPTION);
+        options.put(EXA_VIRTUAL_SCHEMA_NAME_KEY, EXA_VIRTUAL_SCHEMA_NAME_DESCRIPTION);
+        options.put(SOURCE_IP_KEY, SOURCE_IP_DESCRIPTION);
+        options.put(SOURCE_PORT_KEY, SOURCE_PORT_DESCRIPTION);
+        options.put(CREDENTIALS_FILE_KEY, CREDENTIALS_FILE_DESCRIPTION);
         return options;
-    }
-
-    private static String[] getOrDefault(final String[] additionalProperties,
-            final String[] additionalPropertiesDefault) {
-        return additionalProperties == null ? additionalPropertiesDefault : additionalProperties;
     }
 
     private static String getOrDefault(final Map<String, String> userInput, final String key,
@@ -112,9 +93,5 @@ public class Runner {
         } else {
             return userInput.get(key);
         }
-    }
-
-    private static String getDescription(final String description, final String defaultValue) {
-        return description + " (default: " + defaultValue + ").";
     }
 }

@@ -10,7 +10,7 @@ import com.exasol.errorreporting.ExaError;
  * Validates user input.
  */
 public class InputString {
-    private static final Set<Character> ALLOWED_SPECIAL_CHARS = Set.of('_', '-', '.', '/', '=', '\'');
+    private static final Set<Character> ALLOWED_SPECIAL_CHARS = Set.of('_', '-', '.', '/', '=', '\'', ':');
 
     private InputString() {
     }

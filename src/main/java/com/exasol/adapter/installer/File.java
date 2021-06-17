@@ -3,38 +3,38 @@ package com.exasol.adapter.installer;
 import java.nio.file.Path;
 
 /**
- * Represents a JAR file.
+ * Represents a file.
  */
-public class JarFile {
+public class File {
     private final String path;
     private final String name;
 
     /**
-     * Instantiate a new {@link JarFile}.
+     * Instantiate a new {@link File}.
      *
-     * @param path JAR path
-     * @param name JAR name
+     * @param path path
+     * @param name name
      */
-    public JarFile(final String path, final String name) {
+    public File(final String path, final String name) {
         this.path = InputString.validate(path);
         this.name = InputString.validate(name);
     }
 
     /**
-     * Get JAR name.
+     * Get a file name.
      *
-     * @return JAR name
+     * @return file name
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Get path to the JAR file (including the JAR name).
+     * Get path to the file (including the file name).
      *
-     * @return JAR path
+     * @return file path
      */
     public Path getPath() {
-        return Path.of(this.path.toString(), this.name);
+        return Path.of(this.path, this.name);
     }
 }
