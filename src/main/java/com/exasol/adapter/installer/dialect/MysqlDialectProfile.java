@@ -2,7 +2,15 @@ package com.exasol.adapter.installer.dialect;
 
 import com.exasol.adapter.installer.UserInput;
 
+/**
+ * A Mysql dialect profile.
+ */
 public class MysqlDialectProfile extends AbstractVirtualSchemaProfile {
+    /**
+     * Instantiate a new {@link MysqlDialectProfile}.
+     *
+     * @param userInput user input
+     */
     public MysqlDialectProfile(final UserInput userInput) {
         super(userInput);
     }

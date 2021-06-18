@@ -11,6 +11,9 @@ import com.exasol.adapter.installer.File;
 import com.exasol.adapter.installer.UserInput;
 import com.exasol.adapter.installer.VirtualSchemaProfile;
 
+/**
+ * Abstract base of Virtual Schema Profile.
+ */
 public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfile {
     private static final String EXA_IP_DEFAULT = "localhost";
     private static final String EXA_PORT_DEFAULT = "8563";
@@ -18,10 +21,14 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     private static final String EXA_BUCKET_NAME_DEFAULT = "default";
     private static final String EXA_SCHEMA_NAME_DEFAULT = "ADAPTER";
     private static final String SOURCE_IP_DEFAULT = "localhost";
-
     private final ConfigCreator configCreator = new ConfigCreator();
     protected final UserInput userInput;
 
+    /**
+     * Instantiate a new {@link AbstractVirtualSchemaProfile}.
+     *
+     * @param userInput the user input
+     */
     protected AbstractVirtualSchemaProfile(final UserInput userInput) {
         this.userInput = userInput;
     }
@@ -118,18 +125,56 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
         return getOrDefault(this.userInput.getParameters(), SOURCE_PORT_KEY, getDefaultPort());
     }
 
+    /**
+     * Get default port.
+     *
+     * @return default port
+     */
     protected abstract String getDefaultPort();
 
+    /**
+     * Get default driver name.
+     *
+     * @return default driver name
+     */
     protected abstract String getDefaultDriverName();
 
+    /**
+     * Get driver main.
+     *
+     * @return driver main
+     */
     protected abstract String getDriverMain();
 
+    /**
+     * Get driver prefix.
+     *
+     * @return driver prefix
+     */
     protected abstract String getDriverPrefix();
 
+    /**
+     * Get no security value.
+     *
+     * @return no security value
+     */
     protected abstract String getNoSecurity();
 
+    /**
+     * Check if config is required.
+     *
+     * @return true if config is required
+     */
     protected abstract boolean isConfigRequired();
 
+    /**
+     * Get a value from user input or return default if missing.
+     *
+     * @param userInput    user input
+     * @param key          key
+     * @param defaultValue default value
+     * @return value
+     */
     protected String getOrDefault(final Map<String, String> userInput, final String key, final String defaultValue) {
         if (!userInput.containsKey(key) || userInput.get(key) == null || userInput.get(key).isEmpty()) {
             return defaultValue;

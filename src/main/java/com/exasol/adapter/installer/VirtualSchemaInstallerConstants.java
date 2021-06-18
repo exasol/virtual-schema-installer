@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 import com.exasol.adapter.installer.dialect.Dialect;
 
+/**
+ * Virtual Schema installer constants.
+ */
 public class VirtualSchemaInstallerConstants {
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");

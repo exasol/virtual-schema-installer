@@ -11,9 +11,22 @@ import com.exasol.adapter.installer.File;
 import com.exasol.adapter.installer.InstallerException;
 import com.exasol.errorreporting.ExaError;
 
+/**
+ * Creates a config file for a JDBC driver.
+ */
 public class ConfigCreator {
     private static final String FILE_NAME = "settings.cfg";
 
+    /**
+     * Create a new config file.
+     *
+     * @param dialectName  dialect name
+     * @param jarName      jar name
+     * @param driverMain   driver main class
+     * @param driverPrefix driver prefix
+     * @param noSecurity   no security value
+     * @return the file
+     */
     public File createConfig(final String dialectName, final String jarName, final String driverMain,
             final String driverPrefix, final String noSecurity) {
         final String configString = createConfigString(dialectName, jarName, driverMain, driverPrefix, noSecurity);
