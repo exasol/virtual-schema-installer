@@ -10,8 +10,8 @@ import com.exasol.errorreporting.ExaError;
 /**
  * A factory class to provide a Virtual Schema profile.
  */
-public class VirtualSchemaProfileProvider {
-    private VirtualSchemaProfileProvider() {
+public class VirtualSchemaProfileFactory {
+    private VirtualSchemaProfileFactory() {
     }
 
     /**
@@ -20,7 +20,7 @@ public class VirtualSchemaProfileProvider {
      * @param userInput user input
      * @return virtual schema profile
      */
-    public static VirtualSchemaProfile provideProfile(final UserInput userInput) {
+    public static VirtualSchemaProfile getProfileFor(final UserInput userInput) {
         final Dialect dialect = userInput.getDialect();
         if (dialect.equals(POSTGRESQL)) {
             return new PostgresDialectProfile(userInput);

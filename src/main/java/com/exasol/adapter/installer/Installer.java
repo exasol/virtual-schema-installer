@@ -21,6 +21,7 @@ import com.exasol.errorreporting.ExaError;
  */
 public class Installer {
     private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
+    private static final String PATH_TO_DRIVER_IN_BUCKET = "drivers/jdbc/";
     // Files related fields
     private final File virtualSchemaJarFile;
     private final JdbcDriver jdbcDriver;
@@ -69,7 +70,7 @@ public class Installer {
         uploadFilesToBucket(this.virtualSchemaJarFile, this.jdbcDriver);
         try (final Connection connection = getConnection()) {
             installVirtualSchema(connection,
-                    List.of(this.virtualSchemaJarFile.getName(), this.jdbcDriver.getJarFile().getName()));
+                    List.of(this.virtualSchemaJarFile.getName(), this.jdbcDriver.getJar().getName()));
         }
     }
 
@@ -153,22 +154,34 @@ public class Installer {
     }
 
     private String getPathInBucketFor(final String jarName) {
-        return "%jar /buckets/bfsdefault/default/drivers/jdbc/" + jarName + ";" + LINE_SEPARATOR;
+        return "%jar /buckets/bfsdefault/default/" + PATH_TO_DRIVER_IN_BUCKET + jarName + ";" + LINE_SEPARATOR;
     }
 
     private void uploadVsJarToBucket(final WriteEnabledBucket bucket, final File virtualSchemaJarFile)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
-        bucket.uploadFileNonBlocking(virtualSchemaJarFile.getPath(), "drivers/jdbc/" + virtualSchemaJarFile.getName());
+        bucket.uploadFileNonBlocking(virtualSchemaJarFile.getPath(),
+                PATH_TO_DRIVER_IN_BUCKET + virtualSchemaJarFile.getName());
     }
 
     private void uploadDriverToBucket(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
-        final File jdbcDriverJarFile = jdbcDriver.getJarFile();
-        bucket.uploadFileNonBlocking(jdbcDriverJarFile.getPath(), "drivers/jdbc/" + jdbcDriverJarFile.getName());
+        uploadJdbcDriverJar(bucket, jdbcDriver);
         if (jdbcDriver.hasConfig()) {
-            final File config = jdbcDriver.getConfig();
-            bucket.uploadFileNonBlocking(config.getPath(), "drivers/jdbc/" + config.getName());
+            uploadJdbcDriverConfig(bucket, jdbcDriver);
         }
+    }
+
+    private void uploadJdbcDriverJar(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
+            throws BucketAccessException, TimeoutException, FileNotFoundException {
+        final File jdbcDriverJar = jdbcDriver.getJar();
+        bucket.uploadFileNonBlocking(jdbcDriverJar.getPath(),
+                PATH_TO_DRIVER_IN_BUCKET + jdbcDriverJar.getName());
+    }
+
+    private void uploadJdbcDriverConfig(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
+            throws BucketAccessException, TimeoutException, FileNotFoundException {
+        final File config = jdbcDriver.getConfig();
+        bucket.uploadFileNonBlocking(config.getPath(), PATH_TO_DRIVER_IN_BUCKET + config.getName());
     }
 
     /**

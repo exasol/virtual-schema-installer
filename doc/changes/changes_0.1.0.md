@@ -5,6 +5,7 @@ Code name:
 ## Features
 
 * #1: Create initial implementation for Postgres VS dialect.
+* #7: Added support for MySQL Virtual Schema installation.
 
 ## Refactoring
 

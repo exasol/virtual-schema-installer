@@ -23,15 +23,15 @@ import com.exasol.errorreporting.ExaError;
 /**
  * Downloads a Virtual Schema JAR file.
  */
-public class VirtualSchemaGitHubJarDownloader implements FileProvider {
+public class VirtualSchemaJarDownloader implements FileProvider {
     private final Dialect dialect;
 
     /**
-     * Instantiates a new {@link VirtualSchemaGitHubJarDownloader}.
+     * Instantiates a new {@link VirtualSchemaJarDownloader}.
      *
      * @param dialect the dialect
      */
-    public VirtualSchemaGitHubJarDownloader(final Dialect dialect) {
+    public VirtualSchemaJarDownloader(final Dialect dialect) {
         this.dialect = dialect;
     }
 

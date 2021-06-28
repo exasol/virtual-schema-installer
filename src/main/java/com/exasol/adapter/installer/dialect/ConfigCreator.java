@@ -20,16 +20,17 @@ public class ConfigCreator {
     /**
      * Create a new config file.
      *
-     * @param dialectName  dialect name
-     * @param jarName      jar name
-     * @param driverMain   driver main class
-     * @param driverPrefix driver prefix
-     * @param noSecurity   no security value
+     * @param dialectName          dialect name
+     * @param jarName              jar name
+     * @param driverMain           driver main class
+     * @param jdbcConnectionPrefix jdbc connection prefix
+     * @param noSecurity           no security value
      * @return the file
      */
     public File createConfig(final String dialectName, final String jarName, final String driverMain,
-            final String driverPrefix, final String noSecurity) {
-        final String configString = createConfigString(dialectName, jarName, driverMain, driverPrefix, noSecurity);
+            final String jdbcConnectionPrefix, final boolean noSecurity) {
+        final String configString = createConfigString(dialectName, jarName, driverMain, jdbcConnectionPrefix,
+                noSecurity);
         createTemporaryFile(configString);
         return new File(TEMP_DIRECTORY, FILE_NAME);
     }
@@ -45,12 +46,13 @@ public class ConfigCreator {
     }
 
     private String createConfigString(final String dialectName, final String jarName, final String driverMain,
-            final String driverPrefix, final String noSecurity) {
+            final String driverPrefix, final boolean noSecurity) {
+        final String noSecurityString = noSecurity ? "YES" : "NO";
         return "DRIVERNAME=" + dialectName + "\n" //
                 + "JAR=" + jarName + "\n" //
                 + "DRIVERMAIN=" + driverMain + "\n" //
                 + "PREFIX=" + driverPrefix + "\n" //
-                + "NOSECURITY=" + noSecurity + "\n" //
+                + "NOSECURITY=" + noSecurityString + "\n" //
                 + "FETCHSIZE=100000\n" //
                 + "INSERTSIZE=-1\n\n";
     }

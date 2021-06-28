@@ -26,8 +26,8 @@ public class MysqlDialectProfile extends AbstractVirtualSchemaProfile {
     }
 
     @Override
-    protected String getNoSecurity() {
-        return "YES";
+    protected boolean getNoSecurity() {
+        return true;
     }
 
     @Override

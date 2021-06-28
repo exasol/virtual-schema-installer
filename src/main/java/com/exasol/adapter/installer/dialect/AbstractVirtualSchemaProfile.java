@@ -158,7 +158,7 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
      *
      * @return no security value
      */
-    protected abstract String getNoSecurity();
+    protected abstract boolean getNoSecurity();
 
     /**
      * Check if config is required.

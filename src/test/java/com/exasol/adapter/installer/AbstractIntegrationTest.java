@@ -15,6 +15,7 @@ import java.util.concurrent.TimeoutException;
 import org.apache.commons.cli.ParseException;
 import org.testcontainers.junit.jupiter.Container;
 
+import com.exasol.adapter.installer.main.Runner;
 import com.exasol.bucketfs.BucketAccessException;
 import com.exasol.containers.ExasolContainer;
 import com.exasol.matcher.TypeMatchMode;

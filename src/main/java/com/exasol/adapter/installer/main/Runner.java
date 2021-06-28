@@ -1,4 +1,4 @@
-package com.exasol.adapter.installer;
+package com.exasol.adapter.installer.main;
 
 import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
 
@@ -10,8 +10,9 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.cli.ParseException;
 
+import com.exasol.adapter.installer.*;
 import com.exasol.adapter.installer.dialect.Dialect;
-import com.exasol.adapter.installer.dialect.VirtualSchemaProfileProvider;
+import com.exasol.adapter.installer.dialect.VirtualSchemaProfileFactory;
 import com.exasol.bucketfs.BucketAccessException;
 
 public class Runner {
@@ -27,7 +28,7 @@ public class Runner {
         final PropertyReader propertyReader = new PropertyReader(
                 getOrDefault(parameters, CREDENTIALS_FILE_KEY, CREDENTIALS_FILE_DEFAULT));
         final File virtualSchemaJar = getVirtualSchemaJarFile(userInput.getDialect());
-        final VirtualSchemaProfile virtualSchemaProfile = VirtualSchemaProfileProvider.provideProfile(userInput);
+        final VirtualSchemaProfile virtualSchemaProfile = VirtualSchemaProfileFactory.getProfileFor(userInput);
         final String jdbcDriverName = virtualSchemaProfile.getJdbcDriverName();
         final JdbcDriver jdbcDriver = getJdbcDriver(parameters, virtualSchemaProfile, jdbcDriverName);
         final Installer installer = createInstaller(virtualSchemaProfile, virtualSchemaJar, jdbcDriver, propertyReader);
@@ -35,7 +36,7 @@ public class Runner {
     }
 
     private static File getVirtualSchemaJarFile(final Dialect dialect) {
-        final FileProvider virtualSchemaJarProvider = new VirtualSchemaGitHubJarDownloader(dialect);
+        final FileProvider virtualSchemaJarProvider = new VirtualSchemaJarDownloader(dialect);
         return virtualSchemaJarProvider.getFile();
     }
 

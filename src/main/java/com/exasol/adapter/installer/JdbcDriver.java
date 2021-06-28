@@ -4,7 +4,7 @@ package com.exasol.adapter.installer;
  * Represents a JDBC driver to install to a Virtual Schema.
  */
 public class JdbcDriver {
-    private final File jarFile;
+    private final File jar;
     private final File config;
 
     /**
@@ -14,7 +14,7 @@ public class JdbcDriver {
      * @param config  config
      */
     public JdbcDriver(final File jarFile, final File config) {
-        this.jarFile = jarFile;
+        this.jar = jarFile;
         this.config = config;
     }
 
@@ -23,8 +23,8 @@ public class JdbcDriver {
      *
      * @return JAR file
      */
-    public File getJarFile() {
-        return this.jarFile;
+    public File getJar() {
+        return this.jar;
     }
 
     /**
