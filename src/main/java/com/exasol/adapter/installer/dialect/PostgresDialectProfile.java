@@ -26,8 +26,8 @@ public class PostgresDialectProfile extends AbstractVirtualSchemaProfile {
     }
 
     @Override
-    protected boolean getNoSecurity() {
-        return false;
+    protected boolean isSecurityManagerEnabled() {
+        return true;
     }
 
     @Override

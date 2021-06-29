@@ -32,9 +32,9 @@ public class File {
     /**
      * Get path to the file (including the file name).
      *
-     * @return file path
+     * @return file path with the name
      */
-    public Path getPath() {
+    public Path getPathWithName() {
         return Path.of(this.path, this.name);
     }
 }

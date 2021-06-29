@@ -159,7 +159,7 @@ public class Installer {
 
     private void uploadVsJarToBucket(final WriteEnabledBucket bucket, final File virtualSchemaJarFile)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
-        bucket.uploadFileNonBlocking(virtualSchemaJarFile.getPath(),
+        bucket.uploadFileNonBlocking(virtualSchemaJarFile.getPathWithName(),
                 PATH_TO_DRIVER_IN_BUCKET + virtualSchemaJarFile.getName());
     }
 
@@ -174,14 +174,14 @@ public class Installer {
     private void uploadJdbcDriverJar(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
         final File jdbcDriverJar = jdbcDriver.getJar();
-        bucket.uploadFileNonBlocking(jdbcDriverJar.getPath(),
+        bucket.uploadFileNonBlocking(jdbcDriverJar.getPathWithName(),
                 PATH_TO_DRIVER_IN_BUCKET + jdbcDriverJar.getName());
     }
 
     private void uploadJdbcDriverConfig(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
         final File config = jdbcDriver.getConfig();
-        bucket.uploadFileNonBlocking(config.getPath(), PATH_TO_DRIVER_IN_BUCKET + config.getName());
+        bucket.uploadFileNonBlocking(config.getPathWithName(), PATH_TO_DRIVER_IN_BUCKET + config.getName());
     }
 
     /**

@@ -45,7 +45,7 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
                     getJdbcDriverName(), //
                     getDriverMain(), //
                     getDriverPrefix(), //
-                    getNoSecurity());
+                    isSecurityManagerEnabled());
         } else {
             return null;
         }
@@ -154,11 +154,11 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     protected abstract String getDriverPrefix();
 
     /**
-     * Get no security value.
+     * Get true if a security manager is enabled
      *
-     * @return no security value
+     * @return true if a security manager is enabled
      */
-    protected abstract boolean getNoSecurity();
+    protected abstract boolean isSecurityManagerEnabled();
 
     /**
      * Check if config is required.

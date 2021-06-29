@@ -2,7 +2,10 @@
 
 ## Features
 
-* Installs PostgreSQL Virtual Schema to the Exasol Database.
+Installs the following Virtual Schema to the Exasol Database:
+
+* PostgreSQL
+* MySQL
 
 ### Information for Users
 
