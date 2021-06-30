@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>virtual-schema-installer</artifactId>
@@ -12,8 +10,6 @@
         <java.version>11</java.version>
         <surefire.and.failsafe.plugin.version>3.0.0-M5</surefire.and.failsafe.plugin.version>
         <org.testcontainers.version>1.15.3</org.testcontainers.version>
-        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
-        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
     <distributionManagement>
         <repository>
@@ -82,6 +78,18 @@
         </dependency>
         <!--Integration test dependencies -->
         <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mysql</artifactId>
+            <version>${org.testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.23</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
             <version>3.5.3</version>
@@ -124,6 +132,12 @@
             <version>0.8.7</version>
             <classifier>runtime</classifier>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>exasol-testcontainers</artifactId>
+            <version>3.5.3</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -220,9 +234,6 @@
                         a chance to reach branches <property> in the logging lambdas too. -->
                     <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
                     <forkCount>0</forkCount>
-                    <systemPropertyVariables>
-                        <test.coverage>true</test.coverage>
-                    </systemPropertyVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -315,7 +326,6 @@
                     <modules>
                         <module>jar_artifact</module>
                         <module>integration_tests</module>
-                        <module>udf_coverage</module>
                     </modules>
                 </configuration>
             </plugin>
@@ -346,6 +356,19 @@
                             <includeGroupIds>org.postgresql</includeGroupIds>
                             <includeArtifactIds>postgresql</includeArtifactIds>
                             <outputDirectory>${project.build.directory}/postgresql-driver</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-mysql-driver</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <includeGroupIds>mysql</includeGroupIds>
+                            <includeArtifactIds>mysql-connector-java</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/mysql-driver</outputDirectory>
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>

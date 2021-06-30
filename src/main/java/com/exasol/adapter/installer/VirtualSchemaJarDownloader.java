@@ -1,6 +1,7 @@
 package com.exasol.adapter.installer;
 
 import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.FILE_SEPARATOR;
+import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.TEMP_DIRECTORY;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,37 +17,37 @@ import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
+import com.exasol.adapter.installer.dialect.Dialect;
 import com.exasol.errorreporting.ExaError;
 
 /**
  * Downloads a Virtual Schema JAR file.
  */
-public class VirtualSchemaGitHubJarDownloader implements VirtualSchemaJarProvider {
+public class VirtualSchemaJarDownloader implements FileProvider {
     private final Dialect dialect;
 
     /**
-     * Instantiates a new {@link VirtualSchemaGitHubJarDownloader}.
+     * Instantiates a new {@link VirtualSchemaJarDownloader}.
      *
      * @param dialect the dialect
      */
-    public VirtualSchemaGitHubJarDownloader(final Dialect dialect) {
+    public VirtualSchemaJarDownloader(final Dialect dialect) {
         this.dialect = dialect;
     }
 
     @Override
-    public JarFile getJar() {
+    public File getFile() {
         final List<GHAsset> assets = getGHAssets(this.dialect);
         final GHAsset ghAsset = getGHAsset(assets);
-        final String tempDirectory = System.getProperty("java.io.tmpdir");
         final String assetName = ghAsset.getName();
-        final String filePath = tempDirectory + FILE_SEPARATOR + assetName;
+        final String filePath = TEMP_DIRECTORY + FILE_SEPARATOR + assetName;
         try (final InputStream in = new URL(ghAsset.getBrowserDownloadUrl()).openStream()) {
             writeToDisk(filePath, in);
         } catch (final IOException exception) {
             throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-5")
                     .message("Cannot download and save the file {{file}}.", assetName).toString(), exception);
         }
-        return new JarFile(tempDirectory, assetName);
+        return new File(TEMP_DIRECTORY, assetName);
     }
 
     private List<GHAsset> getGHAssets(final Dialect dialect) {

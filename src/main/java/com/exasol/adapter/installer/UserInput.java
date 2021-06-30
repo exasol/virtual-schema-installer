@@ -2,6 +2,8 @@ package com.exasol.adapter.installer;
 
 import java.util.Map;
 
+import com.exasol.adapter.installer.dialect.Dialect;
+
 /**
  * The type User input.
  */

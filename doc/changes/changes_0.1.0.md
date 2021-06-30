@@ -5,6 +5,7 @@ Code name:
 ## Features
 
 * #1: Create initial implementation for Postgres VS dialect.
+* #7: Added support for MySQL Virtual Schema installation.
 
 ## Refactoring
 
@@ -18,6 +19,7 @@ Code name:
 * Added `com.exasol:bucketfs-java:2.0.1`
 * Added `com.exasol:error-reporting-java:0.4.0`
 * Added `com.exasol:exasol-jdbc:7.0.7`
+* Added `com.exasol:exasol-testcontainers:3.5.3`
 * Added `commons-cli:commons-cli:1.4`
 * Added `org.kohsuke:github-api:1.128`
 * Added `org.postgresql:postgresql:42.2.20.jre7`
@@ -28,12 +30,13 @@ Code name:
 
 ### Test Dependency Updates
 
-* Added `com.exasol:exasol-testcontainers:3.5.3`
 * Added `com.exasol:hamcrest-resultset-matcher:1.4.0`
 * Added `junit:junit:4.13.2`
+* Added `mysql:mysql-connector-java:8.0.23`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.7.2`
 * Added `org.testcontainers:junit-jupiter:1.15.3`
+* Added `org.testcontainers:mysql:1.15.3`
 * Added `org.testcontainers:postgresql:1.15.3`
 
 ### Plugin Dependency Updates
