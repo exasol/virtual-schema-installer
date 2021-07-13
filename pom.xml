@@ -133,12 +133,6 @@
             <classifier>runtime</classifier>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.exasol</groupId>
-            <artifactId>exasol-testcontainers</artifactId>
-            <version>3.5.3</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -314,7 +308,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>0.7.2</version>
+                <version>0.10.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -404,7 +398,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>0.1.1</version>
+                <version>0.4.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -413,6 +407,16 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
+        <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-jar-plugin</artifactId>
+    <version>3.2.0</version>
+    <executions>
+        <execution>
+            <id>default-jar</id>
+            <phase>none</phase>
+        </execution>
+    </executions>
+</plugin></plugins>
     </build>
 </project>
