@@ -10,6 +10,8 @@
         <java.version>11</java.version>
         <surefire.and.failsafe.plugin.version>3.0.0-M5</surefire.and.failsafe.plugin.version>
         <org.testcontainers.version>1.15.3</org.testcontainers.version>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
     <distributionManagement>
         <repository>
@@ -228,6 +230,9 @@
                         a chance to reach branches <property> in the logging lambdas too. -->
                     <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
                     <forkCount>0</forkCount>
+                    <systemPropertyVariables>
+                        
+                    </systemPropertyVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -322,7 +327,9 @@
                         <module>integration_tests</module>
                     </modules>
                     <linkReplacements>
-                        <linkReplacement>LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm</linkReplacement>
+                        <linkReplacement>
+                            LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm
+                        </linkReplacement>
                     </linkReplacements>
                 </configuration>
             </plugin>
@@ -372,20 +379,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>io.github.zlika</groupId>
-                <artifactId>reproducible-build-maven-plugin</artifactId>
-                <version>0.13</version>
-                <executions>
-                    <execution>
-                        <id>strip-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>strip-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
@@ -410,16 +403,31 @@
                     </execution>
                 </executions>
             </plugin>
-        <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-jar-plugin</artifactId>
-    <version>3.2.0</version>
-    <executions>
-        <execution>
-            <id>default-jar</id>
-            <phase>none</phase>
-        </execution>
-    </executions>
-</plugin></plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.github.zlika</groupId>
+                <artifactId>reproducible-build-maven-plugin</artifactId>
+                <version>0.13</version>
+                <executions>
+                    <execution>
+                        <id>strip-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>strip-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

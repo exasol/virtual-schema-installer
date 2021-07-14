@@ -46,10 +46,10 @@
 | [Artifact reference checker and unifier][45]            | [MIT][1]                                       |
 | [Project keeper maven plugin][47]                       | [MIT][1]                                       |
 | [Maven Dependency Plugin][49]                           | [The Apache Software License, Version 2.0][40] |
-| [Reproducible Build Maven Plugin][51]                   | [Apache 2.0][40]                               |
-| [Maven Surefire Plugin][53]                             | [Apache License, Version 2.0][5]               |
-| [error-code-crawler-maven-plugin][55]                   | [MIT][1]                                       |
-| [Apache Maven JAR Plugin][57]                           | [Apache License, Version 2.0][5]               |
+| [Maven Surefire Plugin][51]                             | [Apache License, Version 2.0][5]               |
+| [error-code-crawler-maven-plugin][53]                   | [MIT][1]                                       |
+| [Apache Maven JAR Plugin][55]                           | [Apache License, Version 2.0][5]               |
+| [Reproducible Build Maven Plugin][57]                   | [Apache 2.0][40]                               |
 | [Maven Clean Plugin][59]                                | [The Apache Software License, Version 2.0][40] |
 | [Maven Resources Plugin][61]                            | [The Apache Software License, Version 2.0][40] |
 | [Maven Install Plugin][63]                              | [The Apache Software License, Version 2.0][40] |
@@ -63,7 +63,7 @@
 [7]: https://www.opensource.org/licenses/mit-license.php
 [10]: https://jdbc.postgresql.org
 [40]: http://www.apache.org/licenses/LICENSE-2.0.txt
-[53]: https://maven.apache.org/surefire/maven-surefire-plugin/
+[51]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [11]: https://jdbc.postgresql.org/about/license.html
 [59]: http://maven.apache.org/plugins/maven-clean-plugin/
 [9]: https://docs.exasol.com/connect_exasol/drivers/jdbc.htm
@@ -80,7 +80,7 @@
 [19]: https://github.com/exasol/exasol-testcontainers
 [31]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
 [25]: https://github.com/exasol/hamcrest-resultset-matcher
-[51]: http://zlika.github.io/reproducible-build-maven-plugin
+[57]: http://zlika.github.io/reproducible-build-maven-plugin
 [5]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [43]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
 [18]: http://dev.mysql.com/doc/connector-j/en/
@@ -97,6 +97,6 @@
 [6]: https://github-api.kohsuke.org/
 [61]: http://maven.apache.org/plugins/maven-resources-plugin/
 [45]: https://github.com/exasol/artifact-reference-checker-maven-plugin
-[55]: https://github.com/exasol/error-code-crawler-maven-plugin
-[57]: https://maven.apache.org/plugins/maven-jar-plugin/
+[53]: https://github.com/exasol/error-code-crawler-maven-plugin
+[55]: https://maven.apache.org/plugins/maven-jar-plugin/
 [35]: https://maven.apache.org/plugins/maven-assembly-plugin/
