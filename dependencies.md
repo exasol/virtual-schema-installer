@@ -59,7 +59,6 @@
 [29]: https://www.eclemma.org/jacoco/index.html
 [47]: https://github.com/exasol/project-keeper-maven-plugin
 [2]: https://github.com/exasol/bucketfs-java
-[9]: LICENSE-exasol-jdbc.txt
 [0]: https://github.com/exasol/error-reporting-java
 [7]: https://www.opensource.org/licenses/mit-license.php
 [10]: https://jdbc.postgresql.org
@@ -67,6 +66,7 @@
 [53]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [11]: https://jdbc.postgresql.org/about/license.html
 [59]: http://maven.apache.org/plugins/maven-clean-plugin/
+[9]: https://docs.exasol.com/connect_exasol/drivers/jdbc.htm
 [1]: https://opensource.org/licenses/MIT
 [37]: https://maven.apache.org/surefire/maven-failsafe-plugin/
 [41]: http://www.mojohaus.org/versions-maven-plugin/
