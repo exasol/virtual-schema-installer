@@ -20,7 +20,6 @@ Code name:
 * Added `com.exasol:bucketfs-java:2.0.1`
 * Added `com.exasol:error-reporting-java:0.4.0`
 * Added `com.exasol:exasol-jdbc:7.0.7`
-* Added `com.exasol:exasol-testcontainers:3.5.3`
 * Added `commons-cli:commons-cli:1.4`
 * Added `org.kohsuke:github-api:1.128`
 * Added `org.postgresql:postgresql:42.2.20.jre7`
@@ -31,6 +30,7 @@ Code name:
 
 ### Test Dependency Updates
 
+* Added `com.exasol:exasol-testcontainers:3.5.3`
 * Added `com.exasol:hamcrest-resultset-matcher:1.4.0`
 * Added `junit:junit:4.13.2`
 * Added `mysql:mysql-connector-java:8.0.23`
@@ -43,8 +43,8 @@ Code name:
 ### Plugin Dependency Updates
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.3.1`
-* Added `com.exasol:error-code-crawler-maven-plugin:0.1.1`
-* Added `com.exasol:project-keeper-maven-plugin:0.7.2`
+* Added `com.exasol:error-code-crawler-maven-plugin:0.4.0`
+* Added `com.exasol:project-keeper-maven-plugin:0.10.0`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.13`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
@@ -52,9 +52,9 @@ Code name:
 * Added `org.apache.maven.plugins:maven-dependency-plugin:2.8`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:2.7`
 * Added `org.apache.maven.plugins:maven-enforcer-plugin:3.0.0-M3`
-* Added `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M5`
+* Added `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M3`
 * Added `org.apache.maven.plugins:maven-install-plugin:2.4`
-* Added `org.apache.maven.plugins:maven-jar-plugin:2.4`
+* Added `org.apache.maven.plugins:maven-jar-plugin:3.2.0`
 * Added `org.apache.maven.plugins:maven-resources-plugin:2.6`
 * Added `org.apache.maven.plugins:maven-site-plugin:3.3`
 * Added `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M3`
