@@ -41,7 +41,7 @@ public class VirtualSchemaJarDownloader implements FileProvider {
         final GHAsset jarAsset = getJarAsset(latestReleaseAssets);
         final String jarName = jarAsset.getName();
         final String filePath = TEMP_DIRECTORY + FILE_SEPARATOR + jarName;
-        if (!Files.exists(Paths.get(filePath))) {
+        if (!Files.exists(Paths.get(filePath))) { // test
             downloadJarFile(jarAsset, jarName, filePath);
         }
         return new File(TEMP_DIRECTORY, jarName);
