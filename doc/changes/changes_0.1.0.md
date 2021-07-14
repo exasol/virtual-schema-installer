@@ -52,7 +52,7 @@ Code name:
 * Added `org.apache.maven.plugins:maven-dependency-plugin:2.8`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:2.7`
 * Added `org.apache.maven.plugins:maven-enforcer-plugin:3.0.0-M3`
-* Added `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M5`
+* Added `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M3`
 * Added `org.apache.maven.plugins:maven-install-plugin:2.4`
 * Added `org.apache.maven.plugins:maven-jar-plugin:3.2.0`
 * Added `org.apache.maven.plugins:maven-resources-plugin:2.6`
