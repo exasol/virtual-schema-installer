@@ -12,7 +12,7 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Avirtual-schema-installer&metric=code_smells)](https://sonarcloud.io/dashboard?id=com.exasol%3Avirtual-schema-installer)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Avirtual-schema-installer&metric=coverage)](https://sonarcloud.io/dashboard?id=com.exasol%3Avirtual-schema-installer)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Avirtual-schema-installer&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=com.exasol%3Avirtual-schema-installer)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Avirtual-schema-installer&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.exasol%3Avirtual-schema-installer)'
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Avirtual-schema-installer&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.exasol%3Avirtual-schema-installer)
 
 ## Features
 
