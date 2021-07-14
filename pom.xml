@@ -321,6 +321,9 @@
                         <module>jar_artifact</module>
                         <module>integration_tests</module>
                     </modules>
+                    <linkReplacements>
+                        <linkReplacement>LICENSE-exasol-jdbc.txt|https://docs.exasol.com/connect_exasol/drivers/jdbc.htm</linkReplacement>
+                    </linkReplacements>
                 </configuration>
             </plugin>
             <plugin>
