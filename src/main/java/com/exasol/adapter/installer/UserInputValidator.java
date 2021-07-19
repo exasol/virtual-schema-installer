@@ -16,34 +16,34 @@ public class UserInputValidator {
     /**
      * Validate an Exasol identifier.
      *
-     * @param value the value
+     * @param exasolIdentifier exasol identifier
      * @return validated string
      */
-    public static String validateExasolIdentifier(final String value) {
+    public static String validateExasolIdentifier(final String exasolIdentifier) {
         final Set<Character> allowedSpecialCharacters = Set.of('_', '-', '.');
-        return validateString(value, allowedSpecialCharacters);
+        return validateString(exasolIdentifier, allowedSpecialCharacters);
     }
 
     /**
      * Validate a name of a file.
      *
-     * @param value the value
+     * @param fileName file name
      * @return validated string
      */
-    public static String validateFileName(final String value) {
+    public static String validateFileName(final String fileName) {
         final Set<Character> allowedSpecialCharacters = Set.of('_', '-', '.');
-        return validateString(value, allowedSpecialCharacters);
+        return validateString(fileName, allowedSpecialCharacters);
     }
 
     /**
      * Validate a path.
      *
-     * @param value the value
+     * @param path path
      * @return validated string
      */
-    public static String validatePath(final String value) {
+    public static String validatePath(final String path) {
         final Set<Character> allowedSpecialCharacters = Set.of('_', '-', '\\', '/', ' ', '.');
-        return validateString(value, allowedSpecialCharacters);
+        return validateString(path, allowedSpecialCharacters);
     }
 
     /**

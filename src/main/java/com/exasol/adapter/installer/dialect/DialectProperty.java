@@ -45,7 +45,7 @@ public class DialectProperty {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DialectProperty)) {
             return false;
         }
         final DialectProperty that = (DialectProperty) o;

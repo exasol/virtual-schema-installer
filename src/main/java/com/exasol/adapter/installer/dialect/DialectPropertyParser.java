@@ -29,7 +29,7 @@ class DialectPropertyParser {
     private static InstallerException createException(final String property) {
         return new InstallerException(ExaError.messageBuilder("E-VS-INSTL-10")
                 .message("Can't parse dialect property: {{property}}", property)
-                .mitigation("Dialect property must have the following format: <PROPERTY>:'<VALUE>'").toString());
+                .mitigation("Dialect property must have the following format: <PROPERTY>='<VALUE>'").toString());
     }
 
     private static DialectProperty createDialectProperty(final String property, final String key, final String value) {
