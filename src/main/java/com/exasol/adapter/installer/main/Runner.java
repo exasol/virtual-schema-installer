@@ -60,13 +60,12 @@ public class Runner {
                 .exaIp(virtualSchemaProfile.getExaIp()) //
                 .exaPort(virtualSchemaProfile.getExaPort()) //
                 .exaBucketFsPort(virtualSchemaProfile.getBucketFsPort()) //
-                .exaBucketName(virtualSchemaProfile.getBucketName()) //
                 .exaSchemaName(virtualSchemaProfile.getAdapterSchemaName()) //
                 .exaAdapterName(virtualSchemaProfile.getAdapterName()) //
                 .exaConnectionName(virtualSchemaProfile.getConnectionName()) //
                 .exaVirtualSchemaName(virtualSchemaProfile.getVirtualSchemaName()) //
                 .connectionString(virtualSchemaProfile.getConnectionString()) //
-                .dialectSpecificProperties(virtualSchemaProfile.getDialectSpecificProperties()) //
+                .dialectProperties(virtualSchemaProfile.getDialectProperties()) //
                 .build();
     }
 

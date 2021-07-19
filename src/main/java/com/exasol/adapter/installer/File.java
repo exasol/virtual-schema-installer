@@ -16,8 +16,8 @@ public class File {
      * @param name name
      */
     public File(final String path, final String name) {
-        this.path = InputString.validate(path);
-        this.name = InputString.validate(name);
+        this.path = UserInputValidator.validatePath(path);
+        this.name = UserInputValidator.validateFileName(name);
     }
 
     /**

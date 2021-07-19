@@ -2,6 +2,8 @@ package com.exasol.adapter.installer;
 
 import java.util.List;
 
+import com.exasol.adapter.installer.dialect.DialectProperty;
+
 /**
  * Virtual Schema Profile is dialect-based information need to install a Virtual Schema.
  */
@@ -40,13 +42,6 @@ public interface VirtualSchemaProfile {
      * @return Exasol ip
      */
     String getExaIp();
-
-    /**
-     * Get a bucket name.
-     *
-     * @return bucket name
-     */
-    String getBucketName();
 
     /**
      * Get an adapter schema name.
@@ -88,5 +83,5 @@ public interface VirtualSchemaProfile {
      *
      * @return dialect-specific properties
      */
-    List<String> getDialectSpecificProperties();
+    List<DialectProperty> getDialectProperties();
 }

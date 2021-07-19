@@ -18,7 +18,6 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     private static final String EXA_IP_DEFAULT = "localhost";
     private static final String EXA_PORT_DEFAULT = "8563";
     private static final String EXA_BUCKET_FS_PORT_DEFAULT = "2580";
-    private static final String EXA_BUCKET_NAME_DEFAULT = "default";
     private static final String EXA_SCHEMA_NAME_DEFAULT = "ADAPTER";
     private static final String SOURCE_IP_DEFAULT = "localhost";
     private final ConfigCreator configCreator = new ConfigCreator();
@@ -72,11 +71,6 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     }
 
     @Override
-    public String getBucketName() {
-        return EXA_BUCKET_NAME_DEFAULT;
-    }
-
-    @Override
     public String getBucketFsPort() {
         return getOrDefault(this.userInput.getParameters(), EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DEFAULT);
     }
@@ -97,8 +91,10 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     }
 
     @Override
-    public List<String> getDialectSpecificProperties() {
-        return Arrays.stream(this.userInput.getAdditionalProperties()).collect(Collectors.toList());
+    public List<DialectProperty> getDialectProperties() {
+        return Arrays.stream(this.userInput.getAdditionalProperties()) //
+                .map(DialectPropertyParser::parseProperty) //
+                .collect(Collectors.toList());
     }
 
     private String getDialectName() {

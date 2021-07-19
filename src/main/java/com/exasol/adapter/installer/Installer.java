@@ -7,11 +7,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
+import com.exasol.adapter.installer.dialect.DialectProperty;
 import com.exasol.bucketfs.BucketAccessException;
 import com.exasol.bucketfs.WriteEnabledBucket;
 import com.exasol.errorreporting.ExaError;
@@ -21,7 +21,9 @@ import com.exasol.errorreporting.ExaError;
  */
 public class Installer {
     private static final Logger LOGGER = Logger.getLogger(Installer.class.getName());
-    private static final String PATH_TO_DRIVER_IN_BUCKET = "drivers/jdbc/";
+    private static final String DEFAULT_BUCKETFS_NAME = "bfsdefault";
+    private static final String DEFAULT_BUCKET_NAME = "default";
+    private static final String DEFAULT_PATH_TO_FILE_IN_BUCKET = "drivers/jdbc";
     // Files related fields
     private final File virtualSchemaJarFile;
     private final JdbcDriver jdbcDriver;
@@ -35,13 +37,12 @@ public class Installer {
     private final String exaIp;
     private final int exaPort;
     private final int exaBucketFsPort;
-    private final String exaBucketName;
     private final String exaSchemaName;
     private final String exaAdapterName;
     private final String exaConnectionName;
     private final String exaVirtualSchemaName;
     private final String connectionString;
-    private final List<String> dialectSpecificProperties;
+    private final List<DialectProperty> dialectProperties;
 
     private Installer(final InstallerBuilder builder) {
         this.virtualSchemaJarFile = builder.virtualSchemaJarFile;
@@ -58,8 +59,7 @@ public class Installer {
         this.connectionString = builder.connectionString;
         this.exaUsername = builder.exaUsername;
         this.exaPort = builder.exaPort;
-        this.exaBucketName = builder.exaBucketName;
-        this.dialectSpecificProperties = builder.dialectSpecificProperties;
+        this.dialectProperties = builder.dialectProperties;
         this.exaVirtualSchemaName = builder.exaVirtualSchemaName;
     }
 
@@ -81,16 +81,17 @@ public class Installer {
 
     private void uploadFilesToBucket(final File virtualSchemaJarFile, final JdbcDriver jdbcDriver)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
-        final WriteEnabledBucket bucket = getBucket();
-        uploadVsJarToBucket(bucket, virtualSchemaJarFile);
+        final WriteEnabledBucket bucket = getBucket(DEFAULT_BUCKETFS_NAME, DEFAULT_BUCKET_NAME);
+        uploadFileToBucket(bucket, virtualSchemaJarFile, DEFAULT_PATH_TO_FILE_IN_BUCKET);
         uploadDriverToBucket(bucket, jdbcDriver);
     }
 
-    private WriteEnabledBucket getBucket() {
+    private WriteEnabledBucket getBucket(final String bucketFsName, final String bucketName) {
         return WriteEnabledBucket.builder()//
+                .serviceName(bucketFsName) //
                 .ipAddress(this.exaIp) //
                 .httpPort(this.exaBucketFsPort) //
-                .name(this.exaBucketName) //
+                .name(bucketName) //
                 .writePassword(this.exaBucketWritePassword) //
                 .build();
     }
@@ -105,7 +106,7 @@ public class Installer {
     }
 
     private void createSchema(final Statement statement) throws SQLException {
-        statement.execute("CREATE SCHEMA IF NOT EXISTS " + this.exaSchemaName);
+        statement.execute("CREATE SCHEMA IF NOT EXISTS \"" + this.exaSchemaName + "\"");
     }
 
     private void createAdapterScript(final Statement statement, final List<String> jarNames) throws SQLException {
@@ -118,7 +119,7 @@ public class Installer {
     private void createConnection(final Statement statement) throws SQLException {
         LOGGER.info(() -> "Creating connection object with the following connection string: " + LINE_SEPARATOR
                 + this.connectionString);
-        statement.execute("CREATE OR REPLACE CONNECTION " + this.exaConnectionName + " TO '" + this.connectionString
+        statement.execute("CREATE OR REPLACE CONNECTION \"" + this.exaConnectionName + "\" TO '" + this.connectionString
                 + "' USER '" + this.sourceUsername + "' IDENTIFIED BY '" + this.sourcePassword + "'");
     }
 
@@ -135,53 +136,43 @@ public class Installer {
                         + "USING " + this.exaSchemaName + "." + this.exaAdapterName + LINE_SEPARATOR //
                         + "WITH" + LINE_SEPARATOR //
                         + "CONNECTION_NAME = '" + this.exaConnectionName + "'" + LINE_SEPARATOR);
-        for (final String property : this.dialectSpecificProperties) {
-            createVirtualSchemaStatement.append(property).append(LINE_SEPARATOR);
+        for (final DialectProperty property : this.dialectProperties) {
+            createVirtualSchemaStatement //
+                    .append(property.getKey()).append("='").append(property.getValue()).append("'")
+                    .append(LINE_SEPARATOR);
         }
         return createVirtualSchemaStatement.toString();
     }
 
     private String prepareAdapterScriptStatement(final List<String> jarNames) {
         final StringBuilder adapterScript = new StringBuilder( //
-                "CREATE OR REPLACE JAVA ADAPTER SCRIPT " + this.exaSchemaName + "." + this.exaAdapterName + " AS"
-                        + LINE_SEPARATOR //
+                "CREATE OR REPLACE JAVA ADAPTER SCRIPT \"" + this.exaSchemaName + "\".\"" + this.exaAdapterName
+                        + "\" AS" + LINE_SEPARATOR //
                         + "  %scriptclass com.exasol.adapter.RequestDispatcher;" + LINE_SEPARATOR //
         );
         for (final String jarName : jarNames) {
-            adapterScript.append(getPathInBucketFor(jarName));
+            adapterScript.append(getPathInBucketFor(DEFAULT_BUCKETFS_NAME, DEFAULT_BUCKET_NAME,
+                    DEFAULT_PATH_TO_FILE_IN_BUCKET, jarName));
         }
         return adapterScript.toString();
     }
 
-    private String getPathInBucketFor(final String jarName) {
-        return "%jar /buckets/bfsdefault/default/" + PATH_TO_DRIVER_IN_BUCKET + jarName + ";" + LINE_SEPARATOR;
+    private String getPathInBucketFor(final String bucketFsName, final String bucketName, final String path,
+            final String jarName) {
+        return "%jar /buckets/" + bucketFsName + "/" + bucketName + "/" + path + "/" + jarName + ";" + LINE_SEPARATOR;
     }
 
-    private void uploadVsJarToBucket(final WriteEnabledBucket bucket, final File virtualSchemaJarFile)
+    private void uploadFileToBucket(final WriteEnabledBucket bucket, final File file, final String pathInBucket)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
-        bucket.uploadFileNonBlocking(virtualSchemaJarFile.getPathWithName(),
-                PATH_TO_DRIVER_IN_BUCKET + virtualSchemaJarFile.getName());
+        bucket.uploadFileNonBlocking(file.getPathWithName(), pathInBucket + "/" + file.getName());
     }
 
     private void uploadDriverToBucket(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
             throws BucketAccessException, TimeoutException, FileNotFoundException {
-        uploadJdbcDriverJar(bucket, jdbcDriver);
+        uploadFileToBucket(bucket, jdbcDriver.getJar(), DEFAULT_PATH_TO_FILE_IN_BUCKET);
         if (jdbcDriver.hasConfig()) {
-            uploadJdbcDriverConfig(bucket, jdbcDriver);
+            uploadFileToBucket(bucket, jdbcDriver.getConfig(), DEFAULT_PATH_TO_FILE_IN_BUCKET);
         }
-    }
-
-    private void uploadJdbcDriverJar(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
-            throws BucketAccessException, TimeoutException, FileNotFoundException {
-        final File jdbcDriverJar = jdbcDriver.getJar();
-        bucket.uploadFileNonBlocking(jdbcDriverJar.getPathWithName(),
-                PATH_TO_DRIVER_IN_BUCKET + jdbcDriverJar.getName());
-    }
-
-    private void uploadJdbcDriverConfig(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
-            throws BucketAccessException, TimeoutException, FileNotFoundException {
-        final File config = jdbcDriver.getConfig();
-        bucket.uploadFileNonBlocking(config.getPathWithName(), PATH_TO_DRIVER_IN_BUCKET + config.getName());
     }
 
     /**
@@ -210,13 +201,12 @@ public class Installer {
         private String exaIp;
         private int exaPort;
         private int exaBucketFsPort;
-        private String exaBucketName;
         private String exaSchemaName;
         private String exaAdapterName;
         private String exaConnectionName;
         private String exaVirtualSchemaName;
         private String connectionString;
-        private List<String> dialectSpecificProperties;
+        private List<DialectProperty> dialectProperties;
 
         private InstallerBuilder() {
         }
@@ -232,32 +222,32 @@ public class Installer {
         }
 
         public InstallerBuilder exaUsername(final String exaUsername) {
-            this.exaUsername = InputString.validate(exaUsername);
+            this.exaUsername = exaUsername;
             return this;
         }
 
         public InstallerBuilder exaPassword(final String exaPassword) {
-            this.exaPassword = InputString.validate(exaPassword);
+            this.exaPassword = exaPassword;
             return this;
         }
 
         public InstallerBuilder exaBucketWritePassword(final String exaBucketWritePassword) {
-            this.exaBucketWritePassword = InputString.validate(exaBucketWritePassword);
+            this.exaBucketWritePassword = exaBucketWritePassword;
             return this;
         }
 
         public InstallerBuilder sourceUsername(final String sourceUsername) {
-            this.sourceUsername = InputString.validate(sourceUsername);
+            this.sourceUsername = UserInputValidator.validateLiteralString(sourceUsername);
             return this;
         }
 
         public InstallerBuilder sourcePassword(final String sourcePassword) {
-            this.sourcePassword = InputString.validate(sourcePassword);
+            this.sourcePassword = UserInputValidator.validateLiteralString(sourcePassword);
             return this;
         }
 
         public InstallerBuilder exaIp(final String exaIp) {
-            this.exaIp = InputString.validate(exaIp);
+            this.exaIp = exaIp;
             return this;
         }
 
@@ -282,42 +272,33 @@ public class Installer {
             return this;
         }
 
-        public InstallerBuilder exaBucketName(final String exaBucketName) {
-            this.exaBucketName = InputString.validate(exaBucketName);
-            return this;
-        }
-
         public InstallerBuilder exaSchemaName(final String exaSchemaName) {
-            this.exaSchemaName = InputString.validate(exaSchemaName);
+            this.exaSchemaName = UserInputValidator.validateExasolIdentifier(exaSchemaName);
             return this;
         }
 
         public InstallerBuilder exaAdapterName(final String exaAdapterName) {
-            this.exaAdapterName = InputString.validate(exaAdapterName);
+            this.exaAdapterName = UserInputValidator.validateExasolIdentifier(exaAdapterName);
             return this;
         }
 
         public InstallerBuilder exaConnectionName(final String exaConnectionName) {
-            this.exaConnectionName = InputString.validate(exaConnectionName);
+            this.exaConnectionName = UserInputValidator.validateExasolIdentifier(exaConnectionName);
             return this;
         }
 
         public InstallerBuilder exaVirtualSchemaName(final String exaVirtualSchemaName) {
-            this.exaVirtualSchemaName = InputString.validate(exaVirtualSchemaName);
+            this.exaVirtualSchemaName = UserInputValidator.validateExasolIdentifier(exaVirtualSchemaName);
             return this;
         }
 
         public InstallerBuilder connectionString(final String connectionString) {
-            this.connectionString = InputString.validate(connectionString);
+            this.connectionString = UserInputValidator.validateLiteralString(connectionString);
             return this;
         }
 
-        public InstallerBuilder dialectSpecificProperties(final List<String> dialectSpecificProperties) {
-            final List<String> properties = new ArrayList<>(dialectSpecificProperties.size());
-            for (final String additionalProperty : dialectSpecificProperties) {
-                properties.add(InputString.validate(additionalProperty));
-            }
-            this.dialectSpecificProperties = properties;
+        public InstallerBuilder dialectProperties(final List<DialectProperty> dialectProperties) {
+            this.dialectProperties = dialectProperties;
             return this;
         }
 
