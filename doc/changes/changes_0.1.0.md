@@ -12,6 +12,7 @@ Code name:
 * #3: Created an interface for obtaining JAR files.
 * #4: Validated user input.
 * #9: Added cache check for downloaded JAR files.
+* #14: Improved user input validation.
 
 ## Dependency Updates
 
