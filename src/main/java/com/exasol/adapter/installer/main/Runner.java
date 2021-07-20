@@ -4,7 +4,6 @@ import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -23,7 +22,6 @@ public class Runner {
 
     public static void main(final String[] args)
             throws SQLException, BucketAccessException, FileNotFoundException, ParseException, TimeoutException {
-        System.out.println(Arrays.toString(args));
         final Map<String, String> options = getUserInputOptions();
         final UserInput userInput = new UserInputParser().parseUserInput(args, options);
         final Map<String, String> parameters = userInput.getParameters();
