@@ -37,11 +37,11 @@ public interface VirtualSchemaProfile {
     String getExaPort();
 
     /**
-     * Get an Exasol ip.
+     * Get an Exasol host.
      *
-     * @return Exasol ip
+     * @return Exasol host
      */
-    String getExaIp();
+    String getExaHost();
 
     /**
      * Get an adapter schema name.

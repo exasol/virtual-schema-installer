@@ -14,6 +14,10 @@ Code name:
 * #9: Added cache check for downloaded JAR files.
 * #14: Improved user input validation.
 
+## Documentation
+
+* #5: Added user guide.
+
 ## Dependency Updates
 
 ### Compile Dependency Updates

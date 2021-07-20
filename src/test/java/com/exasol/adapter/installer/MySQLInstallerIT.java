@@ -57,14 +57,14 @@ class MySQLInstallerIT extends AbstractIntegrationTest {
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_NAME_KEY, "mysql-connector-java.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/mysql-driver", //
-                "--" + EXA_IP_KEY, "localhost", //
+                "--" + EXA_HOST_KEY, "localhost", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
                 "--" + EXA_SCHEMA_NAME_KEY, EXASOL_SCHEMA_NAME, //
                 "--" + EXA_ADAPTER_NAME_KEY, EXASOL_ADAPTER_NAME, //
                 "--" + EXA_CONNECTION_NAME_KEY, CONNECTION_NAME, //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
-                "--" + SOURCE_IP_KEY, EXASOL.getHostIp(), //
+                "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, MYSQL.getMappedPort(MYSQL_PORT).toString(), //
                 "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + MYSQL_SCHEMA + "'", //
                 "--" + ADDITIONAL_PROPERTY_KEY, "TABLE_FILTER='" + SIMPLE_TABLE + "'", //
@@ -78,12 +78,11 @@ class MySQLInstallerIT extends AbstractIntegrationTest {
             throws SQLException, BucketAccessException, TimeoutException, ParseException, IOException {
         final String virtualSchemaName = "MYSQL_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
-                "--" + JDBC_DRIVER_NAME_KEY, "mysql-connector-java.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/mysql-driver", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
-                "--" + SOURCE_IP_KEY, EXASOL.getHostIp(), //
+                "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, MYSQL.getMappedPort(MYSQL_PORT).toString(), //
                 "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + MYSQL_SCHEMA + "'" //
         };

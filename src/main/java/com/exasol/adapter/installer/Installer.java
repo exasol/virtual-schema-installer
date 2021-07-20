@@ -34,7 +34,7 @@ public class Installer {
     private final String sourceUsername;
     private final String sourcePassword;
     // Virtual Schema related fields
-    private final String exaIp;
+    private final String exaHost;
     private final int exaPort;
     private final int exaBucketFsPort;
     private final String exaSchemaName;
@@ -55,7 +55,7 @@ public class Installer {
         this.exaConnectionName = builder.exaConnectionName;
         this.exaBucketFsPort = builder.exaBucketFsPort;
         this.sourcePassword = builder.sourcePassword;
-        this.exaIp = builder.exaIp;
+        this.exaHost = builder.exaHost;
         this.connectionString = builder.connectionString;
         this.exaUsername = builder.exaUsername;
         this.exaPort = builder.exaPort;
@@ -75,7 +75,7 @@ public class Installer {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:exa:" + this.exaIp + ":" + this.exaPort, this.exaUsername,
+        return DriverManager.getConnection("jdbc:exa:" + this.exaHost + ":" + this.exaPort, this.exaUsername,
                 this.exaPassword);
     }
 
@@ -89,7 +89,7 @@ public class Installer {
     private WriteEnabledBucket getBucket(final String bucketFsName, final String bucketName) {
         return WriteEnabledBucket.builder()//
                 .serviceName(bucketFsName) //
-                .ipAddress(this.exaIp) //
+                .ipAddress(this.exaHost) //
                 .httpPort(this.exaBucketFsPort) //
                 .name(bucketName) //
                 .writePassword(this.exaBucketWritePassword) //
@@ -198,7 +198,7 @@ public class Installer {
         private String sourceUsername;
         private String sourcePassword;
         // Virtual Schema related fields
-        private String exaIp;
+        private String exaHost;
         private int exaPort;
         private int exaBucketFsPort;
         private String exaSchemaName;
@@ -246,8 +246,8 @@ public class Installer {
             return this;
         }
 
-        public InstallerBuilder exaIp(final String exaIp) {
-            this.exaIp = exaIp;
+        public InstallerBuilder exaHost(final String exaHost) {
+            this.exaHost = exaHost;
             return this;
         }
 

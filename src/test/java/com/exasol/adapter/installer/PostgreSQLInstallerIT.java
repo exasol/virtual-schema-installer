@@ -57,14 +57,14 @@ class PostgreSQLInstallerIT extends AbstractIntegrationTest {
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_NAME_KEY, "postgresql.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/postgresql-driver", //
-                "--" + EXA_IP_KEY, "localhost", //
+                "--" + EXA_HOST_KEY, "localhost", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
                 "--" + EXA_SCHEMA_NAME_KEY, EXASOL_SCHEMA_NAME, //
                 "--" + EXA_ADAPTER_NAME_KEY, EXASOL_ADAPTER_NAME, //
                 "--" + EXA_CONNECTION_NAME_KEY, CONNECTION_NAME, //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
-                "--" + SOURCE_IP_KEY, EXASOL.getHostIp(), //
+                "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, POSTGRES.getMappedPort(5432).toString(), //
                 "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + POSTGRES.getDatabaseName() + "'", //
                 "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + POSTGRES_SCHEMA + "'", //
@@ -80,12 +80,11 @@ class PostgreSQLInstallerIT extends AbstractIntegrationTest {
             throws SQLException, BucketAccessException, TimeoutException, ParseException, IOException {
         final String virtualSchemaName = "POSTGRES_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
-                "--" + JDBC_DRIVER_NAME_KEY, "postgresql.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/postgresql-driver", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
-                "--" + SOURCE_IP_KEY, EXASOL.getHostIp(), //
+                "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, POSTGRES.getMappedPort(5432).toString(), //
                 "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + POSTGRES.getDatabaseName() + "'", //
                 "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + POSTGRES_SCHEMA + "'" //
