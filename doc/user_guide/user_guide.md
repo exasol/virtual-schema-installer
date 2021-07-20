@@ -27,7 +27,7 @@
 1. Run the installer in terminal:
 
     ```shell
-    java -jar virtual-schema-installer-<version>.jar --dialect <dialect> --<argument_1> <value_1> --<argument_2> <value_2> ...
+    java -jar virtual-schema-installer-0.1.0.jar --dialect <dialect> --<argument_1> <value_1> --<argument_2> <value_2> ...
     ```
 
 ### Installer Arguments
@@ -68,13 +68,13 @@ Here you can find names of all supported dialects and dialect-specific default v
 * Installing PostgreSQL Virtual Schema with all default values:
   
   ```shell
-  java -jar virtual-schema-installer-<version>.jar --dialect POSTGRESQL --property CATALOG_NAME='test' --property SCHEMA_NAME='postgres_schema'
+  java -jar virtual-schema-installer-0.1.0.jar --dialect POSTGRESQL --property CATALOG_NAME='test' --property SCHEMA_NAME='postgres_schema'
   ```
 
 * Installing MySQL Virtual Schema with customized arguments:
 
   ```shell
-  java -jar virtual-schema-installer-<version>.jar --dialect mysql --jdbc-driver-name mysql-connector.jar --jdbc-driver-path target/mysql-driver --exa-host localhost --exa-port 32769 --exa-bucketfs-port 32770 --exa-schema-name MY_SCHEMA --exa-adapter-name MY_ADAPTER_SCRIPT --exa-connection-name MY_JDBC_CONNECTION --exa-virtual-schema-name MYSQL_VIRTUAL_SCHEMA_1 --source-host 172.17.0.1 --source-port 32783 --property CATALOG_NAME='MYSQL_SCHEMA' --property TABLE_FILTER='SIMPLE_TABLE' --credentials-file /tmp/installer_credentials
+  java -jar virtual-schema-installer-0.1.0.jar --dialect mysql --jdbc-driver-name mysql-connector.jar --jdbc-driver-path target/mysql-driver --exa-host localhost --exa-port 32769 --exa-bucketfs-port 32770 --exa-schema-name MY_SCHEMA --exa-adapter-name MY_ADAPTER_SCRIPT --exa-connection-name MY_JDBC_CONNECTION --exa-virtual-schema-name MYSQL_VIRTUAL_SCHEMA_1 --source-host 172.17.0.1 --source-port 32783 --property CATALOG_NAME='MYSQL_SCHEMA' --property TABLE_FILTER='SIMPLE_TABLE' --credentials-file /tmp/installer_credentials
   ```
   
 ## Things to Be Aware of
