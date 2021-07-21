@@ -4,8 +4,8 @@
 
 * Java 11 or later installed.
 * Internet connection.
-* Exasol and the data source running.
-* Exasol and the data source can establish a connection (network set up and firewalls configured accordingly)
+* Exasol and the datasource running.
+* Exasol and the datasource can establish a connection (network set up and firewalls configured accordingly)
 
 ## How to Use the Installer
 
