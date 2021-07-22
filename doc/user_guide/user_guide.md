@@ -1,5 +1,7 @@
 # Virtual Schema Installer User Guide
 
+Virtual Schema Installer is a Command Line Interface (CLI) tool that automates a Virtual Schema installation.
+
 ## Pre-requisites
 
 * Java 11 or later installed.
