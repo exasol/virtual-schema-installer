@@ -57,7 +57,7 @@ public class Runner {
                 .exaBucketWritePassword(propertyReader.readProperty(EXASOL_BUCKET_WRITE_PASSWORD_KEY))
                 .sourceUsername(propertyReader.readProperty(SOURCE_USERNAME_KEY))
                 .sourcePassword(propertyReader.readProperty(SOURCE_PASSWORD_KEY)) //
-                .exaIp(virtualSchemaProfile.getExaIp()) //
+                .exaHost(virtualSchemaProfile.getExaHost()) //
                 .exaPort(virtualSchemaProfile.getExaPort()) //
                 .exaBucketFsPort(virtualSchemaProfile.getBucketFsPort()) //
                 .exaSchemaName(virtualSchemaProfile.getAdapterSchemaName()) //
@@ -73,14 +73,14 @@ public class Runner {
         final Map<String, String> options = new HashMap<>();
         options.put(JDBC_DRIVER_NAME_KEY, JDBC_DRIVER_NAME_DESCRIPTION);
         options.put(JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DESCRIPTION);
-        options.put(EXA_IP_KEY, EXA_IP_DESCRIPTION);
+        options.put(EXA_HOST_KEY, EXA_HOST_DESCRIPTION);
         options.put(EXA_PORT_KEY, EXA_PORT_DESCRIPTION);
         options.put(EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DESCRIPTION);
         options.put(EXA_SCHEMA_NAME_KEY, EXA_SCHEMA_NAME_DESCRIPTION);
         options.put(EXA_ADAPTER_NAME_KEY, EXA_ADAPTER_NAME_DESCRIPTION);
         options.put(EXA_CONNECTION_NAME_KEY, EXA_CONNECTION_NAME_DESCRIPTION);
         options.put(EXA_VIRTUAL_SCHEMA_NAME_KEY, EXA_VIRTUAL_SCHEMA_NAME_DESCRIPTION);
-        options.put(SOURCE_IP_KEY, SOURCE_IP_DESCRIPTION);
+        options.put(SOURCE_HOST_KEY, SOURCE_HOST_DESCRIPTION);
         options.put(SOURCE_PORT_KEY, SOURCE_PORT_DESCRIPTION);
         options.put(CREDENTIALS_FILE_KEY, CREDENTIALS_FILE_DESCRIPTION);
         return options;

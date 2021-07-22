@@ -14,6 +14,8 @@
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Avirtual-schema-installer&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=com.exasol%3Avirtual-schema-installer)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Avirtual-schema-installer&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.exasol%3Avirtual-schema-installer)
 
+Virtual Schema Installer is a Command Line Interface (CLI) tool that automates a Virtual Schema installation.
+
 ## Features
 
 Installs the following Virtual Schema to the Exasol Database:
@@ -23,5 +25,6 @@ Installs the following Virtual Schema to the Exasol Database:
 
 ### Information for Users
 
+* [User Guide](doc/user_guide/user_guide.md)
 * [Changelog](doc/changes/changelog.md)
 * [Dependencies](dependencies.md)

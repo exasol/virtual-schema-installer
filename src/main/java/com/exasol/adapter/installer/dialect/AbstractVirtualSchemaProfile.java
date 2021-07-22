@@ -15,11 +15,11 @@ import com.exasol.adapter.installer.VirtualSchemaProfile;
  * Abstract base of Virtual Schema Profile.
  */
 public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfile {
-    private static final String EXA_IP_DEFAULT = "localhost";
+    private static final String EXA_HOST_DEFAULT = "localhost";
     private static final String EXA_PORT_DEFAULT = "8563";
     private static final String EXA_BUCKET_FS_PORT_DEFAULT = "2580";
     private static final String EXA_SCHEMA_NAME_DEFAULT = "ADAPTER";
-    private static final String SOURCE_IP_DEFAULT = "localhost";
+    private static final String SOURCE_HOST_DEFAULT = "localhost";
     private final ConfigCreator configCreator = new ConfigCreator();
     protected final UserInput userInput;
 
@@ -52,7 +52,7 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
 
     @Override
     public String getConnectionString() {
-        return getDriverPrefix() + "//" + getIp() + ":" + getPort() + "/";
+        return getDriverPrefix() + "//" + getHost() + ":" + getPort() + "/";
     }
 
     @Override
@@ -81,8 +81,8 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     }
 
     @Override
-    public String getExaIp() {
-        return getOrDefault(this.userInput.getParameters(), EXA_IP_KEY, EXA_IP_DEFAULT);
+    public String getExaHost() {
+        return getOrDefault(this.userInput.getParameters(), EXA_HOST_KEY, EXA_HOST_DEFAULT);
     }
 
     @Override
@@ -113,8 +113,8 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
         return getDialectName() + "_VIRTUAL_SCHEMA";
     }
 
-    private String getIp() {
-        return getOrDefault(this.userInput.getParameters(), SOURCE_IP_KEY, SOURCE_IP_DEFAULT);
+    private String getHost() {
+        return getOrDefault(this.userInput.getParameters(), SOURCE_HOST_KEY, SOURCE_HOST_DEFAULT);
     }
 
     private String getPort() {
