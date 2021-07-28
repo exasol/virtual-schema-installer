@@ -97,7 +97,7 @@ Here you can find names of all supported dialects and dialect-specific default v
 ## Things to Be Aware of
 
 * By default all files are uploaded to the `/buckets/bfsdefault/drivers/jdbc` bucket directory.
-* The installer downloads a vVrtual Schema Adapter JAR from Exasol GitHub and saves it in the default temporary directory.
+* The installer downloads a Virtual Schema Adapter JAR from Exasol GitHub and saves it in the default temporary directory.
 * The installer only creates a new Exasol schema if a schema with a specified name does not yet exist.
 * The installer uses quotes when creating Exasol schema, adapter, connection and Virtual Schema name. That means the names you specify on the console are case-sensitive.
 * If a connection with the same name already exists, the installer replaces it.
