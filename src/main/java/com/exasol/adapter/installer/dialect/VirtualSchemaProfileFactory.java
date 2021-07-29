@@ -1,7 +1,5 @@
 package com.exasol.adapter.installer.dialect;
 
-import static com.exasol.adapter.installer.dialect.Dialect.POSTGRESQL;
-
 import com.exasol.adapter.installer.*;
 import com.exasol.errorreporting.ExaError;
 
@@ -20,13 +18,16 @@ public class VirtualSchemaProfileFactory {
      */
     public static VirtualSchemaProfile getProfileFor(final UserInput userInput) {
         final Dialect dialect = userInput.getDialect();
-        if (dialect.equals(POSTGRESQL)) {
+        switch (dialect) {
+        case POSTGRESQL:
             return new PostgresDialectProfile(userInput);
-        } else if (dialect.equals(Dialect.MYSQL)) {
+        case MYSQL:
             return new MysqlDialectProfile(userInput);
-        } else if (dialect.equals(Dialect.SQLSERVER)) {
+        case SQLSERVER:
             return new SqlServerDialectProfile(userInput);
-        } else {
+        case DB2:
+            return new Db2DialectProfile(userInput);
+        default:
             throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-8")
                     .message("Unsupported dialect: {{dialect}}", dialect.name()).toString());
         }

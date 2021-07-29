@@ -147,6 +147,18 @@
             <version>${org.testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>db2</artifactId>
+            <version>${org.testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.db2</groupId>
+            <artifactId>jcc</artifactId>
+            <version>11.5.5.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -394,6 +406,19 @@
                             <includeGroupIds>com.microsoft.sqlserver</includeGroupIds>
                             <includeArtifactIds>mssql-jdbc</includeArtifactIds>
                             <outputDirectory>${project.build.directory}/sqlserver-driver</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-db2-driver</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <includeGroupIds>com.ibm.db2</includeGroupIds>
+                            <includeArtifactIds>jcc</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/db2-driver</outputDirectory>
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>

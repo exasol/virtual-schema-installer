@@ -3,41 +3,41 @@ package com.exasol.adapter.installer.dialect;
 import com.exasol.adapter.installer.UserInput;
 
 /**
- * A SQl Server dialect profile.
+ * A DB2 dialect profile.
  */
-public class SqlServerDialectProfile extends AbstractVirtualSchemaProfile {
+public class Db2DialectProfile extends AbstractVirtualSchemaProfile {
     /**
-     * Instantiate a new {@link SqlServerDialectProfile}.
+     * Instantiate a new {@link Db2DialectProfile}.
      *
      * @param userInput user input
      */
-    public SqlServerDialectProfile(final UserInput userInput) {
+    public Db2DialectProfile(final UserInput userInput) {
         super(userInput);
     }
 
     @Override
     protected String getDriverMain() {
-        return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+        return "com.ibm.db2.jcc.DB2Driver";
     }
 
     @Override
     protected String getDriverPrefix() {
-        return "jdbc:sqlserver:";
+        return "jdbc:db2:";
     }
 
     @Override
     protected boolean isSecurityManagerEnabled() {
-        return true;
+        return false;
     }
 
     @Override
     protected String getDefaultPort() {
-        return "1433";
+        return "50000";
     }
 
     @Override
     protected String getDefaultDriverName() {
-        return "mssql-jdbc.jar";
+        return "jcc.jar";
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SqlServerDialectProfile extends AbstractVirtualSchemaProfile {
     public String getConnectionString() {
         final String connectionString = getDriverPrefix() + "//" + getHost() + ":" + getPort();
         if (hasAdditionalConnectionProperties()) {
-            return connectionString + ";" + getAdditionalConnectionProperties();
+            return connectionString + "/" + getAdditionalConnectionProperties();
         } else {
             return connectionString;
         }

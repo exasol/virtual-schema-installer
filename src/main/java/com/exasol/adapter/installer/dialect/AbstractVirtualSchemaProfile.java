@@ -2,14 +2,10 @@ package com.exasol.adapter.installer.dialect;
 
 import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import com.exasol.adapter.installer.File;
-import com.exasol.adapter.installer.UserInput;
-import com.exasol.adapter.installer.VirtualSchemaProfile;
+import com.exasol.adapter.installer.*;
 
 /**
  * Abstract base of Virtual Schema Profile.
@@ -83,6 +79,16 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     @Override
     public String getExaPort() {
         return getOrDefault(this.userInput.getParameters(), EXA_PORT_KEY, EXA_PORT_DEFAULT);
+    }
+
+    @Override
+    public String getAdditionalConnectionProperties() {
+        return this.userInput.getParameters().get(ADDITIONAL_CONNECTION_PROPERTIES_KEY);
+    }
+
+    @Override
+    public boolean hasAdditionalConnectionProperties() {
+        return this.userInput.getParameters().get(ADDITIONAL_CONNECTION_PROPERTIES_KEY) != null;
     }
 
     @Override

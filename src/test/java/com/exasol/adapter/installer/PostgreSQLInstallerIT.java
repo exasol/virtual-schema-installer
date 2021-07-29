@@ -74,8 +74,8 @@ class PostgreSQLInstallerIT extends AbstractIntegrationTest {
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, POSTGRES.getMappedPort(5432).toString(), //
-                "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + POSTGRES.getDatabaseName() + "'", //
-                "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + POSTGRES_SCHEMA + "'" //
+                "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + POSTGRES_SCHEMA + "'", //
+                "--" + ADDITIONAL_CONNECTION_PROPERTIES_KEY, POSTGRES.getDatabaseName(), //
         };
         assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.POSTGRESQL.name().toLowerCase(Locale.ROOT),
                 POSTGRES.getUsername(), POSTGRES.getPassword());

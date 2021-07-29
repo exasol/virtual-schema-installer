@@ -72,8 +72,8 @@ class SqlServerInstallerIT extends AbstractIntegrationTest {
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, MS_SQL_SERVER.getMappedPort(MS_SQL_PORT).toString(), //
-                "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='master'", //
                 "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + MS_SQL_SCHEMA + "'", //
+                "--" + ADDITIONAL_CONNECTION_PROPERTIES_KEY, "databaseName=master", //
         };
         assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.SQLSERVER.toString().toLowerCase(),
                 MS_SQL_SERVER.getUsername(), MS_SQL_SERVER.getPassword());

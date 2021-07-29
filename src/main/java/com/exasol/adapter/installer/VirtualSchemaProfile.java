@@ -84,4 +84,19 @@ public interface VirtualSchemaProfile {
      * @return dialect-specific properties
      */
     List<DialectProperty> getDialectProperties();
+
+    /**
+     * Get additional connection properties.
+     *
+     * @return additional connection properties
+     */
+    String getAdditionalConnectionProperties();
+
+
+    /**
+     * Check if additional connection properties exist.
+     *
+     * @return true if additional connection properties exist
+     */
+    boolean hasAdditionalConnectionProperties();
 }

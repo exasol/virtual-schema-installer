@@ -47,6 +47,11 @@ public class MysqlDialectProfile extends AbstractVirtualSchemaProfile {
 
     @Override
     public String getConnectionString() {
-        return getDriverPrefix() + "//" + getHost() + ":" + getPort();
+        final String connectionString = getDriverPrefix() + "//" + getHost() + ":" + getPort();
+        if (hasAdditionalConnectionProperties()) {
+            return connectionString + "/" + getAdditionalConnectionProperties();
+        } else {
+            return connectionString;
+        }
     }
 }
