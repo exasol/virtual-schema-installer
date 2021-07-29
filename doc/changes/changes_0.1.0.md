@@ -24,10 +24,10 @@ Code name:
 
 * Added `com.exasol:bucketfs-java:2.0.1`
 * Added `com.exasol:error-reporting-java:0.4.0`
-* Added `com.exasol:exasol-jdbc:7.0.7`
+* Added `com.exasol:exasol-jdbc:7.0.11`
 * Added `commons-cli:commons-cli:1.4`
-* Added `org.kohsuke:github-api:1.128`
-* Added `org.postgresql:postgresql:42.2.20.jre7`
+* Added `org.kohsuke:github-api:1.132`
+* Added `org.postgresql:postgresql:42.2.23.jre7`
 
 ### Runtime Dependency Updates
 
@@ -35,20 +35,20 @@ Code name:
 
 ### Test Dependency Updates
 
-* Added `com.exasol:exasol-testcontainers:3.5.3`
+* Added `com.exasol:exasol-testcontainers:4.0.0`
 * Added `com.exasol:hamcrest-resultset-matcher:1.4.0`
 * Added `junit:junit:4.13.2`
-* Added `mysql:mysql-connector-java:8.0.23`
+* Added `mysql:mysql-connector-java:8.0.26`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.7.2`
-* Added `org.testcontainers:junit-jupiter:1.15.3`
-* Added `org.testcontainers:mysql:1.15.3`
-* Added `org.testcontainers:postgresql:1.15.3`
+* Added `org.testcontainers:junit-jupiter:1.16.0`
+* Added `org.testcontainers:mysql:1.16.0`
+* Added `org.testcontainers:postgresql:1.16.0`
 
 ### Plugin Dependency Updates
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.3.1`
-* Added `com.exasol:error-code-crawler-maven-plugin:0.4.0`
+* Added `com.exasol:error-code-crawler-maven-plugin:0.5.1`
 * Added `com.exasol:project-keeper-maven-plugin:0.10.0`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.13`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`

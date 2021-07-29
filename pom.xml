@@ -11,7 +11,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
         <surefire.and.failsafe.plugin.version>3.0.0-M3</surefire.and.failsafe.plugin.version>
-        <org.testcontainers.version>1.15.3</org.testcontainers.version>
+        <org.testcontainers.version>1.16.0</org.testcontainers.version>
     </properties>
     <distributionManagement>
         <repository>
@@ -58,12 +58,12 @@
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
-            <version>1.128</version>
+            <version>1.132</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-jdbc</artifactId>
-            <version>7.0.7</version>
+            <version>7.0.11</version>
         </dependency>
         <!--Unit test dependencies -->
         <dependency>
@@ -88,13 +88,13 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.23</version>
+            <version>8.0.26</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>exasol-testcontainers</artifactId>
-            <version>3.5.3</version>
+            <version>4.0.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -112,7 +112,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.20.jre7</version>
+            <version>42.2.23.jre7</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -121,7 +121,7 @@
             <scope>test</scope>
         </dependency>
         <!-- Overrides Junit 4.12 which is used in test containers but contains
-            a security issue: https://ossindex.sonatype.org/vuln/7ea56ad4-8a8b-4e51-8ed9-5aad83d8efb1 -->
+                        a security issue: https://ossindex.sonatype.org/vuln/7ea56ad4-8a8b-4e51-8ed9-5aad83d8efb1 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -227,7 +227,7 @@
                 <version>${surefire.and.failsafe.plugin.version}</version>
                 <configuration>
                     <!-- Set the highest log level for coverage testing, so that we have
-                        a chance to reach branches <property> in the logging lambdas too. -->
+                                                      a chance to reach branches <property> in the logging lambdas too. -->
                     <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
                 </configuration>
                 <executions>
@@ -380,7 +380,7 @@
                 <version>3.0.0-M3</version>
                 <configuration>
                     <!-- Set the highest log level for coverage testing, so that we
-                      have a chance to reach branches in the logging lambdas too. -->
+                                                    have a chance to reach branches in the logging lambdas too. -->
                     <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
                     <excludes>
                         <exclude>**IT.java</exclude>
@@ -390,7 +390,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>0.4.0</version>
+                <version>0.5.1</version>
                 <executions>
                     <execution>
                         <goals>
