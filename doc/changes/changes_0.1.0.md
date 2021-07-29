@@ -2,6 +2,14 @@
 
 Code name: 
 
+## Summary 
+
+This CLI tools helps you installing Virtual Schemas. Currently supported dialects:
+
+* PostgreSQL
+* MySQL
+* Microsoft SQL Server
+
 ## Features
 
 * #1: Create initial implementation for Postgres VS dialect.
@@ -37,11 +45,13 @@ Code name:
 
 * Added `com.exasol:exasol-testcontainers:4.0.0`
 * Added `com.exasol:hamcrest-resultset-matcher:1.4.0`
+* Added `com.microsoft.sqlserver:mssql-jdbc:9.2.0.jre8`
 * Added `junit:junit:4.13.2`
 * Added `mysql:mysql-connector-java:8.0.26`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.7.2`
 * Added `org.testcontainers:junit-jupiter:1.16.0`
+* Added `org.testcontainers:mssqlserver:1.16.0`
 * Added `org.testcontainers:mysql:1.16.0`
 * Added `org.testcontainers:postgresql:1.16.0`
 

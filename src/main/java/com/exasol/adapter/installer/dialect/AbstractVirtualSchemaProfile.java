@@ -51,11 +51,6 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     }
 
     @Override
-    public String getConnectionString() {
-        return getDriverPrefix() + "//" + getHost() + ":" + getPort() + "/";
-    }
-
-    @Override
     public String getConnectionName() {
         return getOrDefault(this.userInput.getParameters(), EXA_CONNECTION_NAME_KEY, getDefaultConnectionName());
     }
@@ -113,11 +108,21 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
         return getDialectName() + "_VIRTUAL_SCHEMA";
     }
 
-    private String getHost() {
+    /**
+     * Get host.
+     *
+     * @return host
+     */
+    protected String getHost() {
         return getOrDefault(this.userInput.getParameters(), SOURCE_HOST_KEY, SOURCE_HOST_DEFAULT);
     }
 
-    private String getPort() {
+    /**
+     * Get port.
+     *
+     * @return port
+     */
+    protected String getPort() {
         return getOrDefault(this.userInput.getParameters(), SOURCE_PORT_KEY, getDefaultPort());
     }
 

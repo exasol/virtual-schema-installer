@@ -15,6 +15,7 @@ Virtual Schema Installer is a Command Line Interface (CLI) tool that automates a
 1. Download a third-party JDBC driver (depending on dialect):
     * [PostgreSQL](https://jdbc.postgresql.org/download.html)
     * [MySQL](https://dev.mysql.com/downloads/connector/j/)
+    * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server)
 1. (Optional) Create a file `.virtual-schema-installer/credentials` in your home directory to store credentials.
    If the file is missing, the installer will ask you to input credentials via console.
    
@@ -74,6 +75,7 @@ Here you can find names of all supported dialects and dialect-specific default v
 |------------|----------------------------|---------------------|
 | POSTGRESQL | `postgresql.jar`           | `5432`              |
 | MYSQL      | `mysql-connector-java.jar` | `3306`              |
+| SQLSERVER  | `mssql-jdbc.jar`           | `1433`              |
 
 ### Examples
 

@@ -80,7 +80,7 @@ public class VirtualSchemaJarDownloader implements FileProvider {
 
     private GHRepository getRepository(final String repositoryName) {
         try {
-            final GitHub gitHub = GitHub.connect();
+            final GitHub gitHub = GitHub.connectAnonymously();
             return gitHub.getRepository(repositoryName);
         } catch (final IOException exception) {
             throw new InstallerException(

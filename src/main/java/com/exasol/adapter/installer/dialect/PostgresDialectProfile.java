@@ -44,4 +44,9 @@ public class PostgresDialectProfile extends AbstractVirtualSchemaProfile {
     protected String getDefaultDriverName() {
         return "postgresql.jar";
     }
+
+    @Override
+    public String getConnectionString() {
+        return getDriverPrefix() + "//" + getHost() + ":" + getPort() + "/";
+    }
 }

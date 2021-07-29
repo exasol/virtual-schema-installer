@@ -3,41 +3,41 @@ package com.exasol.adapter.installer.dialect;
 import com.exasol.adapter.installer.UserInput;
 
 /**
- * A Mysql dialect profile.
+ * A SQl Server dialect profile.
  */
-public class MysqlDialectProfile extends AbstractVirtualSchemaProfile {
+public class SqlServerDialectProfile extends AbstractVirtualSchemaProfile {
     /**
-     * Instantiate a new {@link MysqlDialectProfile}.
+     * Instantiate a new {@link SqlServerDialectProfile}.
      *
      * @param userInput user input
      */
-    public MysqlDialectProfile(final UserInput userInput) {
+    public SqlServerDialectProfile(final UserInput userInput) {
         super(userInput);
     }
 
     @Override
     protected String getDriverMain() {
-        return "com.mysql.jdbc.Driver";
+        return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     }
 
     @Override
     protected String getDriverPrefix() {
-        return "jdbc:mysql:";
+        return "jdbc:sqlserver:";
     }
 
     @Override
     protected boolean isSecurityManagerEnabled() {
-        return false;
+        return true;
     }
 
     @Override
     protected String getDefaultPort() {
-        return "3306";
+        return "1433";
     }
 
     @Override
     protected String getDefaultDriverName() {
-        return "mysql-connector-java.jar";
+        return "mssql-jdbc.jar";
     }
 
     @Override

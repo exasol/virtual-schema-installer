@@ -22,6 +22,7 @@ Installs the following Virtual Schema to the Exasol Database:
 
 * PostgreSQL
 * MySQL
+* Microsoft SQL Server
 
 ### Information for Users
 

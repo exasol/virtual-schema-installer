@@ -9,7 +9,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -18,33 +18,32 @@ import com.exasol.bucketfs.BucketAccessException;
 
 @Tag("integration")
 @Testcontainers
-class MySQLInstallerIT extends AbstractIntegrationTest {
-    private static final String MYSQL_SCHEMA = "MYSQL_SCHEMA";
-    public static final String MYSQL_DOCKER_IMAGE_REFERENCE = "mysql:8.0.23";
-    private static final int MYSQL_PORT = 3306;
+class SqlServerInstallerIT extends AbstractIntegrationTest {
+    private static final String MS_SQL_SCHEMA = "MS_SQL_SCHEMA";
+    private static final int MS_SQL_PORT = 1433;
+    public static final String DOCKER_IMAGE_REFERENCE = "mcr.microsoft.com/mssql/server:2019-CU8-ubuntu-16.04";
 
     @Container
-    private static final MySQLContainer<?> MYSQL = new MySQLContainer<>(MYSQL_DOCKER_IMAGE_REFERENCE)
-            .withUsername("root").withPassword("");
+    private static final MSSQLServerContainer MS_SQL_SERVER = new MSSQLServerContainer(DOCKER_IMAGE_REFERENCE);
 
     @BeforeAll
     static void beforeAll() throws SQLException {
         final Statement sourceStatement = createStatement();
-        createSchema(sourceStatement, MYSQL_SCHEMA);
-        createSimpleTestTable(sourceStatement, MYSQL_SCHEMA);
+        createSchema(sourceStatement, MS_SQL_SCHEMA);
+        createSimpleTestTable(sourceStatement, MS_SQL_SCHEMA);
     }
 
     private static Statement createStatement() throws SQLException {
-        return MYSQL.createConnection("").createStatement();
+        return MS_SQL_SERVER.createConnection("").createStatement();
     }
 
     @Test
     void testInstallVirtualSchema()
             throws SQLException, BucketAccessException, TimeoutException, ParseException, IOException {
-        final String virtualSchemaName = "MYSQL_VIRTUAL_SCHEMA_1";
+        final String virtualSchemaName = "SQL_SERVER_VIRTUAL_SCHEMA_1";
         final String[] args = new String[] { //
-                "--" + JDBC_DRIVER_NAME_KEY, "mysql-connector-java.jar", //
-                "--" + JDBC_DRIVER_PATH_KEY, "target/mysql-driver", //
+                "--" + JDBC_DRIVER_NAME_KEY, "mssql-jdbc.jar", //
+                "--" + JDBC_DRIVER_PATH_KEY, "target/sqlserver-driver", //
                 "--" + EXA_HOST_KEY, "localhost", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
@@ -53,28 +52,30 @@ class MySQLInstallerIT extends AbstractIntegrationTest {
                 "--" + EXA_CONNECTION_NAME_KEY, CONNECTION_NAME, //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
-                "--" + SOURCE_PORT_KEY, MYSQL.getMappedPort(MYSQL_PORT).toString(), //
-                "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + MYSQL_SCHEMA + "'", //
+                "--" + SOURCE_PORT_KEY, MS_SQL_SERVER.getMappedPort(MS_SQL_PORT).toString(), //
+                "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='master'", //
+                "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + MS_SQL_SCHEMA + "'", //
                 "--" + ADDITIONAL_PROPERTY_KEY, "TABLE_FILTER='" + SIMPLE_TABLE + "'", //
         };
-        assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.MYSQL.toString().toLowerCase(),
-                MYSQL.getUsername(), MYSQL.getPassword());
+        assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.SQLSERVER.toString().toLowerCase(),
+                MS_SQL_SERVER.getUsername(), MS_SQL_SERVER.getPassword());
     }
 
     @Test
     void testInstallVirtualSchemaWithDefaultValues()
             throws SQLException, BucketAccessException, TimeoutException, ParseException, IOException {
-        final String virtualSchemaName = "MYSQL_VIRTUAL_SCHEMA_2";
+        final String virtualSchemaName = "SQL_SERVER_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
-                "--" + JDBC_DRIVER_PATH_KEY, "target/mysql-driver", //
+                "--" + JDBC_DRIVER_PATH_KEY, "target/sqlserver-driver", //
                 "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
                 "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
-                "--" + SOURCE_PORT_KEY, MYSQL.getMappedPort(MYSQL_PORT).toString(), //
-                "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='" + MYSQL_SCHEMA + "'" //
+                "--" + SOURCE_PORT_KEY, MS_SQL_SERVER.getMappedPort(MS_SQL_PORT).toString(), //
+                "--" + ADDITIONAL_PROPERTY_KEY, "CATALOG_NAME='master'", //
+                "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + MS_SQL_SCHEMA + "'", //
         };
-        assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.MYSQL.toString().toLowerCase(),
-                MYSQL.getUsername(), MYSQL.getPassword());
+        assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.SQLSERVER.toString().toLowerCase(),
+                MS_SQL_SERVER.getUsername(), MS_SQL_SERVER.getPassword());
     }
 }
