@@ -20,8 +20,10 @@ Virtual Schema Installer is a Command Line Interface (CLI) tool that automates a
 
 Installs the following Virtual Schema to the Exasol Database:
 
-* PostgreSQL
+* DB2
+* Microsoft SQL Server
 * MySQL
+* PostgreSQL
 
 ### Information for Users
 

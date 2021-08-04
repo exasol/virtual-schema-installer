@@ -13,8 +13,10 @@ Virtual Schema Installer is a Command Line Interface (CLI) tool that automates a
 
 1. Download the latest available release of [Virtual Schema Installer](https://github.com/exasol/virtual-schema-installer/releases)
 1. Download a third-party JDBC driver (depending on dialect):
-    * [PostgreSQL](https://jdbc.postgresql.org/download.html)
+    * [DB2](https://www.ibm.com/analytics/db2)
+    * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server)
     * [MySQL](https://dev.mysql.com/downloads/connector/j/)
+    * [PostgreSQL](https://jdbc.postgresql.org/download.html)
 1. (Optional) Create a file `.virtual-schema-installer/credentials` in your home directory to store credentials.
    If the file is missing, the installer will ask you to input credentials via console.
    
@@ -46,22 +48,23 @@ Virtual Schema Installer is a Command Line Interface (CLI) tool that automates a
 
 The only mandatory argument is `dialect`.
 
-| Argument                  | Description                                              | Default (if present)                             |
-|---------------------------|----------------------------------------------------------|--------------------------------------------------|
-| --credentials-file        | Path to the file where credentials are stored            | `<HOME>/.virtual-schema-installer/credentials`   |
-| --dialect                 | Dialect to install                                       |  See [predefined dialects](#predefined-dialects) |
-| --exa-bucketfs-port       | A port on which BucketFS is listening                    | `2580`                                           | 
-| --exa-host                | A host to connect to the Exasol database                 | `localhost`                                      |
-| --exa-port                | A port on which the Exasol database is listening         | `8563`                                           |
-| --exa-adapter-name        | Exasol adapter script name                               |  upper-case dialect name + `_ADAPTER_SCRIPT`     | 
-| --exa-schema-name         | A name for an Exasol schema that holds an adapter script |  `ADAPTER`                                       |
-| --exa-virtual-schema-name | Exasol virtual schema name                               |  upper-case dialect name + `_VIRTUAL_SCHEMA`     |
-| --help                    | Print help.                                              |                                                  |
-| --jdbc-driver-name        | Name of the source JDBC driver file                      |  Depends on the [dialect](#predefined-dialects)  | 
-| --jdbc-driver-path        | Path to the source JDBC driver file                      |  Current directory                               | 
-| --property                | Virtual Schema property (multiple values allowed)        |                                                  | 
-| --source-host             | A host to connect to the source database                 | `localhost`                                      | 
-| --source-port             | A port on which the source database is listening         |  Depends on the [dialect](#predefined-dialects)  |
+| Argument                           | Description                                              | Default (if present)                             |
+|------------------------------------|----------------------------------------------------------|--------------------------------------------------|
+| --additional-connection-properties | Additional properties to append to the connection string |                                                  |
+| --credentials-file                 | Path to the file where credentials are stored            | `<HOME>/.virtual-schema-installer/credentials`   |
+| --dialect                          | Dialect to install                                       |  See [predefined dialects](#predefined-dialects) |
+| --exa-bucketfs-port                | A port on which BucketFS is listening                    | `2580`                                           | 
+| --exa-host                         | A host to connect to the Exasol database                 | `localhost`                                      |
+| --exa-port                         | A port on which the Exasol database is listening         | `8563`                                           |
+| --exa-adapter-name                 | Exasol adapter script name                               |  upper-case dialect name + `_ADAPTER_SCRIPT`     | 
+| --exa-schema-name                  | A name for an Exasol schema that holds an adapter script |  `ADAPTER`                                       |
+| --exa-virtual-schema-name          | Exasol virtual schema name                               |  upper-case dialect name + `_VIRTUAL_SCHEMA`     |
+| --help                             | Print help.                                              |                                                  |
+| --jdbc-driver-name                 | Name of the source JDBC driver file                      |  Depends on the [dialect](#predefined-dialects)  | 
+| --jdbc-driver-path                 | Path to the source JDBC driver file                      |  Current directory                               | 
+| --property                         | Virtual Schema property (multiple values allowed)        |                                                  | 
+| --source-host                      | A host to connect to the source database                 | `localhost`                                      | 
+| --source-port                      | A port on which the source database is listening         |  Depends on the [dialect](#predefined-dialects)  |
 
 **Important note**: Please, avoid any spaces when specifying `--property` values. A correct example: `--property CATALOG_NAME='test'`.
 Incorrect examples: `--property CATALOG_NAME = 'test'`, `--property TABLE_FILTER='SIMPLE_TABLE, TEST_TABLE'` (these values won't be parsed correctly, and you'll get an error).
@@ -72,8 +75,10 @@ Here you can find names of all supported dialects and dialect-specific default v
 
 | Dialect    | Default jdbc-driver-name   | Default source-port |
 |------------|----------------------------|---------------------|
+| DB2        | `jcc.jar`                  | `50000`              |
 | POSTGRESQL | `postgresql.jar`           | `5432`              |
 | MYSQL      | `mysql-connector-java.jar` | `3306`              |
+| SQLSERVER  | `mssql-jdbc.jar`           | `1433`              |
 
 ### Examples
 

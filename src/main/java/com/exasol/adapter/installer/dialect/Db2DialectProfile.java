@@ -3,26 +3,26 @@ package com.exasol.adapter.installer.dialect;
 import com.exasol.adapter.installer.UserInput;
 
 /**
- * A Mysql dialect profile.
+ * A DB2 dialect profile.
  */
-public class MysqlDialectProfile extends AbstractVirtualSchemaProfile {
+public class Db2DialectProfile extends AbstractVirtualSchemaProfile {
     /**
-     * Instantiate a new {@link MysqlDialectProfile}.
+     * Instantiate a new {@link Db2DialectProfile}.
      *
      * @param userInput user input
      */
-    public MysqlDialectProfile(final UserInput userInput) {
+    public Db2DialectProfile(final UserInput userInput) {
         super(userInput);
     }
 
     @Override
     protected String getDriverMain() {
-        return "com.mysql.jdbc.Driver";
+        return "com.ibm.db2.jcc.DB2Driver";
     }
 
     @Override
     protected String getDriverPrefix() {
-        return "jdbc:mysql:";
+        return "jdbc:db2:";
     }
 
     @Override
@@ -32,12 +32,12 @@ public class MysqlDialectProfile extends AbstractVirtualSchemaProfile {
 
     @Override
     protected String getDefaultPort() {
-        return "3306";
+        return "50000";
     }
 
     @Override
     protected String getDefaultDriverName() {
-        return "mysql-connector-java.jar";
+        return "jcc.jar";
     }
 
     @Override

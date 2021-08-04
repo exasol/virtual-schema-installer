@@ -64,6 +64,9 @@ public class VirtualSchemaInstallerConstants {
     public static final String SOURCE_PORT_KEY = "source-port";
     public static final String SOURCE_PORT_DESCRIPTION = "A port on which the source database is listening";
 
+    public static final String ADDITIONAL_CONNECTION_PROPERTIES_KEY = "additional-connection-properties";
+    public static final String ADDITIONAL_CONNECTION_PROPERTIES_KEY_DESCRIPTION = "Additional properties to append to the connection string";
+
     public static final String ADDITIONAL_PROPERTY_KEY = "property";
     public static final String HELP_KEY = "help";
 }

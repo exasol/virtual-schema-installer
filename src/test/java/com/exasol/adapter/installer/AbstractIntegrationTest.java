@@ -8,8 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.cli.ParseException;
@@ -39,6 +38,16 @@ abstract class AbstractIntegrationTest {
         final ResultSet actualResultSet = EXASOL.createConnection().createStatement()
                 .executeQuery("SELECT * FROM " + virtualSchemaName + "." + SIMPLE_TABLE);
         assertThat(actualResultSet, table().row(1).matches(TypeMatchMode.NO_JAVA_TYPE_CHECK));
+    }
+
+    protected static void createSchema(final Statement statement, final String schemaName) throws SQLException {
+        statement.execute("CREATE SCHEMA " + schemaName);
+    }
+
+    protected static void createSimpleTestTable(final Statement statement, String schemaName) throws SQLException {
+        final String qualifiedTableName = schemaName + "." + SIMPLE_TABLE;
+        statement.execute("CREATE TABLE " + qualifiedTableName + " (x INT)");
+        statement.execute("INSERT INTO " + qualifiedTableName + " VALUES (1)");
     }
 
     private Path createCredentialsFile(final String username, final String password) throws IOException {

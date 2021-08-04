@@ -2,14 +2,10 @@ package com.exasol.adapter.installer.dialect;
 
 import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import com.exasol.adapter.installer.File;
-import com.exasol.adapter.installer.UserInput;
-import com.exasol.adapter.installer.VirtualSchemaProfile;
+import com.exasol.adapter.installer.*;
 
 /**
  * Abstract base of Virtual Schema Profile.
@@ -51,11 +47,6 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     }
 
     @Override
-    public String getConnectionString() {
-        return getDriverPrefix() + "//" + getHost() + ":" + getPort() + "/";
-    }
-
-    @Override
     public String getConnectionName() {
         return getOrDefault(this.userInput.getParameters(), EXA_CONNECTION_NAME_KEY, getDefaultConnectionName());
     }
@@ -91,6 +82,16 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     }
 
     @Override
+    public String getAdditionalConnectionProperties() {
+        return this.userInput.getParameters().get(ADDITIONAL_CONNECTION_PROPERTIES_KEY);
+    }
+
+    @Override
+    public boolean hasAdditionalConnectionProperties() {
+        return this.userInput.getParameters().get(ADDITIONAL_CONNECTION_PROPERTIES_KEY) != null;
+    }
+
+    @Override
     public List<DialectProperty> getDialectProperties() {
         return Arrays.stream(this.userInput.getAdditionalProperties()) //
                 .map(DialectPropertyParser::parseProperty) //
@@ -113,11 +114,21 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
         return getDialectName() + "_VIRTUAL_SCHEMA";
     }
 
-    private String getHost() {
+    /**
+     * Get host.
+     *
+     * @return host
+     */
+    protected String getHost() {
         return getOrDefault(this.userInput.getParameters(), SOURCE_HOST_KEY, SOURCE_HOST_DEFAULT);
     }
 
-    private String getPort() {
+    /**
+     * Get port.
+     *
+     * @return port
+     */
+    protected String getPort() {
         return getOrDefault(this.userInput.getParameters(), SOURCE_PORT_KEY, getDefaultPort());
     }
 
