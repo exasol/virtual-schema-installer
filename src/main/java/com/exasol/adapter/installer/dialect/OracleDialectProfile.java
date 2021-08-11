@@ -7,7 +7,7 @@ import com.exasol.adapter.installer.UserInput;
  */
 public class OracleDialectProfile extends AbstractVirtualSchemaProfile {
     /**
-     * Instantiate a new {@link MysqlDialectProfile}.
+     * Instantiate a new {@link OracleDialectProfile}.
      *
      * @param userInput user input
      */
