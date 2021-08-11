@@ -95,7 +95,7 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     public List<DialectProperty> getDialectProperties() {
         final String[] additionalProperties = this.userInput.getAdditionalProperties();
         if (additionalProperties == null) {
-            return List.of();
+            return Collections.emptyList();
         } else {
             return Arrays.stream(additionalProperties) //
                     .map(DialectPropertyParser::parseProperty) //
