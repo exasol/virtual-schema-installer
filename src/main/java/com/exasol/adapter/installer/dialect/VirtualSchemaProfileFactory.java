@@ -29,6 +29,8 @@ public class VirtualSchemaProfileFactory {
             return new Db2DialectProfile(userInput);
         case ELASTICSEARCH:
             return new ElasticSearchDialectProfile(userInput);
+        case ORACLE:
+            return new OracleDialectProfile(userInput);
         default:
             throw new InstallerException(ExaError.messageBuilder("E-VS-INSTL-8")
                     .message("Unsupported dialect: {{dialect}}", dialect.name()).toString());

@@ -4,5 +4,5 @@ package com.exasol.adapter.installer.dialect;
  * List of supported dialects to install.
  */
 public enum Dialect {
-    POSTGRESQL, MYSQL, SQLSERVER, DB2, ELASTICSEARCH
+    POSTGRESQL, MYSQL, SQLSERVER, DB2, ELASTICSEARCH, ORACLE
 }
