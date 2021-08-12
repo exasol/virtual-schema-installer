@@ -33,10 +33,16 @@ abstract class AbstractIntegrationTest {
     protected void assertVirtualSchemaWasCreated(final String virtualSchemaName, final String[] args,
             final String dialect, final String username, final String password)
             throws ParseException, SQLException, BucketAccessException, TimeoutException, IOException {
+        assertVirtualSchemaWasCreated(virtualSchemaName, args, dialect, username, password,
+                "SELECT * FROM " + virtualSchemaName + "." + SIMPLE_TABLE);
+    }
+
+    protected void assertVirtualSchemaWasCreated(final String virtualSchemaName, final String[] args,
+            final String dialect, final String username, final String password, final String query)
+            throws ParseException, SQLException, BucketAccessException, TimeoutException, IOException {
         final Path tempFile = createCredentialsFile(username, password);
         installVirtualSchema(args, tempFile, dialect);
-        final ResultSet actualResultSet = EXASOL.createConnection().createStatement()
-                .executeQuery("SELECT * FROM " + virtualSchemaName + "." + SIMPLE_TABLE);
+        final ResultSet actualResultSet = EXASOL.createConnection().createStatement().executeQuery(query);
         assertThat(actualResultSet, table().row(1).matches(TypeMatchMode.NO_JAVA_TYPE_CHECK));
     }
 
@@ -44,7 +50,8 @@ abstract class AbstractIntegrationTest {
         statement.execute("CREATE SCHEMA " + schemaName);
     }
 
-    protected static void createSimpleTestTable(final Statement statement, String schemaName) throws SQLException {
+    protected static void createSimpleTestTable(final Statement statement, final String schemaName)
+            throws SQLException {
         final String qualifiedTableName = schemaName + "." + SIMPLE_TABLE;
         statement.execute("CREATE TABLE " + qualifiedTableName + " (x INT)");
         statement.execute("INSERT INTO " + qualifiedTableName + " VALUES (1)");

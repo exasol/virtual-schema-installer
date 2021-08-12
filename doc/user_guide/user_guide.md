@@ -14,8 +14,10 @@ Virtual Schema Installer is a Command Line Interface (CLI) tool that automates a
 1. Download the latest available release of [Virtual Schema Installer](https://github.com/exasol/virtual-schema-installer/releases)
 1. Download a third-party JDBC driver (depending on dialect):
     * [DB2](https://www.ibm.com/analytics/db2)
+    * [ElasticSearch](https://www.elastic.co/downloads/jdbc-client)
     * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server)
     * [MySQL](https://dev.mysql.com/downloads/connector/j/)
+    * [Oracle](https://www.oracle.com/technetwork/database/application-development/jdbc/downloads/index.html)
     * [PostgreSQL](https://jdbc.postgresql.org/download.html)
 1. (Optional) Create a file `.virtual-schema-installer/credentials` in your home directory to store credentials.
    If the file is missing, the installer will ask you to input credentials via console.
@@ -73,12 +75,14 @@ Incorrect examples: `--property CATALOG_NAME = 'test'`, `--property TABLE_FILTER
 
 Here you can find names of all supported dialects and dialect-specific default values.
 
-| Dialect    | Default jdbc-driver-name   | Default source-port |
-|------------|----------------------------|---------------------|
-| DB2        | `jcc.jar`                  | `50000`              |
-| POSTGRESQL | `postgresql.jar`           | `5432`              |
-| MYSQL      | `mysql-connector-java.jar` | `3306`              |
-| SQLSERVER  | `mssql-jdbc.jar`           | `1433`              |
+| Dialect       | Default jdbc-driver-name   | Default source-port |
+|---------------|----------------------------|---------------------|
+| DB2           | `jcc.jar`                  | `50000`              |
+| ELASTICSEARCH | `x-pack-sql-jdbc.jar`      | `9200`              |
+| MYSQL         | `mysql-connector-java.jar` | `3306`              |
+| ORACLE        | `ojdbc8.jar`               | `1521`              |
+| POSTGRESQL    | `postgresql.jar`           | `5432`              |
+| SQLSERVER     | `mssql-jdbc.jar`           | `1433`              |
 
 ### Examples
 

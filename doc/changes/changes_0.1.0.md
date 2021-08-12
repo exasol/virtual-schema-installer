@@ -1,20 +1,23 @@
 # Virtual Schema Installer 0.1.0, released 2021-??-??
 
-Code name: 
+Code name: Initial implementation
 
 ## Summary 
 
-This CLI tools helps you installing Virtual Schemas. Currently supported dialects:
+This CLI tools helps you to install Virtual Schemas. Currently supported dialects:
 
 * DB2
+* ElasticSearch
 * Microsoft SQL Server
 * MySQL
+* Oracle
 * PostgreSQL
 
 ## Features
 
 * #1: Create initial implementation for Postgres VS dialect.
 * #7: Added support for MySQL Virtual Schema installation.
+* #17: Added new dialects: DB2, ElasticSearch, Microsoft SQL Server, Oracle
 
 ## Refactoring
 
@@ -48,14 +51,20 @@ This CLI tools helps you installing Virtual Schemas. Currently supported dialect
 * Added `com.exasol:hamcrest-resultset-matcher:1.4.0`
 * Added `com.ibm.db2:jcc:11.5.5.0`
 * Added `com.microsoft.sqlserver:mssql-jdbc:9.2.0.jre8`
+* Added `com.oracle.ojdbc:ojdbc8:19.3.0.0`
 * Added `junit:junit:4.13.2`
 * Added `mysql:mysql-connector-java:8.0.26`
+* Added `org.apache.httpcomponents:httpclient:4.5.13`
+* Added `org.elasticsearch.client:elasticsearch-rest-high-level-client:7.13.4`
+* Added `org.elasticsearch.plugin:x-pack-sql-jdbc:7.13.4`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.7.2`
 * Added `org.testcontainers:db2:1.16.0`
+* Added `org.testcontainers:elasticsearch:1.16.0`
 * Added `org.testcontainers:junit-jupiter:1.16.0`
 * Added `org.testcontainers:mssqlserver:1.16.0`
 * Added `org.testcontainers:mysql:1.16.0`
+* Added `org.testcontainers:oracle-xe:1.16.0`
 * Added `org.testcontainers:postgresql:1.16.0`
 
 ### Plugin Dependency Updates

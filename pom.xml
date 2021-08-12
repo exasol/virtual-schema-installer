@@ -12,6 +12,7 @@
         <java.version>11</java.version>
         <surefire.and.failsafe.plugin.version>3.0.0-M3</surefire.and.failsafe.plugin.version>
         <org.testcontainers.version>1.16.0</org.testcontainers.version>
+        <elasticsearch.version>7.13.4</elasticsearch.version>
     </properties>
     <distributionManagement>
         <repository>
@@ -159,6 +160,44 @@
             <version>11.5.5.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>${org.testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>${elasticsearch.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.plugin</groupId>
+            <artifactId>x-pack-sql-jdbc</artifactId>
+            <version>${elasticsearch.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Overrides httpclient 4.5.10 which is used in elasticsearch-rest-high-level-client but contains
+        a security issue: https://ossindex.sonatype.org/vuln/c0ed9602-d5c5-4c45-af48-c757161879ee -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>oracle-xe</artifactId>
+            <version>${org.testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>19.3.0.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -253,6 +292,9 @@
                     <!-- Set the highest log level for coverage testing, so that we have
                                                       a chance to reach branches <property> in the logging lambdas too. -->
                     <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
+                    <excludes>
+                        <exclude>OracleInstallerIT.java</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
@@ -419,6 +461,32 @@
                             <includeGroupIds>com.ibm.db2</includeGroupIds>
                             <includeArtifactIds>jcc</includeArtifactIds>
                             <outputDirectory>${project.build.directory}/db2-driver</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-elasticsearch-driver</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <includeGroupIds>org.elasticsearch.plugin</includeGroupIds>
+                            <includeArtifactIds>x-pack-sql-jdbc</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/elasticsearch-driver</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-oracle-driver</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <includeGroupIds>com.oracle.ojdbc</includeGroupIds>
+                            <includeArtifactIds>ojdbc8</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/oracle-driver</outputDirectory>
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
