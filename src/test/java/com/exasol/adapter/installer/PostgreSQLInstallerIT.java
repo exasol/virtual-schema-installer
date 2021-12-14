@@ -21,7 +21,7 @@ import com.exasol.bucketfs.BucketAccessException;
 @Testcontainers
 class PostgreSQLInstallerIT extends AbstractIntegrationTest {
     private static final String POSTGRES_SCHEMA = "postgres_schema";
-    private static final String POSTGRES_CONTAINER_NAME = "postgres:13.1";
+    private static final String POSTGRES_CONTAINER_NAME = "postgres:14.1";
 
     @Container
     private static final PostgreSQLContainer<? extends PostgreSQLContainer<?>> POSTGRES = new PostgreSQLContainer<>(

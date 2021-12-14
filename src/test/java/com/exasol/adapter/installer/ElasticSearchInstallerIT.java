@@ -31,7 +31,7 @@ class ElasticSearchInstallerIT extends AbstractIntegrationTest {
     private static final String ELASTIC_SEARCH_INDEX = "index";
     private static final String ELASTICSEARCH_USERNAME = "user";
     private static final String ELASTICSEARCH_PASSWORD = "pass";
-    public static final String ELASTICSEARCH_DOCKER_IMAGE_REFERENCE = "docker.elastic.co/elasticsearch/elasticsearch:7.10.1";
+    public static final String ELASTICSEARCH_DOCKER_IMAGE_REFERENCE = "docker.elastic.co/elasticsearch/elasticsearch:7.16.1";
     private static final int ELASTIC_SEARCH_PORT = 9200;
 
     @Container

@@ -24,7 +24,7 @@ abstract class AbstractIntegrationTest {
     protected static final String EXASOL_ADAPTER_NAME = "MY_ADAPTER_SCRIPT";
     protected static final String CONNECTION_NAME = "JDBC_CONNECTION";
     protected static final String SIMPLE_TABLE = "SIMPLE_TABLE";
-    private static final String EXASOL_DOCKER_IMAGE_REFERENCE = "7.0.10";
+    private static final String EXASOL_DOCKER_IMAGE_REFERENCE = "7.1.3";
 
     @Container
     protected static final ExasolContainer<? extends ExasolContainer<?>> EXASOL = new ExasolContainer<>(

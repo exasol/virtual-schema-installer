@@ -21,7 +21,7 @@ import com.exasol.bucketfs.BucketAccessException;
 class Db2InstallerIT extends AbstractIntegrationTest {
     private static final String DB2_SCHEMA = "DB2INST1";
     private static final int DB2_PORT = 50000;
-    public static final String DOCKER_IMAGE_REFERENCE = "ibmcom/db2:11.5.5.0";
+    public static final String DOCKER_IMAGE_REFERENCE = "ibmcom/db2:11.5.7.0";
 
     @Container
     private static final Db2Container DB2 = new Db2Container(DOCKER_IMAGE_REFERENCE);

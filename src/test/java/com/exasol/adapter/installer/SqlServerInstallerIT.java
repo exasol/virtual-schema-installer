@@ -21,7 +21,7 @@ import com.exasol.bucketfs.BucketAccessException;
 class SqlServerInstallerIT extends AbstractIntegrationTest {
     private static final String MS_SQL_SCHEMA = "MS_SQL_SCHEMA";
     private static final int MS_SQL_PORT = 1433;
-    public static final String DOCKER_IMAGE_REFERENCE = "mcr.microsoft.com/mssql/server:2019-CU8-ubuntu-16.04";
+    public static final String DOCKER_IMAGE_REFERENCE = "mcr.microsoft.com/mssql/server:2019-CU14-ubuntu-20.04";
 
     @Container
     private static final MSSQLServerContainer MS_SQL_SERVER = new MSSQLServerContainer(DOCKER_IMAGE_REFERENCE);

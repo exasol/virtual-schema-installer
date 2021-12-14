@@ -20,7 +20,7 @@ import com.exasol.bucketfs.BucketAccessException;
 @Testcontainers
 class MySQLInstallerIT extends AbstractIntegrationTest {
     private static final String MYSQL_SCHEMA = "MYSQL_SCHEMA";
-    public static final String MYSQL_DOCKER_IMAGE_REFERENCE = "mysql:8.0.23";
+    public static final String MYSQL_DOCKER_IMAGE_REFERENCE = "mysql:8.0.27";
     private static final int MYSQL_PORT = 3306;
 
     @Container
