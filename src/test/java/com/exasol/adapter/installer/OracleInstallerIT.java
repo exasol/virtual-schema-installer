@@ -43,7 +43,6 @@ class OracleInstallerIT extends AbstractIntegrationTest {
     }
 
     private static Statement createStatement() throws SQLException {
-        System.out.println("connecting as sysdba");
         return DriverManager.getConnection(ORACLE.getJdbcUrl(), "sys as sysdba", ORACLE.getPassword())
                 .createStatement();
     }
@@ -69,8 +68,8 @@ class OracleInstallerIT extends AbstractIntegrationTest {
                 "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + ORACLE_SCHEMA + "'", //
                 "--" + ADDITIONAL_PROPERTY_KEY, "TABLE_FILTER='" + SIMPLE_TABLE + "'", //
         };
-        assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.ORACLE.toString().toLowerCase(),
-                ORACLE.getUsername(), ORACLE.getPassword());
+        assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.ORACLE.toString().toLowerCase(), ORACLE_SCHEMA,
+                ORACLE_SCHEMA);
     }
 
     @Test

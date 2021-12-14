@@ -52,7 +52,7 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 * Added `com.exasol:exasol-testcontainers:5.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
 * Added `com.ibm.db2:jcc:11.5.6.0`
-* Added `com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre11`
+* Added `com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8`
 * Added `com.oracle.ojdbc:ojdbc8:19.3.0.0`
 * Added `mysql:mysql-connector-java:8.0.27`
 * Added `org.apache.httpcomponents:httpclient:4.5.13`
