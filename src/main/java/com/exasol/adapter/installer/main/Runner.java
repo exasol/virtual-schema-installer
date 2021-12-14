@@ -59,6 +59,7 @@ public class Runner {
                 .sourcePassword(propertyReader.readProperty(SOURCE_PASSWORD_KEY)) //
                 .exaHost(virtualSchemaProfile.getExaHost()) //
                 .exaPort(virtualSchemaProfile.getExaPort()) //
+                .exaCertifcateFingerprint(virtualSchemaProfile.getExaCertificateFingerprint()) //
                 .exaBucketFsPort(virtualSchemaProfile.getBucketFsPort()) //
                 .exaSchemaName(virtualSchemaProfile.getAdapterSchemaName()) //
                 .exaAdapterName(virtualSchemaProfile.getAdapterName()) //
@@ -75,6 +76,7 @@ public class Runner {
         options.put(JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DESCRIPTION);
         options.put(EXA_HOST_KEY, EXA_HOST_DESCRIPTION);
         options.put(EXA_PORT_KEY, EXA_PORT_DESCRIPTION);
+        options.put(EXA_CERTIFICATE_FINGERPRINT_KEY, EXA_CERTIFICATE_FINGERPRINT_DESCRIPTION);
         options.put(EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DESCRIPTION);
         options.put(EXA_SCHEMA_NAME_KEY, EXA_SCHEMA_NAME_DESCRIPTION);
         options.put(EXA_ADAPTER_NAME_KEY, EXA_ADAPTER_NAME_DESCRIPTION);
@@ -89,7 +91,7 @@ public class Runner {
 
     private static String getOrDefault(final Map<String, String> userInput, final String key,
             final String defaultValue) {
-        if (!userInput.containsKey(key) || userInput.get(key) == null || userInput.get(key).isEmpty()) {
+        if (!userInput.containsKey(key) || (userInput.get(key) == null) || userInput.get(key).isEmpty()) {
             return defaultValue;
         } else {
             return userInput.get(key);

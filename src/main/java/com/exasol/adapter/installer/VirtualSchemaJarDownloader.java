@@ -6,16 +6,12 @@ import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.TEMP_
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
-import org.kohsuke.github.GHAsset;
-import org.kohsuke.github.GHRelease;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
+import org.kohsuke.github.*;
 
 import com.exasol.adapter.installer.dialect.Dialect;
 import com.exasol.errorreporting.ExaError;
@@ -24,6 +20,7 @@ import com.exasol.errorreporting.ExaError;
  * Downloads a Virtual Schema JAR file.
  */
 public class VirtualSchemaJarDownloader implements FileProvider {
+    private static final Logger LOGGER = Logger.getLogger(VirtualSchemaJarDownloader.class.getName());
     private final Dialect dialect;
 
     /**
@@ -79,6 +76,7 @@ public class VirtualSchemaJarDownloader implements FileProvider {
     }
 
     private GHRepository getRepository(final String repositoryName) {
+        LOGGER.info(() -> "Fetching GitHub repository " + repositoryName);
         try {
             final GitHub gitHub = GitHub.connectAnonymously();
             return gitHub.getRepository(repositoryName);

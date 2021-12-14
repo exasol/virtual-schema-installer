@@ -43,6 +43,9 @@ public class VirtualSchemaInstallerConstants {
     public static final String EXA_PORT_KEY = "exa-port";
     public static final String EXA_PORT_DESCRIPTION = "A port on which the Exasol database is listening";
 
+    public static final String EXA_CERTIFICATE_FINGERPRINT_KEY = "exa-certificate-fingerprint";
+    public static final String EXA_CERTIFICATE_FINGERPRINT_DESCRIPTION = "The fingerprint of the Exasol database's TLS certificate";
+
     public static final String EXA_BUCKET_FS_PORT_KEY = "exa-bucketfs-port";
     public static final String EXA_BUCKET_FS_PORT_DESCRIPTION = "A port on which BucketFS is listening";
 

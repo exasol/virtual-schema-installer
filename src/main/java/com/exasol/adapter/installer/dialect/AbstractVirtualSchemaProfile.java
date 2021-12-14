@@ -13,6 +13,7 @@ import com.exasol.adapter.installer.*;
 public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfile {
     private static final String EXA_HOST_DEFAULT = "localhost";
     private static final String EXA_PORT_DEFAULT = "8563";
+    private static final String EXA_CERTIFICATE_FINGERPRINT_DEFAULT = null;
     private static final String EXA_BUCKET_FS_PORT_DEFAULT = "2580";
     private static final String EXA_SCHEMA_NAME_DEFAULT = "ADAPTER";
     private static final String SOURCE_HOST_DEFAULT = "localhost";
@@ -79,6 +80,12 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
     @Override
     public String getExaPort() {
         return getOrDefault(this.userInput.getParameters(), EXA_PORT_KEY, EXA_PORT_DEFAULT);
+    }
+
+    @Override
+    public String getExaCertificateFingerprint() {
+        return getOrDefault(this.userInput.getParameters(), EXA_CERTIFICATE_FINGERPRINT_KEY,
+                EXA_CERTIFICATE_FINGERPRINT_DEFAULT);
     }
 
     @Override
@@ -188,7 +195,7 @@ public abstract class AbstractVirtualSchemaProfile implements VirtualSchemaProfi
      * @return value
      */
     protected String getOrDefault(final Map<String, String> userInput, final String key, final String defaultValue) {
-        if (!userInput.containsKey(key) || userInput.get(key) == null || userInput.get(key).isEmpty()) {
+        if (!userInput.containsKey(key) || (userInput.get(key) == null) || userInput.get(key).isEmpty()) {
             return defaultValue;
         } else {
             return userInput.get(key);

@@ -58,6 +58,7 @@ The only mandatory argument is `dialect`.
 | --exa-bucketfs-port                | A port on which BucketFS is listening                    | `2580`                                           | 
 | --exa-host                         | A host to connect to the Exasol database                 | `localhost`                                      |
 | --exa-port                         | A port on which the Exasol database is listening         | `8563`                                           |
+| --exa-certificate-fingerprint      | The fingerprint of the Exasol database's TLS certificate |                                                  |
 | --exa-adapter-name                 | Exasol adapter script name                               |  upper-case dialect name + `_ADAPTER_SCRIPT`     | 
 | --exa-schema-name                  | A name for an Exasol schema that holds an adapter script |  `ADAPTER`                                       |
 | --exa-virtual-schema-name          | Exasol virtual schema name                               |  upper-case dialect name + `_VIRTUAL_SCHEMA`     |

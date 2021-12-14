@@ -45,9 +45,10 @@ class MySQLInstallerIT extends AbstractIntegrationTest {
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_NAME_KEY, "mysql-connector-java.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/mysql-driver", //
-                "--" + EXA_HOST_KEY, "localhost", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_SCHEMA_NAME_KEY, EXASOL_SCHEMA_NAME, //
                 "--" + EXA_ADAPTER_NAME_KEY, EXASOL_ADAPTER_NAME, //
                 "--" + EXA_CONNECTION_NAME_KEY, CONNECTION_NAME, //
@@ -67,8 +68,10 @@ class MySQLInstallerIT extends AbstractIntegrationTest {
         final String virtualSchemaName = "MYSQL_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/mysql-driver", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, MYSQL.getMappedPort(MYSQL_PORT).toString(), //

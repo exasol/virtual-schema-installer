@@ -3,8 +3,7 @@ package com.exasol.adapter.installer;
 import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.cli.ParseException;
@@ -20,14 +19,15 @@ import com.exasol.bucketfs.BucketAccessException;
 @Testcontainers
 class OracleInstallerIT extends AbstractIntegrationTest {
     private static final String ORACLE_SCHEMA = "ORACLE_SCHEMA";
-    public static final String ORACLE_DOCKER_IMAGE_REFERENCE = "oracleinanutshell/oracle-xe-11g";
+    public static final String ORACLE_DOCKER_IMAGE_REFERENCE = "gvenzl/oracle-xe";
     private static final int ORACLE_PORT = 1521;
 
     @Container
-    private static final OracleContainer ORACLE = new OracleContainer(ORACLE_DOCKER_IMAGE_REFERENCE);
+    private static final OracleContainer ORACLE = new OracleContainer(ORACLE_DOCKER_IMAGE_REFERENCE).withReuse(false);
 
     @BeforeAll
-    static void beforeAll() throws SQLException {
+    static void beforeAll() throws SQLException, UnsupportedOperationException, IOException, InterruptedException {
+        ORACLE.execInContainer("resetPassword", ORACLE.getPassword());
         final Statement sourceStatement = createStatement();
         createOracleUser(sourceStatement);
         createSimpleTestTable(sourceStatement, ORACLE_SCHEMA);
@@ -43,7 +43,9 @@ class OracleInstallerIT extends AbstractIntegrationTest {
     }
 
     private static Statement createStatement() throws SQLException {
-        return ORACLE.createConnection("").createStatement();
+        System.out.println("connecting as sysdba");
+        return DriverManager.getConnection(ORACLE.getJdbcUrl(), "sys as sysdba", ORACLE.getPassword())
+                .createStatement();
     }
 
     @Test
@@ -53,9 +55,10 @@ class OracleInstallerIT extends AbstractIntegrationTest {
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_NAME_KEY, "ojdbc8.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/oracle-driver", //
-                "--" + EXA_HOST_KEY, "localhost", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_SCHEMA_NAME_KEY, EXASOL_SCHEMA_NAME, //
                 "--" + EXA_ADAPTER_NAME_KEY, EXASOL_ADAPTER_NAME, //
                 "--" + EXA_CONNECTION_NAME_KEY, CONNECTION_NAME, //
@@ -76,8 +79,10 @@ class OracleInstallerIT extends AbstractIntegrationTest {
         final String virtualSchemaName = "ORACLE_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/oracle-driver", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, ORACLE.getMappedPort(ORACLE_PORT).toString(), //

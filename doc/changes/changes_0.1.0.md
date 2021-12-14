@@ -18,6 +18,7 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 * #1: Create initial implementation for Postgres VS dialect.
 * #7: Added support for MySQL Virtual Schema installation.
 * #17: Added new dialects: DB2, ElasticSearch, Microsoft SQL Server, Oracle
+* #25: Added support for TLS certificates when connecting to Exasol.
 
 ## Refactoring
 
@@ -25,6 +26,7 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 * #4: Validated user input.
 * #9: Added cache check for downloaded JAR files.
 * #14: Improved user input validation.
+* #23: Updated dependencies.
 
 ## Documentation
 
@@ -50,7 +52,7 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 * Added `com.exasol:exasol-testcontainers:5.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
 * Added `com.ibm.db2:jcc:11.5.6.0`
-* Added `com.microsoft.sqlserver:mssql-jdbc:9.5.0.jre17-preview`
+* Added `com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre11`
 * Added `com.oracle.ojdbc:ojdbc8:19.3.0.0`
 * Added `mysql:mysql-connector-java:8.0.27`
 * Added `org.apache.httpcomponents:httpclient:4.5.13`

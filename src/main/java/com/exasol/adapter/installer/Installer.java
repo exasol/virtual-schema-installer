@@ -3,12 +3,8 @@ package com.exasol.adapter.installer;
 import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.LINE_SEPARATOR;
 
 import java.io.FileNotFoundException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
 import com.exasol.adapter.installer.dialect.DialectProperty;
@@ -36,6 +32,7 @@ public class Installer {
     // Virtual Schema related fields
     private final String exaHost;
     private final int exaPort;
+    private final String exaCertifcateFingerprint;
     private final int exaBucketFsPort;
     private final String exaSchemaName;
     private final String exaAdapterName;
@@ -56,6 +53,7 @@ public class Installer {
         this.exaBucketFsPort = builder.exaBucketFsPort;
         this.sourcePassword = builder.sourcePassword;
         this.exaHost = builder.exaHost;
+        this.exaCertifcateFingerprint = builder.exaCertifcateFingerprint;
         this.connectionString = builder.connectionString;
         this.exaUsername = builder.exaUsername;
         this.exaPort = builder.exaPort;
@@ -66,7 +64,8 @@ public class Installer {
     /**
      * Install a Virtual Schema to the Exasol database.
      */
-    public void install() throws SQLException, BucketAccessException, TimeoutException, FileNotFoundException {
+    public void install() throws SQLException, BucketAccessException, FileNotFoundException {
+
         uploadFilesToBucket(this.virtualSchemaJarFile, this.jdbcDriver);
         try (final Connection connection = getConnection()) {
             installVirtualSchema(connection,
@@ -75,12 +74,20 @@ public class Installer {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:exa:" + this.exaHost + ":" + this.exaPort, this.exaUsername,
-                this.exaPassword);
+        return DriverManager.getConnection(getJdbcUrl(), this.exaUsername, this.exaPassword);
+    }
+
+    private String getJdbcUrl() {
+        final String url = "jdbc:exa:" + this.exaHost + ":" + this.exaPort;
+        if ((this.exaCertifcateFingerprint == null) || this.exaCertifcateFingerprint.isBlank()) {
+            return url;
+        } else {
+            return url + ";fingerprint=" + this.exaCertifcateFingerprint;
+        }
     }
 
     private void uploadFilesToBucket(final File virtualSchemaJarFile, final JdbcDriver jdbcDriver)
-            throws BucketAccessException, TimeoutException, FileNotFoundException {
+            throws BucketAccessException, FileNotFoundException {
         final WriteEnabledBucket bucket = getBucket(DEFAULT_BUCKETFS_NAME, DEFAULT_BUCKET_NAME);
         uploadFileToBucket(bucket, virtualSchemaJarFile, DEFAULT_PATH_TO_FILE_IN_BUCKET);
         uploadDriverToBucket(bucket, jdbcDriver);
@@ -90,7 +97,7 @@ public class Installer {
         return WriteEnabledBucket.builder()//
                 .serviceName(bucketFsName) //
                 .ipAddress(this.exaHost) //
-                .httpPort(this.exaBucketFsPort) //
+                .port(this.exaBucketFsPort) //
                 .name(bucketName) //
                 .writePassword(this.exaBucketWritePassword) //
                 .build();
@@ -163,12 +170,13 @@ public class Installer {
     }
 
     private void uploadFileToBucket(final WriteEnabledBucket bucket, final File file, final String pathInBucket)
-            throws BucketAccessException, TimeoutException, FileNotFoundException {
+            throws BucketAccessException, FileNotFoundException {
+        LOGGER.info(() -> "Uploading file " + file + " to path in bucket " + pathInBucket);
         bucket.uploadFileNonBlocking(file.getPathWithName(), pathInBucket + "/" + file.getName());
     }
 
     private void uploadDriverToBucket(final WriteEnabledBucket bucket, final JdbcDriver jdbcDriver)
-            throws BucketAccessException, TimeoutException, FileNotFoundException {
+            throws BucketAccessException, FileNotFoundException {
         uploadFileToBucket(bucket, jdbcDriver.getJar(), DEFAULT_PATH_TO_FILE_IN_BUCKET);
         if (jdbcDriver.hasConfig()) {
             uploadFileToBucket(bucket, jdbcDriver.getConfig(), DEFAULT_PATH_TO_FILE_IN_BUCKET);
@@ -177,7 +185,7 @@ public class Installer {
 
     /**
      * Create a new builder for {@link Installer}.
-     * 
+     *
      * @return new builder
      */
     public static InstallerBuilder builder() {
@@ -201,6 +209,7 @@ public class Installer {
         private String exaHost;
         private int exaPort;
         private int exaBucketFsPort;
+        private String exaCertifcateFingerprint;
         private String exaSchemaName;
         private String exaAdapterName;
         private String exaConnectionName;
@@ -267,6 +276,11 @@ public class Installer {
             }
         }
 
+        public InstallerBuilder exaCertifcateFingerprint(final String exaCertifcateFingerprint) {
+            this.exaCertifcateFingerprint = exaCertifcateFingerprint;
+            return this;
+        }
+
         public InstallerBuilder exaBucketFsPort(final String exaBucketFsPort) {
             this.exaBucketFsPort = convertToInteger(exaBucketFsPort, "exaBucketFsPort");
             return this;
@@ -304,7 +318,7 @@ public class Installer {
 
         /**
          * Create a new {@link Installer}.
-         * 
+         *
          * @return new installer
          */
         public Installer build() {

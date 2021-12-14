@@ -14,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 import org.apache.commons.cli.ParseException;
 import org.testcontainers.junit.jupiter.Container;
 
+import com.exasol.adapter.installer.fingerprint.FingerprintExtractor;
 import com.exasol.adapter.installer.main.Runner;
 import com.exasol.bucketfs.BucketAccessException;
 import com.exasol.containers.ExasolContainer;
@@ -29,6 +30,22 @@ abstract class AbstractIntegrationTest {
     @Container
     protected static final ExasolContainer<? extends ExasolContainer<?>> EXASOL = new ExasolContainer<>(
             EXASOL_DOCKER_IMAGE_REFERENCE).withReuse(true);
+
+    protected String getExaCertificateFingerprint() {
+        return FingerprintExtractor.extractFingerprint(EXASOL.getJdbcUrl()).orElse(null);
+    }
+
+    protected String getExaHost() {
+        return EXASOL.getHost();
+    }
+
+    protected String getExaPort() {
+        return EXASOL.getMappedPort(8563).toString();
+    }
+
+    protected String getExaBucketFsPort() {
+        return EXASOL.getMappedPort(2580).toString();
+    }
 
     protected void assertVirtualSchemaWasCreated(final String virtualSchemaName, final String[] args,
             final String dialect, final String username, final String password)

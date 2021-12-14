@@ -44,6 +44,13 @@ public interface VirtualSchemaProfile {
     String getExaHost();
 
     /**
+     * Get the TLS certificate's fingerprint of the host.
+     *
+     * @return TLS certificate's fingerprint of the host or {@code null} if no certificate is required.
+     */
+    String getExaCertificateFingerprint();
+
+    /**
      * Get an adapter schema name.
      *
      * @return adapter schema name
@@ -91,7 +98,6 @@ public interface VirtualSchemaProfile {
      * @return additional connection properties
      */
     String getAdditionalConnectionProperties();
-
 
     /**
      * Check if additional connection properties exist.
