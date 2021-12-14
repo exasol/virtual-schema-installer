@@ -52,9 +52,9 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 * Added `com.ibm.db2:jcc:11.5.6.0`
 * Added `com.microsoft.sqlserver:mssql-jdbc:9.5.0.jre17-preview`
 * Added `com.oracle.ojdbc:ojdbc8:19.3.0.0`
-* Added `junit:junit:4.13.2`
 * Added `mysql:mysql-connector-java:8.0.27`
 * Added `org.apache.httpcomponents:httpclient:4.5.13`
+* Added `org.apache.logging.log4j:log4j-api:2.16.0`
 * Added `org.elasticsearch.client:elasticsearch-rest-high-level-client:7.16.1`
 * Added `org.elasticsearch.plugin:x-pack-sql-jdbc:7.16.1`
 * Added `org.hamcrest:hamcrest:2.2`
