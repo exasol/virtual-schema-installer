@@ -34,12 +34,12 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 
 ### Compile Dependency Updates
 
-* Added `com.exasol:bucketfs-java:2.0.1`
-* Added `com.exasol:error-reporting-java:0.4.0`
-* Added `com.exasol:exasol-jdbc:7.0.11`
-* Added `commons-cli:commons-cli:1.4`
-* Added `org.kohsuke:github-api:1.132`
-* Added `org.postgresql:postgresql:42.2.23.jre7`
+* Added `com.exasol:bucketfs-java:2.2.0`
+* Added `com.exasol:error-reporting-java:0.4.1`
+* Added `com.exasol:exasol-jdbc:7.1.3`
+* Added `commons-cli:commons-cli:1.5.0`
+* Added `org.kohsuke:github-api:1.301`
+* Added `org.postgresql:postgresql:42.3.1`
 
 ### Runtime Dependency Updates
 
@@ -47,38 +47,38 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 
 ### Test Dependency Updates
 
-* Added `com.exasol:exasol-testcontainers:4.0.0`
-* Added `com.exasol:hamcrest-resultset-matcher:1.4.0`
-* Added `com.ibm.db2:jcc:11.5.5.0`
-* Added `com.microsoft.sqlserver:mssql-jdbc:9.2.0.jre8`
+* Added `com.exasol:exasol-testcontainers:5.1.1`
+* Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
+* Added `com.ibm.db2:jcc:11.5.6.0`
+* Added `com.microsoft.sqlserver:mssql-jdbc:9.5.0.jre17-preview`
 * Added `com.oracle.ojdbc:ojdbc8:19.3.0.0`
 * Added `junit:junit:4.13.2`
-* Added `mysql:mysql-connector-java:8.0.26`
+* Added `mysql:mysql-connector-java:8.0.27`
 * Added `org.apache.httpcomponents:httpclient:4.5.13`
-* Added `org.elasticsearch.client:elasticsearch-rest-high-level-client:7.13.4`
-* Added `org.elasticsearch.plugin:x-pack-sql-jdbc:7.13.4`
+* Added `org.elasticsearch.client:elasticsearch-rest-high-level-client:7.16.1`
+* Added `org.elasticsearch.plugin:x-pack-sql-jdbc:7.16.1`
 * Added `org.hamcrest:hamcrest:2.2`
-* Added `org.junit.jupiter:junit-jupiter:5.7.2`
-* Added `org.testcontainers:db2:1.16.0`
-* Added `org.testcontainers:elasticsearch:1.16.0`
-* Added `org.testcontainers:junit-jupiter:1.16.0`
-* Added `org.testcontainers:mssqlserver:1.16.0`
-* Added `org.testcontainers:mysql:1.16.0`
-* Added `org.testcontainers:oracle-xe:1.16.0`
-* Added `org.testcontainers:postgresql:1.16.0`
+* Added `org.junit.jupiter:junit-jupiter:5.8.2`
+* Added `org.testcontainers:db2:1.16.2`
+* Added `org.testcontainers:elasticsearch:1.16.2`
+* Added `org.testcontainers:junit-jupiter:1.16.2`
+* Added `org.testcontainers:mssqlserver:1.16.2`
+* Added `org.testcontainers:mysql:1.16.2`
+* Added `org.testcontainers:oracle-xe:1.16.2`
+* Added `org.testcontainers:postgresql:1.16.2`
 
 ### Plugin Dependency Updates
 
-* Added `com.exasol:artifact-reference-checker-maven-plugin:0.3.1`
-* Added `com.exasol:error-code-crawler-maven-plugin:0.5.1`
-* Added `com.exasol:project-keeper-maven-plugin:0.10.0`
-* Added `io.github.zlika:reproducible-build-maven-plugin:0.13`
+* Added `com.exasol:artifact-reference-checker-maven-plugin:0.4.0`
+* Added `com.exasol:error-code-crawler-maven-plugin:0.7.1`
+* Added `com.exasol:project-keeper-maven-plugin:1.3.4`
+* Added `io.github.zlika:reproducible-build-maven-plugin:0.14`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
 * Added `org.apache.maven.plugins:maven-compiler-plugin:3.8.1`
 * Added `org.apache.maven.plugins:maven-dependency-plugin:2.8`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:2.7`
-* Added `org.apache.maven.plugins:maven-enforcer-plugin:3.0.0-M3`
+* Added `org.apache.maven.plugins:maven-enforcer-plugin:3.0.0`
 * Added `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M3`
 * Added `org.apache.maven.plugins:maven-install-plugin:2.4`
 * Added `org.apache.maven.plugins:maven-jar-plugin:3.2.0`

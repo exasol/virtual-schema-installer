@@ -10,7 +10,7 @@
 | [Apache Commons CLI][4]      | [Apache License, Version 2.0][5] |
 | [GitHub API for Java][6]     | [The MIT license][7]             |
 | [EXASolution JDBC Driver][8] | [EXAClient License][9]           |
-| [pgdjbc Postgresql-jre7][10] | [BSD-2-Clause][11]               |
+| [PostgreSQL JDBC Driver][10] | [BSD-2-Clause][11]               |
 
 ## Test Dependencies
 
@@ -70,6 +70,7 @@
 [65]: https://github.com/exasol/project-keeper-maven-plugin
 [2]: https://github.com/exasol/bucketfs-java
 [0]: https://github.com/exasol/error-reporting-java
+[39]: https://raw.githubusercontent.com/elastic/elasticsearch/v7.16.1/licenses/ELASTIC-LICENSE-2.0.txt
 [7]: https://www.opensource.org/licenses/mit-license.php
 [46]: https://www.oracle.com/database/technologies/appdev/jdbc.html
 [43]: http://www.apache.org/licenses/LICENSE-2.0.txt
@@ -97,22 +98,21 @@
 [63]: https://github.com/exasol/artifact-reference-checker-maven-plugin
 [73]: https://maven.apache.org/plugins/maven-jar-plugin/
 [10]: https://jdbc.postgresql.org
+[4]: https://commons.apache.org/proper/commons-cli/
 [55]: https://maven.apache.org/surefire/maven-failsafe-plugin/
 [67]: http://maven.apache.org/plugins/maven-dependency-plugin/
 [17]: http://opensource.org/licenses/MIT
 [28]: http://www.eclipse.org/legal/epl-v10.html
 [19]: https://github.com/exasol/exasol-testcontainers
 [5]: https://www.apache.org/licenses/LICENSE-2.0.txt
-[39]: https://raw.githubusercontent.com/elastic/elasticsearch/v7.13.4/licenses/ELASTIC-LICENSE-2.0.txt
 [61]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
 [8]: http://www.exasol.com
 [15]: https://www.eclipse.org/legal/epl-v20.html
 [81]: http://maven.apache.org/plugins/maven-install-plugin/
-[4]: http://commons.apache.org/proper/commons-cli/
 [42]: http://hc.apache.org/httpcomponents-client
 [57]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 [16]: https://testcontainers.org
-[35]: http://www-03.ibm.com/software/sla/sladb.nsf/lilookup/179A6D1769B0A44D8525862400329FB8?OpenDocument
+[35]: http://www-03.ibm.com/software/sla/sladb.nsf/lilookup/B290E426DA2F1ECC852586FC006262BE?OpenDocument
 [83]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [85]: http://maven.apache.org/plugins/maven-site-plugin/
 [71]: https://github.com/exasol/error-code-crawler-maven-plugin
