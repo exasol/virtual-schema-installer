@@ -186,6 +186,13 @@
             <version>4.5.13</version>
             <scope>test</scope>
         </dependency>
+        <!-- Overrides log4j-api 2.11.1 which is used in elasticsearch-rest-high-level-client but contains a security issue: https://nvd.nist.gov/vuln/detail/CVE-2021-44228 -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.16.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>oracle-xe</artifactId>
