@@ -1,6 +1,9 @@
 package com.exasol.adapter.installer;
 
 import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -16,6 +19,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.exasol.adapter.installer.dialect.Dialect;
 import com.exasol.bucketfs.BucketAccessException;
+import com.exasol.jdbc.ConnectFailed;
 
 @Tag("integration")
 @Testcontainers
@@ -80,8 +84,32 @@ class PostgreSQLInstallerIT extends AbstractIntegrationTest {
                 "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + POSTGRES_SCHEMA + "'", //
                 "--" + ADDITIONAL_CONNECTION_PROPERTIES_KEY, POSTGRES.getDatabaseName(), //
         };
-        System.out.println(EXASOL.getHostIp());
         assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.POSTGRESQL.name().toLowerCase(Locale.ROOT),
                 POSTGRES.getUsername(), POSTGRES.getPassword());
+    }
+
+    @Test
+    void testInstallVirtualSchemaWithoutCertificateFingerprintFails()
+            throws SQLException, BucketAccessException, TimeoutException, ParseException, IOException {
+        final String virtualSchemaName = "POSTGRES_VIRTUAL_SCHEMA_2";
+        final String[] args = new String[] { //
+                "--" + JDBC_DRIVER_PATH_KEY, "target/postgresql-driver", //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
+                "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
+                "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
+                "--" + SOURCE_PORT_KEY, POSTGRES.getMappedPort(5432).toString(), //
+                "--" + ADDITIONAL_PROPERTY_KEY, "SCHEMA_NAME='" + POSTGRES_SCHEMA + "'", //
+                "--" + ADDITIONAL_CONNECTION_PROPERTIES_KEY, POSTGRES.getDatabaseName(), //
+        };
+
+        final String dialect = Dialect.POSTGRESQL.name().toLowerCase(Locale.ROOT);
+        final String username = POSTGRES.getUsername();
+        final String password = POSTGRES.getPassword();
+        final ConnectFailed exception = assertThrows(ConnectFailed.class,
+                () -> assertVirtualSchemaWasCreated(virtualSchemaName, args, dialect, username, password));
+        assertThat(exception.getMessage(),
+                containsString("TLS connection to host (" + EXASOL.getHost() + ") failed: PKIX path building failed"));
     }
 }

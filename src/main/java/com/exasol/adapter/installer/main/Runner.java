@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.cli.ParseException;
 
@@ -89,7 +88,7 @@ public class Runner {
         return options;
     }
 
-    private static String getOrDefault(final Map<String, String> userInput, final String key,
+    static String getOrDefault(final Map<String, String> userInput, final String key,
             final String defaultValue) {
         if (!userInput.containsKey(key) || (userInput.get(key) == null) || userInput.get(key).isEmpty()) {
             return defaultValue;
