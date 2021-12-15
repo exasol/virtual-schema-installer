@@ -21,7 +21,7 @@ public class Runner {
     private static final String JDBC_DRIVER_PATH_DEFAULT = "";
 
     public static void main(final String[] args)
-            throws SQLException, BucketAccessException, FileNotFoundException, ParseException, TimeoutException {
+            throws SQLException, BucketAccessException, FileNotFoundException, ParseException {
         final Map<String, String> options = getUserInputOptions();
         final UserInput userInput = new UserInputParser().parseUserInput(args, options);
         final Map<String, String> parameters = userInput.getParameters();
