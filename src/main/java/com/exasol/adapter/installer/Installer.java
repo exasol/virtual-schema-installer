@@ -65,7 +65,6 @@ public class Installer {
      * Install a Virtual Schema to the Exasol database.
      */
     public void install() throws SQLException, BucketAccessException, FileNotFoundException {
-
         uploadFilesToBucket(this.virtualSchemaJarFile, this.jdbcDriver);
         try (final Connection connection = getConnection()) {
             installVirtualSchema(connection,
