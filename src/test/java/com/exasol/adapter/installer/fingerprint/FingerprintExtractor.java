@@ -2,7 +2,10 @@
 package com.exasol.adapter.installer.fingerprint;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.exasol.errorreporting.ExaError;
 
 /**
  * This class provides a method for extracting the fingerprint from an Exasol JDBC URL.
@@ -24,9 +27,10 @@ public class FingerprintExtractor {
         if (jdbcUrl.contains("validateservercertificate=0")) {
             return Optional.empty();
         }
-        final java.util.regex.Matcher matcher = Pattern.compile("jdbc:exa:[^/]+/([^:]+):.*").matcher(jdbcUrl);
+        final Matcher matcher = Pattern.compile("jdbc:exa:[^/]+/([^:]+):.*").matcher(jdbcUrl);
         if (!matcher.matches()) {
-            throw new IllegalStateException("Error extracting fingerprint from '" + jdbcUrl + "'");
+            throw new IllegalStateException(ExaError.messageBuilder("E-VS-INSTL-11")
+                    .message("Error extracting fingerprint from {{jdbcUrl}}").parameter("jdbcUrl", jdbcUrl).toString());
         }
         return Optional.of(matcher.group(1));
     }

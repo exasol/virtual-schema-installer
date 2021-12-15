@@ -33,7 +33,9 @@ class FingerprintExtractorTest {
 
     @Test
     void testExtractFingerprintFailed() {
-        assertThrows(IllegalStateException.class,
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> FingerprintExtractor.extractFingerprint("jdbc:exa:127.0.0.1:1234;validateservercertificate=1"));
+        assertThat(exception.getMessage(), equalTo(
+                "E-VS-INSTL-11: Error extracting fingerprint from 'jdbc:exa:127.0.0.1:1234;validateservercertificate=1'"));
     }
 }
