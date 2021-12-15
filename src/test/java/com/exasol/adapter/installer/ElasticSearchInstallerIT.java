@@ -16,7 +16,7 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.*;
 import org.elasticsearch.client.license.StartTrialRequest;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.xcontent.XContentType;
 import org.junit.jupiter.api.*;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -31,7 +31,7 @@ class ElasticSearchInstallerIT extends AbstractIntegrationTest {
     private static final String ELASTIC_SEARCH_INDEX = "index";
     private static final String ELASTICSEARCH_USERNAME = "user";
     private static final String ELASTICSEARCH_PASSWORD = "pass";
-    public static final String ELASTICSEARCH_DOCKER_IMAGE_REFERENCE = "docker.elastic.co/elasticsearch/elasticsearch:7.10.1";
+    public static final String ELASTICSEARCH_DOCKER_IMAGE_REFERENCE = "docker.elastic.co/elasticsearch/elasticsearch:7.16.1";
     private static final int ELASTIC_SEARCH_PORT = 9200;
 
     @Container
@@ -62,9 +62,10 @@ class ElasticSearchInstallerIT extends AbstractIntegrationTest {
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_NAME_KEY, "x-pack-sql-jdbc.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/elasticsearch-driver", //
-                "--" + EXA_HOST_KEY, "localhost", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_SCHEMA_NAME_KEY, EXASOL_SCHEMA_NAME, //
                 "--" + EXA_ADAPTER_NAME_KEY, EXASOL_ADAPTER_NAME, //
                 "--" + EXA_CONNECTION_NAME_KEY, CONNECTION_NAME, //
@@ -73,7 +74,8 @@ class ElasticSearchInstallerIT extends AbstractIntegrationTest {
                 "--" + SOURCE_PORT_KEY, ELASTIC_SEARCH.getMappedPort(ELASTIC_SEARCH_PORT).toString(), //
         };
         assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.ELASTICSEARCH.toString().toLowerCase(),
-                ELASTICSEARCH_USERNAME, ELASTICSEARCH_PASSWORD, "SELECT \"int_field\" FROM " + virtualSchemaName + ".\"" + ELASTIC_SEARCH_INDEX + "\"");
+                ELASTICSEARCH_USERNAME, ELASTICSEARCH_PASSWORD,
+                "SELECT \"int_field\" FROM " + virtualSchemaName + ".\"" + ELASTIC_SEARCH_INDEX + "\"");
     }
 
     @Test
@@ -82,13 +84,16 @@ class ElasticSearchInstallerIT extends AbstractIntegrationTest {
         final String virtualSchemaName = "ELASTIC_SEARCH_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/elasticsearch-driver", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, ELASTIC_SEARCH.getMappedPort(ELASTIC_SEARCH_PORT).toString(), //
         };
         assertVirtualSchemaWasCreated(virtualSchemaName, args, Dialect.ELASTICSEARCH.toString().toLowerCase(),
-                ELASTICSEARCH_USERNAME, ELASTICSEARCH_PASSWORD, "SELECT \"int_field\" FROM " + virtualSchemaName + ".\"" + ELASTIC_SEARCH_INDEX + "\"");
+                ELASTICSEARCH_USERNAME, ELASTICSEARCH_PASSWORD,
+                "SELECT \"int_field\" FROM " + virtualSchemaName + ".\"" + ELASTIC_SEARCH_INDEX + "\"");
     }
 }

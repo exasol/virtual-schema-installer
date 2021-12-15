@@ -21,10 +21,11 @@ import com.exasol.bucketfs.BucketAccessException;
 class SqlServerInstallerIT extends AbstractIntegrationTest {
     private static final String MS_SQL_SCHEMA = "MS_SQL_SCHEMA";
     private static final int MS_SQL_PORT = 1433;
-    public static final String DOCKER_IMAGE_REFERENCE = "mcr.microsoft.com/mssql/server:2019-CU8-ubuntu-16.04";
+    public static final String DOCKER_IMAGE_REFERENCE = "mcr.microsoft.com/mssql/server:2019-CU14-ubuntu-20.04";
 
     @Container
-    private static final MSSQLServerContainer MS_SQL_SERVER = new MSSQLServerContainer(DOCKER_IMAGE_REFERENCE);
+    private static final MSSQLServerContainer<? extends MSSQLServerContainer<?>> MS_SQL_SERVER = new MSSQLServerContainer<>(
+            DOCKER_IMAGE_REFERENCE);
 
     @BeforeAll
     static void beforeAll() throws SQLException {
@@ -44,9 +45,10 @@ class SqlServerInstallerIT extends AbstractIntegrationTest {
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_NAME_KEY, "mssql-jdbc.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/sqlserver-driver", //
-                "--" + EXA_HOST_KEY, "localhost", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_SCHEMA_NAME_KEY, EXASOL_SCHEMA_NAME, //
                 "--" + EXA_ADAPTER_NAME_KEY, EXASOL_ADAPTER_NAME, //
                 "--" + EXA_CONNECTION_NAME_KEY, CONNECTION_NAME, //
@@ -67,8 +69,10 @@ class SqlServerInstallerIT extends AbstractIntegrationTest {
         final String virtualSchemaName = "SQL_SERVER_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/sqlserver-driver", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, MS_SQL_SERVER.getMappedPort(MS_SQL_PORT).toString(), //

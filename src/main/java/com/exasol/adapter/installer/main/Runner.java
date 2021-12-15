@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.cli.ParseException;
 
@@ -21,7 +20,7 @@ public class Runner {
     private static final String JDBC_DRIVER_PATH_DEFAULT = "";
 
     public static void main(final String[] args)
-            throws SQLException, BucketAccessException, FileNotFoundException, ParseException, TimeoutException {
+            throws SQLException, BucketAccessException, FileNotFoundException, ParseException {
         final Map<String, String> options = getUserInputOptions();
         final UserInput userInput = new UserInputParser().parseUserInput(args, options);
         final Map<String, String> parameters = userInput.getParameters();
@@ -59,6 +58,7 @@ public class Runner {
                 .sourcePassword(propertyReader.readProperty(SOURCE_PASSWORD_KEY)) //
                 .exaHost(virtualSchemaProfile.getExaHost()) //
                 .exaPort(virtualSchemaProfile.getExaPort()) //
+                .exaCertifcateFingerprint(virtualSchemaProfile.getExaCertificateFingerprint()) //
                 .exaBucketFsPort(virtualSchemaProfile.getBucketFsPort()) //
                 .exaSchemaName(virtualSchemaProfile.getAdapterSchemaName()) //
                 .exaAdapterName(virtualSchemaProfile.getAdapterName()) //
@@ -75,6 +75,7 @@ public class Runner {
         options.put(JDBC_DRIVER_PATH_KEY, JDBC_DRIVER_PATH_DESCRIPTION);
         options.put(EXA_HOST_KEY, EXA_HOST_DESCRIPTION);
         options.put(EXA_PORT_KEY, EXA_PORT_DESCRIPTION);
+        options.put(EXA_CERTIFICATE_FINGERPRINT_KEY, EXA_CERTIFICATE_FINGERPRINT_DESCRIPTION);
         options.put(EXA_BUCKET_FS_PORT_KEY, EXA_BUCKET_FS_PORT_DESCRIPTION);
         options.put(EXA_SCHEMA_NAME_KEY, EXA_SCHEMA_NAME_DESCRIPTION);
         options.put(EXA_ADAPTER_NAME_KEY, EXA_ADAPTER_NAME_DESCRIPTION);
@@ -87,9 +88,9 @@ public class Runner {
         return options;
     }
 
-    private static String getOrDefault(final Map<String, String> userInput, final String key,
+    static String getOrDefault(final Map<String, String> userInput, final String key,
             final String defaultValue) {
-        if (!userInput.containsKey(key) || userInput.get(key) == null || userInput.get(key).isEmpty()) {
+        if (!userInput.containsKey(key) || (userInput.get(key) == null) || userInput.get(key).isEmpty()) {
             return defaultValue;
         } else {
             return userInput.get(key);

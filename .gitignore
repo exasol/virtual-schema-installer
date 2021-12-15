@@ -24,3 +24,12 @@ Scripts
 **/*.log
 .directory
 venv/
+
+~*
+*.lock
+*.bak
+*.orig
+*.old
+*.md.html
+/.apt_generated/
+/.apt_generated_tests/

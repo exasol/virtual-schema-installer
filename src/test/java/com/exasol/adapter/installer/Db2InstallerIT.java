@@ -21,7 +21,7 @@ import com.exasol.bucketfs.BucketAccessException;
 class Db2InstallerIT extends AbstractIntegrationTest {
     private static final String DB2_SCHEMA = "DB2INST1";
     private static final int DB2_PORT = 50000;
-    public static final String DOCKER_IMAGE_REFERENCE = "ibmcom/db2:11.5.5.0";
+    public static final String DOCKER_IMAGE_REFERENCE = "ibmcom/db2:11.5.7.0";
 
     @Container
     private static final Db2Container DB2 = new Db2Container(DOCKER_IMAGE_REFERENCE);
@@ -43,9 +43,10 @@ class Db2InstallerIT extends AbstractIntegrationTest {
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_NAME_KEY, "jcc.jar", //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/db2-driver", //
-                "--" + EXA_HOST_KEY, "localhost", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_SCHEMA_NAME_KEY, EXASOL_SCHEMA_NAME, //
                 "--" + EXA_ADAPTER_NAME_KEY, EXASOL_ADAPTER_NAME, //
                 "--" + EXA_CONNECTION_NAME_KEY, CONNECTION_NAME, //
@@ -66,8 +67,10 @@ class Db2InstallerIT extends AbstractIntegrationTest {
         final String virtualSchemaName = "DB2_VIRTUAL_SCHEMA_2";
         final String[] args = new String[] { //
                 "--" + JDBC_DRIVER_PATH_KEY, "target/db2-driver", //
-                "--" + EXA_PORT_KEY, EXASOL.getMappedPort(8563).toString(), //
-                "--" + EXA_BUCKET_FS_PORT_KEY, EXASOL.getMappedPort(2580).toString(), //
+                "--" + EXA_HOST_KEY, getExaHost(), //
+                "--" + EXA_PORT_KEY, getExaPort(), //
+                "--" + EXA_CERTIFICATE_FINGERPRINT_KEY, getExaCertificateFingerprint(), //
+                "--" + EXA_BUCKET_FS_PORT_KEY, getExaBucketFsPort(), //
                 "--" + EXA_VIRTUAL_SCHEMA_NAME_KEY, virtualSchemaName, //
                 "--" + SOURCE_HOST_KEY, EXASOL.getHostIp(), //
                 "--" + SOURCE_PORT_KEY, DB2.getMappedPort(DB2_PORT).toString(), //
