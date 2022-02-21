@@ -97,6 +97,7 @@
 [63]: https://github.com/exasol/artifact-reference-checker-maven-plugin
 [73]: https://maven.apache.org/plugins/maven-jar-plugin/
 [10]: https://jdbc.postgresql.org
+[33]: https://www-40.ibm.com/software/sla/sladb.nsf/lilookup/1024954E51C94B03002587A4003CB520?OpenDocument
 [4]: https://commons.apache.org/proper/commons-cli/
 [42]: https://logging.apache.org/log4j/2.x/log4j-api/
 [55]: https://maven.apache.org/surefire/maven-failsafe-plugin/
@@ -111,7 +112,6 @@
 [40]: http://hc.apache.org/httpcomponents-client
 [57]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 [16]: https://testcontainers.org
-[33]: http://www-03.ibm.com/software/sla/sladb.nsf/lilookup/B290E426DA2F1ECC852586FC006262BE?OpenDocument
 [83]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [85]: http://maven.apache.org/plugins/maven-site-plugin/
 [71]: https://github.com/exasol/error-code-crawler-maven-plugin

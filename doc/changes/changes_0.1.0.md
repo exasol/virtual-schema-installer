@@ -36,12 +36,12 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 
 ### Compile Dependency Updates
 
-* Added `com.exasol:bucketfs-java:2.2.0`
+* Added `com.exasol:bucketfs-java:2.3.0`
 * Added `com.exasol:error-reporting-java:0.4.1`
-* Added `com.exasol:exasol-jdbc:7.1.3`
+* Added `com.exasol:exasol-jdbc:7.1.4`
 * Added `commons-cli:commons-cli:1.5.0`
 * Added `org.kohsuke:github-api:1.301`
-* Added `org.postgresql:postgresql:42.3.1`
+* Added `org.postgresql:postgresql:42.3.3`
 
 ### Runtime Dependency Updates
 
@@ -49,14 +49,14 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 
 ### Test Dependency Updates
 
-* Added `com.exasol:exasol-testcontainers:5.1.1`
+* Added `com.exasol:exasol-testcontainers:6.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
-* Added `com.ibm.db2:jcc:11.5.6.0`
-* Added `com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8`
+* Added `com.ibm.db2:jcc:11.5.7.0`
+* Added `com.microsoft.sqlserver:mssql-jdbc:10.2.0.jre17`
 * Added `com.oracle.ojdbc:ojdbc8:19.3.0.0`
-* Added `mysql:mysql-connector-java:8.0.27`
+* Added `mysql:mysql-connector-java:8.0.28`
 * Added `org.apache.httpcomponents:httpclient:4.5.13`
-* Added `org.apache.logging.log4j:log4j-api:2.16.0`
+* Added `org.apache.logging.log4j:log4j-api:2.17.1`
 * Added `org.elasticsearch.client:elasticsearch-rest-high-level-client:7.16.1`
 * Added `org.elasticsearch.plugin:x-pack-sql-jdbc:7.16.1`
 * Added `org.hamcrest:hamcrest:2.2`
