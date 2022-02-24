@@ -11,7 +11,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
         <surefire.and.failsafe.plugin.version>3.0.0-M3</surefire.and.failsafe.plugin.version>
-        <org.testcontainers.version>1.16.2</org.testcontainers.version>
+        <org.testcontainers.version>1.16.3</org.testcontainers.version>
         <elasticsearch.version>7.16.1</elasticsearch.version>
     </properties>
     <distributionManagement>
@@ -131,7 +131,7 @@
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>10.2.0.jre8</version>
+            <version>9.4.1.jre8</version><!-- be careful with updating. Did not work with 10.2.0. -->
             <scope>test</scope>
         </dependency>
         <dependency>

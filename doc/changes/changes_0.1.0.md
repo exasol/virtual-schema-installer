@@ -52,7 +52,7 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 * Added `com.exasol:exasol-testcontainers:6.1.1`
 * Added `com.exasol:hamcrest-resultset-matcher:1.5.1`
 * Added `com.ibm.db2:jcc:11.5.7.0`
-* Added `com.microsoft.sqlserver:mssql-jdbc:10.2.0.jre8`
+* Added `com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8`
 * Added `com.oracle.ojdbc:ojdbc8:19.3.0.0`
 * Added `mysql:mysql-connector-java:8.0.28`
 * Added `org.apache.httpcomponents:httpclient:4.5.13`
@@ -61,13 +61,13 @@ This CLI tools helps you to install Virtual Schemas. Currently supported dialect
 * Added `org.elasticsearch.plugin:x-pack-sql-jdbc:7.16.1`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter:5.8.2`
-* Added `org.testcontainers:db2:1.16.2`
-* Added `org.testcontainers:elasticsearch:1.16.2`
-* Added `org.testcontainers:junit-jupiter:1.16.2`
-* Added `org.testcontainers:mssqlserver:1.16.2`
-* Added `org.testcontainers:mysql:1.16.2`
-* Added `org.testcontainers:oracle-xe:1.16.2`
-* Added `org.testcontainers:postgresql:1.16.2`
+* Added `org.testcontainers:db2:1.16.3`
+* Added `org.testcontainers:elasticsearch:1.16.3`
+* Added `org.testcontainers:junit-jupiter:1.16.3`
+* Added `org.testcontainers:mssqlserver:1.16.3`
+* Added `org.testcontainers:mysql:1.16.3`
+* Added `org.testcontainers:oracle-xe:1.16.3`
+* Added `org.testcontainers:postgresql:1.16.3`
 
 ### Plugin Dependency Updates
 
