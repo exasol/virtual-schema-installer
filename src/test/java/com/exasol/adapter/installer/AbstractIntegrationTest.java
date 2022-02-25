@@ -1,8 +1,11 @@
 package com.exasol.adapter.installer;
 
-import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
-import static com.exasol.matcher.ResultSetStructureMatcher.table;
-import static org.hamcrest.MatcherAssert.assertThat;
+import com.exasol.adapter.installer.main.Runner;
+import com.exasol.bucketfs.BucketAccessException;
+import com.exasol.containers.ExasolContainer;
+import com.exasol.matcher.TypeMatchMode;
+import org.apache.commons.cli.ParseException;
+import org.testcontainers.junit.jupiter.Container;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,28 +14,23 @@ import java.nio.file.Path;
 import java.sql.*;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.cli.ParseException;
-import org.testcontainers.junit.jupiter.Container;
-
-import com.exasol.adapter.installer.fingerprint.FingerprintExtractor;
-import com.exasol.adapter.installer.main.Runner;
-import com.exasol.bucketfs.BucketAccessException;
-import com.exasol.containers.ExasolContainer;
-import com.exasol.matcher.TypeMatchMode;
+import static com.exasol.adapter.installer.VirtualSchemaInstallerConstants.*;
+import static com.exasol.matcher.ResultSetStructureMatcher.table;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 abstract class AbstractIntegrationTest {
     protected static final String EXASOL_SCHEMA_NAME = "ADAPTER";
     protected static final String EXASOL_ADAPTER_NAME = "MY_ADAPTER_SCRIPT";
     protected static final String CONNECTION_NAME = "JDBC_CONNECTION";
     protected static final String SIMPLE_TABLE = "SIMPLE_TABLE";
-    private static final String EXASOL_DOCKER_IMAGE_REFERENCE = "7.1.3";
+    private static final String EXASOL_DOCKER_IMAGE_REFERENCE = "7.1.6";
 
     @Container
     protected static final ExasolContainer<? extends ExasolContainer<?>> EXASOL = new ExasolContainer<>(
             EXASOL_DOCKER_IMAGE_REFERENCE).withReuse(true);
 
     protected String getExaCertificateFingerprint() {
-        return FingerprintExtractor.extractFingerprint(EXASOL.getJdbcUrl()).orElse(null);
+        return EXASOL.getTlsCertificateFingerprint().orElse(null);
     }
 
     protected String getExaHost() {
@@ -48,14 +46,14 @@ abstract class AbstractIntegrationTest {
     }
 
     protected void assertVirtualSchemaWasCreated(final String virtualSchemaName, final String[] args,
-            final String dialect, final String username, final String password)
+                                                 final String dialect, final String username, final String password)
             throws ParseException, SQLException, BucketAccessException, TimeoutException, IOException {
         assertVirtualSchemaWasCreated(virtualSchemaName, args, dialect, username, password,
                 "SELECT * FROM " + virtualSchemaName + "." + SIMPLE_TABLE);
     }
 
     protected void assertVirtualSchemaWasCreated(final String virtualSchemaName, final String[] args,
-            final String dialect, final String username, final String password, final String query)
+                                                 final String dialect, final String username, final String password, final String query)
             throws ParseException, SQLException, BucketAccessException, TimeoutException, IOException {
         final Path tempFile = createCredentialsFile(username, password);
         installVirtualSchema(args, tempFile, dialect);
