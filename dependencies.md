@@ -70,7 +70,6 @@
 [65]: https://github.com/exasol/project-keeper-maven-plugin
 [2]: https://github.com/exasol/bucketfs-java
 [0]: https://github.com/exasol/error-reporting-java
-[37]: https://raw.githubusercontent.com/elastic/elasticsearch/v7.16.1/licenses/ELASTIC-LICENSE-2.0.txt
 [7]: https://www.opensource.org/licenses/mit-license.php
 [46]: https://www.oracle.com/database/technologies/appdev/jdbc.html
 [41]: http://www.apache.org/licenses/LICENSE-2.0.txt
@@ -85,6 +84,7 @@
 [36]: https://github.com/elastic/elasticsearch
 [48]: https://www.eclipse.org/legal/epl-2.0/
 [49]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
+[37]: https://raw.githubusercontent.com/elastic/elasticsearch/v7.17.3/licenses/ELASTIC-LICENSE-2.0.txt
 [25]: https://github.com/exasol/hamcrest-resultset-matcher
 [75]: http://zlika.github.io/reproducible-build-maven-plugin
 [28]: http://www.opensource.org/licenses/mit-license.php
