@@ -1,11 +1,12 @@
 package com.exasol.adapter.installer.dialect;
 
 import com.exasol.adapter.installer.UserInput;
+import com.exasol.adapter.installer.VirtualSchemaProfile;
 
 /**
  * A Postgres dialect profile.
  */
-public class PostgresDialectProfile extends AbstractVirtualSchemaProfile {
+public class PostgresDialectProfile extends AbstractVirtualSchemaProfile implements VirtualSchemaProfile {
     /**
      * Instantiate a new {@link PostgresDialectProfile}.
      *

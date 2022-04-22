@@ -1,11 +1,12 @@
 package com.exasol.adapter.installer.dialect;
 
 import com.exasol.adapter.installer.UserInput;
+import com.exasol.adapter.installer.VirtualSchemaProfile;
 
 /**
  * A SQl Server dialect profile.
  */
-public class SqlServerDialectProfile extends AbstractVirtualSchemaProfile {
+public class SqlServerDialectProfile extends AbstractVirtualSchemaProfile implements VirtualSchemaProfile {
     /**
      * Instantiate a new {@link SqlServerDialectProfile}.
      *

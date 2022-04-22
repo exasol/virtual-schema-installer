@@ -1,11 +1,12 @@
 package com.exasol.adapter.installer.dialect;
 
 import com.exasol.adapter.installer.UserInput;
+import com.exasol.adapter.installer.VirtualSchemaProfile;
 
 /**
  * A ElasticSearch dialect profile.
  */
-public class ElasticSearchDialectProfile extends AbstractVirtualSchemaProfile {
+public class ElasticSearchDialectProfile extends AbstractVirtualSchemaProfile implements VirtualSchemaProfile {
     /**
      * Instantiate a new {@link ElasticSearchDialectProfile}.
      *

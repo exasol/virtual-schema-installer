@@ -1,11 +1,12 @@
 package com.exasol.adapter.installer.dialect;
 
 import com.exasol.adapter.installer.UserInput;
+import com.exasol.adapter.installer.VirtualSchemaProfile;
 
 /**
  * A DB2 dialect profile.
  */
-public class Db2DialectProfile extends AbstractVirtualSchemaProfile {
+public class Db2DialectProfile extends AbstractVirtualSchemaProfile implements VirtualSchemaProfile {
     /**
      * Instantiate a new {@link Db2DialectProfile}.
      *

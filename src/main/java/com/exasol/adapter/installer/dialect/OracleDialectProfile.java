@@ -1,11 +1,12 @@
 package com.exasol.adapter.installer.dialect;
 
 import com.exasol.adapter.installer.UserInput;
+import com.exasol.adapter.installer.VirtualSchemaProfile;
 
 /**
  * An Oracle dialect profile.
  */
-public class OracleDialectProfile extends AbstractVirtualSchemaProfile {
+public class OracleDialectProfile extends AbstractVirtualSchemaProfile implements VirtualSchemaProfile {
     /**
      * Instantiate a new {@link OracleDialectProfile}.
      *
