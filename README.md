@@ -1,6 +1,6 @@
 # This Project is Superseded by the Extension Installer
 
-This project is superseeded by Exasol's [Extension Manager](https://github.com/exasol/extension-manager) and therefore archived. The Virtual Schema Installer is archived no longer maintained.
+This project is superseded by Exasol's [Extension Manager](https://github.com/exasol/extension-manager) and therefore archived. The Virtual Schema Installer is archived no longer maintained.
 
 # Virtual Schema Installer
 
