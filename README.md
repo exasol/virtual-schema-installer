@@ -1,3 +1,7 @@
+# This Project is Superseded by the Extension Installer
+
+This project is superseded by Exasol's [Extension Manager](https://github.com/exasol/extension-manager) and therefore archived. The Virtual Schema Installer is archived no longer maintained.
+
 # Virtual Schema Installer
 
 [![Build Status](https://github.com/exasol/virtual-schema-installer/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/virtual-schema-installer/actions/workflows/ci-build.yml)
